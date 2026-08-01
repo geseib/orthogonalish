@@ -152,6 +152,16 @@ describe("calculator review regressions", () => {
     expect(page).not.toMatch(/Ideas stored|Speaking at once|Possible casts|The bend appears/);
   });
 
+  it("styles the introductory scenes as part of the same theatre", async () => {
+    const css = await readFile(new URL("./globals.css", import.meta.url), "utf8");
+
+    expect(css).toMatch(/\.intro-scene\s*\{/);
+    expect(css).toMatch(/\.intro-art-frame\s*\{/);
+    expect(css).toMatch(/\.intro-dialogue\s*\{/);
+    expect(css).toMatch(/\.intro-controls\s*\{/);
+    expect(css).toMatch(/\.story-down\s*\{/);
+  });
+
   it("returns the exact orthogonal basis instead of randomly searching for 90°", async () => {
     const { exactOrthogonalResult } = await reviewExports();
     const result = exactOrthogonalResult?.(1_000, 12_588);

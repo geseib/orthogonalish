@@ -84,6 +84,7 @@ export function IntroSequence() {
       {introScenes.map((scene, sceneIndex) => {
         const beatIndex = beatIndexes[sceneIndex];
         const beat = scene.beats[beatIndex];
+        const previousSection = sceneIndex === 0 ? "opening" : introScenes[sceneIndex - 1].id;
         const nextSection = introScenes[sceneIndex + 1]?.id ?? "calculator";
 
         return (
@@ -165,13 +166,19 @@ export function IntroSequence() {
               </button>
             </div>
 
-            <a
-              className="story-down"
-              href={`#${nextSection}`}
-              aria-label={`Continue to ${sceneIndex === 0 ? "the next scene" : "the calculator"}`}
-            >
-              <span aria-hidden="true">↓</span>
-            </a>
+            <nav className="story-section-nav" aria-label="Move between story sections">
+              <a className="story-up" href={`#${previousSection}`} aria-label="Previous section">
+                <span aria-hidden="true">↑</span>
+              </a>
+              <span>sections</span>
+              <a
+                className="story-down"
+                href={`#${nextSection}`}
+                aria-label={`Continue to ${sceneIndex === 0 ? "the next scene" : "the calculator"}`}
+              >
+                <span aria-hidden="true">↓</span>
+              </a>
+            </nav>
           </section>
         );
       })}
