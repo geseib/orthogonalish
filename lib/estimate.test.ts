@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   analyzeCapacity,
+  estimateStoryTotal,
   estimateRandomSet,
   formatCapacity,
   validateInputs,
@@ -18,7 +19,16 @@ describe("validateInputs", () => {
     expect(validateInputs(100, -1, 92)).not.toHaveLength(0);
     expect(validateInputs(100, 88, 181)).not.toHaveLength(0);
     expect(validateInputs(100, 92, 88)).not.toHaveLength(0);
-    expect(validateInputs(100, 90, 90)).not.toHaveLength(0);
+    expect(validateInputs(100, 89, 89)).not.toHaveLength(0);
+  });
+
+  it("accepts exactly 90° as the perfectly orthogonal baseline", () => {
+    expect(validateInputs(1_000, 90, 90)).toEqual([]);
+    expect(analyzeCapacity(estimateRandomSet(1_000, 90, 90))).toMatchObject({
+      guaranteedMinimum: 1_000,
+      welchUpperBound: 1_000,
+      isExact: true,
+    });
   });
 
   it("requires a nearly orthogonal interval to contain 90°", () => {
@@ -31,6 +41,42 @@ describe("validateInputs", () => {
     expect(validateInputs(100, 88, 92)).not.toContain(
       "The angle range must contain 90°.",
     );
+  });
+});
+
+describe("estimateStoryTotal", () => {
+  it("restores the large dimension-scaled estimates that drive the lesson", () => {
+    expect(estimateStoryTotal(estimateRandomSet(1_000, 88, 92))).toMatchObject({
+      total: 2_658,
+      multiplier: 2.6586137298206878,
+    });
+    expect(estimateStoryTotal(estimateRandomSet(10_000, 88, 92))).toMatchObject({
+      total: 540_586,
+      multiplier: 54.05869647852782,
+    });
+  });
+
+  it("lets known low-dimensional limits quietly correct the estimate", () => {
+    expect(estimateStoryTotal(estimateRandomSet(3, 88, 92))).toMatchObject({
+      total: 3,
+      isExact: true,
+    });
+    expect(estimateStoryTotal(estimateRandomSet(10, 88, 92))).toMatchObject({
+      total: 10,
+      isExact: true,
+    });
+    expect(estimateStoryTotal(estimateRandomSet(100, 88, 92))).toMatchObject({
+      total: 113,
+      isCappedByKnownLimit: true,
+    });
+  });
+
+  it("keeps exact right angles one-for-one", () => {
+    expect(estimateStoryTotal(estimateRandomSet(10_000, 90, 90))).toMatchObject({
+      total: 10_000,
+      multiplier: 1,
+      isExact: true,
+    });
   });
 });
 

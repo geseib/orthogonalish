@@ -10,9 +10,8 @@ import {
 } from "react";
 
 import {
-  analyzeCapacity,
+  estimateStoryTotal,
   estimateRandomSet,
-  formatCapacity,
   validateInputs,
   type EstimateResult,
 } from "../lib/estimate";
@@ -124,8 +123,23 @@ export default function Home() {
       return { kind: "completed", seed, result };
     }
     if (result && runStatus === "capped") return { kind: "capped", seed, result };
+    if (dialogueKind === "dimension") {
+      const currentEstimate = estimateRandomSet(
+        parsedInputs.dimension,
+        parsedInputs.lowerAngle,
+        parsedInputs.upperAngle,
+      );
+      const story = estimateStoryTotal(currentEstimate);
+      return {
+        kind: "dimension",
+        seed,
+        dimension: parsedInputs.dimension,
+        estimatedTotal: story.total,
+        multiplier: story.multiplier,
+      };
+    }
     return { kind: dialogueKind, seed };
-  }, [dialogueKind, isValid, result, runStatus, seed, validationErrors]);
+  }, [dialogueKind, isValid, parsedInputs, result, runStatus, seed, validationErrors]);
   const beat = getDialogue(dialogueState);
 
   useEffect(
@@ -183,6 +197,15 @@ export default function Home() {
     setProgressAnnouncement("");
     lastProgressAnnouncementAtRef.current = 0;
     setLessonOpen(false);
+
+    if (
+      parsedInputs.lowerAngle === 90 &&
+      parsedInputs.upperAngle === 90
+    ) {
+      setResult(exactOrthogonalResult(parsedInputs.dimension, nextSeed));
+      setRunStatus("complete");
+      return;
+    }
 
     const started = safelyStartWorker(
       () =>
@@ -287,7 +310,7 @@ export default function Home() {
   return (
     <main>
       <header className="hero">
-        <p className="eyebrow">An argument in N dimensions</p>
+        <p className="eyebrow">An argument in many dimensions</p>
         <h1>
           How many arrows can stand <em>nearly sideways?</em>
         </h1>
@@ -324,7 +347,7 @@ export default function Home() {
                 aria-invalid={Boolean(fieldErrors.dimension)}
                 aria-describedby={fieldErrors.dimension ? "dimension-error" : "dimension-help"}
               />
-              <span aria-hidden="true">N</span>
+              <span aria-hidden="true">D</span>
             </div>
             <p className="field-help" id="dimension-help">
               One positive whole number. High dimensions are welcome.
@@ -434,11 +457,11 @@ export default function Home() {
         <div className="dialogue" aria-live="polite" aria-atomic="true">
           <blockquote className="speech speech-rosencrantz">
             <p>{beat.rosencrantz}</p>
-            <cite>Rosencrantz · theorist</cite>
+            <cite>Rosencrantz · experimentalist</cite>
           </blockquote>
           <blockquote className="speech speech-guildenstern">
             <p>{beat.guildenstern}</p>
-            <cite>Guildenstern · experimentalist</cite>
+            <cite>Guildenstern · theorist</cite>
           </blockquote>
         </div>
 
@@ -495,40 +518,35 @@ export default function Home() {
 }
 
 function EstimateCard({ estimate }: { estimate: EstimateResult | null }) {
-  const capacity = estimate ? analyzeCapacity(estimate) : null;
-  const formatted = capacity ? formatCapacity(capacity) : null;
+  const estimated = estimate ? estimateStoryTotal(estimate) : null;
 
   return (
     <aside className="estimate-panel" aria-labelledby="estimate-title" aria-live="polite">
       <p className="section-number" aria-hidden="true">II</p>
       <div className="section-heading">
         <p className="eyebrow">The prediction</p>
-        <h2 id="estimate-title">{formatted?.heading ?? "Rigorous capacity range"}</h2>
+        <h2 id="estimate-title">
+          {estimated?.isExact ? "Exact total vectors" : "Estimated total vectors"}
+        </h2>
       </div>
-      {estimate && formatted ? (
+      {estimate && estimated ? (
         <>
-          <p className="estimate-value">{formatted.primary}</p>
-          <p className="estimate-secondary">{formatted.secondary}</p>
-          <dl className="estimate-metrics">
-            <div>
-              <dt>Guaranteed minimum</dt>
-              <dd>{capacity?.guaranteedMinimum.toLocaleString("en-US")}</dd>
-            </div>
-            <div>
-              <dt>Welch ceiling</dt>
-              <dd>{capacity?.welchUpperBound?.toLocaleString("en-US") ?? "Open here"}</dd>
-            </div>
-            <div>
-              <dt>Tolerance ε</dt>
-              <dd>{capacity?.epsilon.toFixed(4)}</dd>
-            </div>
-          </dl>
+          <p className="estimate-value">
+            {estimated.log10Total < 15
+              ? estimated.total.toLocaleString("en-US")
+              : formatLargeEstimate(estimated.log10Total)}
+          </p>
+          <p className="estimate-secondary">
+            {estimated.isExact
+              ? "One distinct direction for every dimension. Exactly."
+              : `≈ ${estimated.multiplier.toFixed(4)} × ${estimate.dimension.toLocaleString("en-US")}, rounded down`}
+          </p>
           <p className="estimate-disclaimer">
-            {capacity?.isExact
-              ? `An orthogonal basis supplies ${capacity.dimension.toLocaleString("en-US")} vectors, and the Welch bound rules out one more.`
-              : capacity?.welchUpperBound !== null
-                ? "A proven interval: the exact maximum lies somewhere between these two integers."
-                : "The guaranteed floor is still N. In this regime the Welch bound gives no finite ceiling, so the exact maximum remains unknown."}
+            {estimated.isExact
+              ? "Perfect right angles grow one-for-one."
+              : estimated.isCappedByKnownLimit
+                ? "At this smaller size, geometry gives us a tighter limit, so the estimate stops there."
+                : "An illustrative estimate of the exponential trend—not a claim that the exact maximum is known."}
           </p>
         </>
       ) : (
@@ -713,6 +731,22 @@ function simulationOptions(
   };
 }
 
+export function exactOrthogonalResult(
+  dimension: number,
+  seed: number,
+): SimulationResult {
+  return {
+    vectorsFound: dimension,
+    attempts: dimension,
+    pairChecks: (dimension * (dimension - 1)) / 2,
+    minAngle: dimension > 1 ? 90 : null,
+    maxAngle: dimension > 1 ? 90 : null,
+    elapsedMilliseconds: 0,
+    seed,
+    stopReason: "vector-cap",
+  };
+}
+
 function actionLabel(action: DialogueAction): string {
   return {
     test: "Test it",
@@ -759,6 +793,12 @@ function formatAngle(value: number | null): string {
 
 function formatDuration(milliseconds: number): string {
   return milliseconds < 1_000 ? `${milliseconds} ms` : `${(milliseconds / 1_000).toFixed(2)} s`;
+}
+
+function formatLargeEstimate(log10Total: number): string {
+  const exponent = Math.floor(log10Total);
+  const mantissa = 10 ** (log10Total - exponent);
+  return `${mantissa.toFixed(2)} × 10^${exponent}`;
 }
 
 function stopReasonLabel(reason: SimulationResult["stopReason"]): string {

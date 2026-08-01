@@ -19,6 +19,12 @@ type ReviewExports = {
     worker: Pick<Worker, "postMessage" | "terminate"> | null;
     error: string | null;
   };
+  exactOrthogonalResult?: (dimension: number, seed: number) => {
+    vectorsFound: number;
+    pairChecks: number;
+    minAngle: number | null;
+    maxAngle: number | null;
+  };
 };
 
 async function reviewExports(): Promise<ReviewExports> {
@@ -134,5 +140,27 @@ describe("calculator review regressions", () => {
     expect(JSON.parse(packageLock).packages[""].name).toBe(
       "nearly-orthogonal-society",
     );
+  });
+
+  it("tells one dimension-to-exponential story without adding a second calculator", async () => {
+    const page = await readFile(new URL("./page.tsx", import.meta.url), "utf8");
+
+    expect(page).toMatch(/Estimated total vectors/);
+    expect(page).toMatch(/estimated\.total\.toLocaleString/);
+    expect(page).toMatch(/Rosencrantz · experimentalist/);
+    expect(page).toMatch(/Guildenstern · theorist/);
+    expect(page).not.toMatch(/Ideas stored|Speaking at once|Possible casts|The bend appears/);
+  });
+
+  it("returns the exact orthogonal basis instead of randomly searching for 90°", async () => {
+    const { exactOrthogonalResult } = await reviewExports();
+    const result = exactOrthogonalResult?.(1_000, 12_588);
+
+    expect(result).toMatchObject({
+      vectorsFound: 1_000,
+      pairChecks: 499_500,
+      minAngle: 90,
+      maxAngle: 90,
+    });
   });
 });

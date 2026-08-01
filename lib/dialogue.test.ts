@@ -27,7 +27,13 @@ const completedResult = {
 
 const states: DialogueState[] = [
   { kind: "opening", seed: 1 },
-  { kind: "dimension", seed: 2 },
+  {
+    kind: "dimension",
+    seed: 2,
+    dimension: 1_000,
+    estimatedTotal: 2_658,
+    multiplier: 2.6586,
+  },
   { kind: "angle", seed: 3 },
   { kind: "running", seed: 4 },
   { kind: "completed", seed: 5, result: completedResult },
@@ -59,7 +65,7 @@ describe("getDialogue", () => {
     const lessons = states.map((state) => getDialogue(state).lesson);
 
     expect(getDialogue(states[0]).lesson).toMatch(/perfect orthogonality/i);
-    expect(getDialogue(states[1]).lesson).toMatch(/concentration of measure/i);
+    expect(getDialogue(states[1]).lesson).toMatch(/grows increasingly|exponential|multipl/i);
     expect(getDialogue(states[2]).lesson).toMatch(/tolerance/i);
     expect(getDialogue(states[3]).lesson).toMatch(/construction|candidate/i);
     expect(getDialogue(states[5]).lesson).toMatch(/quadratic|n²|pair/i);
@@ -78,10 +84,11 @@ describe("getDialogue", () => {
     expect(copy).not.toMatch(/\bmaximum\b/i);
   });
 
-  it("describes the rigorous capacity bound instead of a scaled random-set estimate", () => {
+  it("describes the guaranteed result without theorem jargon", () => {
     const lesson = getDialogue({ kind: "running", seed: 4 }).lesson;
 
-    expect(lesson).toMatch(/capacity|Welch/i);
+    expect(lesson).toMatch(/guarantee|construction|capacity/i);
+    expect(lesson).not.toMatch(/Welch|epsilon|coherence/i);
     expect(lesson).not.toMatch(/random-set estimate/i);
   });
 
@@ -99,6 +106,27 @@ describe("getDialogue", () => {
       getDialogue({ kind: "completed", seed: 11, result: completedResult })
         .rosencrantz,
     );
+  });
+
+  it("turns changing dimensions into the exponential discovery", () => {
+    const thousand = getDialogue({
+      kind: "dimension",
+      seed: 2,
+      dimension: 1_000,
+      estimatedTotal: 2_658,
+      multiplier: 2.6586,
+    });
+    const tenThousand = getDialogue({
+      kind: "dimension",
+      seed: 2,
+      dimension: 10_000,
+      estimatedTotal: 540_586,
+      multiplier: 54.0587,
+    });
+
+    expect(`${thousand.rosencrantz} ${thousand.guildenstern}`).toMatch(/2,658|more than/i);
+    expect(`${tenThousand.rosencrantz} ${tenThousand.guildenstern}`).toMatch(/540,586|exponential/i);
+    expect(`${thousand.lesson} ${tenThousand.lesson}`).not.toMatch(/Welch|epsilon|coherence/i);
   });
 
   it.each(states)("lets the $kind lesson return with Go on", (state) => {

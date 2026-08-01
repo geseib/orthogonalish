@@ -18,6 +18,14 @@ export type CapacityAnalysis = {
   isExact: boolean;
 };
 
+export type StoryEstimate = {
+  total: number;
+  multiplier: number;
+  log10Total: number;
+  isExact: boolean;
+  isCappedByKnownLimit: boolean;
+};
+
 const DEGREES_TO_RADIANS = Math.PI / 180;
 const PROBABILITY_FLOOR = Number.EPSILON;
 
@@ -44,7 +52,8 @@ export function validateInputs(
   if (
     Number.isFinite(lowerAngle) &&
     Number.isFinite(upperAngle) &&
-    lowerAngle >= upperAngle
+    lowerAngle >= upperAngle &&
+    !(lowerAngle === 90 && upperAngle === 90)
   ) {
     errors.push("Lower angle must be less than upper angle.");
   }
@@ -117,6 +126,41 @@ export function analyzeCapacity(estimate: EstimateResult): CapacityAnalysis {
     welchUpperBound,
     thresholdDimension,
     isExact: welchUpperBound === estimate.dimension,
+  };
+}
+
+/**
+ * Produces the intentionally illustrative headline used by the lesson.
+ * The random-set scale is applied to the d-vector orthogonal baseline, while
+ * exact or finite low-dimensional limits take precedence when known.
+ */
+export function estimateStoryTotal(estimate: EstimateResult): StoryEstimate {
+  const capacity = analyzeCapacity(estimate);
+  if (capacity.isExact) {
+    return {
+      total: estimate.dimension,
+      multiplier: 1,
+      log10Total: Math.log10(estimate.dimension),
+      isExact: true,
+      isCappedByKnownLimit: false,
+    };
+  }
+
+  const multiplier = 10 ** estimate.log10Size;
+  const scaledTotal = Math.floor(estimate.dimension * multiplier);
+  const isCappedByKnownLimit =
+    capacity.welchUpperBound !== null &&
+    scaledTotal > capacity.welchUpperBound;
+  const total = isCappedByKnownLimit
+    ? capacity.welchUpperBound ?? scaledTotal
+    : scaledTotal;
+
+  return {
+    total,
+    multiplier,
+    log10Total: Math.log10(total),
+    isExact: false,
+    isCappedByKnownLimit,
   };
 }
 

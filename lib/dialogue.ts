@@ -17,7 +17,14 @@ export type DialogueBeat = {
 };
 
 export type DialogueState =
-  | { kind: "opening" | "dimension" | "angle" | "running"; seed: number }
+  | { kind: "opening" | "angle" | "running"; seed: number }
+  | {
+      kind: "dimension";
+      seed: number;
+      dimension: number;
+      estimatedTotal: number;
+      multiplier: number;
+    }
   | { kind: "completed" | "capped"; seed: number; result: SimulationResult }
   | { kind: "invalid"; seed: number; errors: readonly string[] };
 
@@ -33,17 +40,48 @@ const opening: DialogueBeat = {
   actions: ["test", "explain", "continue", "change"],
 };
 
-const dimension: DialogueBeat = {
-  scene: "conjecture",
-  rosencrantz:
-    "Another dimension! The walls retreat whenever I begin to count them.",
-  guildenstern:
-    "And random arrows huddle nearer a right angle. High-dimensional geometry has peculiar manners.",
-  aside: "More dimensions push random pairwise angles toward 90°.",
-  lesson:
-    "Concentration of measure means that, as dimension grows, the dot product of two random unit vectors is increasingly likely to sit near zero—so their angle is increasingly likely to sit near 90°.",
-  actions: ["test", "explain", "continue", "change"],
-};
+function dimensionBeat(
+  dimension: number,
+  estimatedTotal: number,
+  multiplier: number,
+): DialogueBeat {
+  if (multiplier === 1) {
+    return {
+      scene: "conjecture",
+      rosencrantz: `${dimension.toLocaleString("en-US")} dimensions. ${dimension.toLocaleString("en-US")} arrows. They are being suspiciously literal.`,
+      guildenstern:
+        "You demanded perfect right angles. Perfection permits one new direction for each new dimension—and no theatrical excess.",
+      aside: "Perfect orthogonality grows one-for-one.",
+      lesson:
+        "At exactly 90°, every vector needs its own independent direction. Relaxing the angle is what eventually changes the shape of the growth.",
+      actions: ["test", "explain", "continue", "change"],
+    };
+  }
+
+  if (multiplier < 10) {
+    return {
+      scene: "conjecture",
+      rosencrantz: `${estimatedTotal.toLocaleString("en-US")} arrows in ${dimension.toLocaleString("en-US")} dimensions? That is more than I put in.`,
+      guildenstern:
+        "A modest excess. Add another zero to the dimensions and observe whether modesty survives.",
+      aside: "The advantage begins quietly, then accelerates.",
+      lesson:
+        "Allowing a narrow angle around 90° creates more room than perfect orthogonality. The estimate grows increasingly quickly as dimensions are added.",
+      actions: ["test", "explain", "continue", "change"],
+    };
+  }
+
+  return {
+    scene: "closet",
+    rosencrantz: `${estimatedTotal.toLocaleString("en-US")} arrows? I merely added a zero to the dimensions.`,
+    guildenstern:
+      "And the estimate multiplied by far more than ten. That is the exponential part.",
+    aside: "More dimensions do not merely add room; they multiply the nearly-orthogonal possibilities.",
+    lesson:
+      "A narrow relaxation around 90° may look unimportant in small spaces. In high dimensions, the estimate grows exponentially, so increasing dimension can produce a far larger increase in distinct nearly-orthogonal vectors.",
+    actions: ["test", "explain", "continue", "change"],
+  };
+}
 
 const angle: DialogueBeat = {
   scene: "conjecture",
@@ -64,7 +102,7 @@ const runningVariants: readonly DialogueBeat[] = [
       "First normalize it; then compare it with every member already admitted.",
     aside: "The experiment builds one concrete collection, candidate by candidate.",
     lesson:
-      "The capacity card combines a guaranteed orthogonal basis with the Welch ceiling when that ceiling is finite. This experiment supplies separate constructive evidence: each random candidate is kept only if every tested pair lies inside the angle band.",
+      "The capacity card shows a count mathematics can guarantee. This experiment supplies separate constructive evidence: each random candidate is kept only if every tested pair lies inside the angle band.",
     actions: ["explain", "continue", "change"],
   },
   {
@@ -131,7 +169,11 @@ export function getDialogue(state: DialogueState): DialogueBeat {
     case "opening":
       return opening;
     case "dimension":
-      return dimension;
+      return dimensionBeat(
+        state.dimension,
+        state.estimatedTotal,
+        state.multiplier,
+      );
     case "angle":
       return angle;
     case "running":
