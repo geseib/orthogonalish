@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
+import {
+  parseTrustedForwardedHosts,
+  resolveMetadataBase,
+} from "./metadata-origin";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,13 +23,11 @@ const description =
 
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
-  const forwardedHost = requestHeaders.get("x-forwarded-host")?.split(",")[0]?.trim();
-  const host = forwardedHost || requestHeaders.get("host") || "localhost:3000";
-  const forwardedProtocol = requestHeaders.get("x-forwarded-proto")
-    ?.split(",")[0]
-    ?.trim();
-  const protocol = forwardedProtocol || (host.startsWith("localhost") ? "http" : "https");
-  const metadataBase = new URL(`${protocol}://${host}`);
+  const metadataBase = resolveMetadataBase(requestHeaders, {
+    trustedForwardedHosts: parseTrustedForwardedHosts(
+      process.env.TRUSTED_FORWARDED_HOSTS,
+    ),
+  });
 
   return {
     metadataBase,

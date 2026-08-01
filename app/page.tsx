@@ -537,13 +537,10 @@ function EstimateCard({ estimate }: { estimate: EstimateResult | null }) {
 }
 
 function SceneFrame({ beat }: { beat: DialogueBeat }) {
-  const sceneFile = `/scenes/${beat.scene}.webp`;
+  const sceneFile = sceneFiles[beat.scene];
 
   return (
-    <div
-      className={`scene-frame scene-${beat.scene}`}
-      data-scene-file={sceneFile}
-    >
+    <div className="scene-frame" data-scene-file={sceneFile}>
       <Image
         className="scene-art"
         src={sceneFile}
@@ -555,6 +552,13 @@ function SceneFrame({ beat }: { beat: DialogueBeat }) {
     </div>
   );
 }
+
+const sceneFiles: Record<DialogueBeat["scene"], string> = {
+  conjecture: "/images/grand-conjecture.webp",
+  audition: "/images/vector-audition.webp",
+  tribunal: "/images/pairwise-tribunal.webp",
+  closet: "/images/exponential-prop-closet.webp",
+};
 
 function EvidencePanel({
   status,

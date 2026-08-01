@@ -471,7 +471,6 @@ main {
   background: var(--ink);
   border: 1px solid rgba(216, 173, 88, 0.65);
   box-shadow: inset 0 0 0 8px var(--charcoal), inset 0 0 0 9px rgba(216, 173, 88, 0.35);
-  min-height: 360px;
   overflow: hidden;
   position: relative;
 }
@@ -748,10 +747,6 @@ footer {
   .progress-copy,
   .found-result { align-items: flex-start; flex-direction: column; }
   .stage-status { margin-top: 1.5rem; }
-  .scene-frame { aspect-ratio: 4 / 5; min-height: 470px; }
-  .figure { bottom: 4rem; height: 36%; width: 28%; }
-  .figure-rosencrantz { left: 16%; }
-  .figure-guildenstern { right: 15%; }
   .speech { min-height: 14rem; }
   .evidence-metrics { grid-template-columns: 1fr 1fr; }
   .evidence-metrics div { border-left: 0; border-top: 1px solid rgba(19, 23, 26, 0.25); padding: 1rem 0; }
