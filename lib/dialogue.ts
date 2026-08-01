@@ -50,7 +50,7 @@ const angle: DialogueBeat = {
   rosencrantz: "Two degrees either way. Surely geometry will not notice.",
   guildenstern:
     "Geometry notices everything. With every pair examined, a little tolerance is multiplied many times.",
-  aside: "Small changes to the angle band can make the estimate swing sharply.",
+  aside: "Small changes to the angle band can move the capacity bounds sharply.",
   lesson:
     "Tolerance sensitivity comes from repeated pair constraints: widening the accepted angle band raises one pair’s pass probability, and that improvement compounds across all pairs in the collection.",
   actions: ["test", "explain", "continue", "change"],
@@ -64,7 +64,7 @@ const runningVariants: readonly DialogueBeat[] = [
       "First normalize it; then compare it with every member already admitted.",
     aside: "The experiment builds one concrete collection, candidate by candidate.",
     lesson:
-      "A random-set estimate predicts a likely scale; this construction produces evidence. Each random candidate is normalized to unit length and kept only if every tested pair lies inside the angle band.",
+      "The capacity card combines a guaranteed orthogonal basis with the Welch ceiling when that ceiling is finite. This experiment supplies separate constructive evidence: each random candidate is kept only if every tested pair lies inside the angle band.",
     actions: ["explain", "continue", "change"],
   },
   {
@@ -145,9 +145,9 @@ export function getDialogue(state: DialogueState): DialogueBeat {
         scene: "conjecture",
         rosencrantz: "The numbers have declined their entrance.",
         guildenstern: `Quite right: ${state.errors[0] ?? "the proposed geometry is not defined."}`,
-        aside: "Correct the marked field and the estimate will return immediately.",
+        aside: "Correct the marked field and the capacity result will return immediately.",
         lesson:
-          "The estimator needs one positive integer dimension and two finite angles between 0° and 180°, with the lower angle strictly below the upper angle.",
+          "The calculator needs one positive integer dimension and two finite angles between 0° and 180°, with the lower angle strictly below the upper angle.",
         actions: ["change", "explain", "continue"],
       };
   }

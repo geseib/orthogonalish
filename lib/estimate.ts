@@ -9,6 +9,15 @@ export type EstimateResult = {
   caveat?: string;
 };
 
+export type CapacityAnalysis = {
+  dimension: number;
+  epsilon: number;
+  guaranteedMinimum: number;
+  welchUpperBound: number | null;
+  thresholdDimension: number;
+  isExact: boolean;
+};
+
 const DEGREES_TO_RADIANS = Math.PI / 180;
 const PROBABILITY_FLOOR = Number.EPSILON;
 
@@ -38,6 +47,15 @@ export function validateInputs(
     lowerAngle >= upperAngle
   ) {
     errors.push("Lower angle must be less than upper angle.");
+  }
+
+  if (
+    Number.isFinite(lowerAngle) &&
+    Number.isFinite(upperAngle) &&
+    lowerAngle < upperAngle &&
+    (lowerAngle > 90 || upperAngle < 90)
+  ) {
+    errors.push("The angle range must contain 90°.");
   }
 
   return errors;
@@ -79,28 +97,56 @@ export function estimateRandomSet(
   };
 }
 
-/** Formats the dimension-scaled estimate as a floor-rounded total. */
-export function formatEstimatedTotal(estimate: EstimateResult): {
+/** Applies the Welch coherence bound to the angle tolerance. */
+export function analyzeCapacity(estimate: EstimateResult): CapacityAnalysis {
+  const epsilon = Math.max(Math.abs(estimate.dotMin), Math.abs(estimate.dotMax));
+  const epsilonSquared = epsilon * epsilon;
+  const thresholdDimension = 1 / epsilonSquared;
+  const hasFiniteWelchCeiling = estimate.dimension * epsilonSquared < 1;
+  const welchUpperBound = hasFiniteWelchCeiling
+    ? Math.floor(
+        (estimate.dimension * (1 - epsilonSquared)) /
+          (1 - estimate.dimension * epsilonSquared),
+      )
+    : null;
+
+  return {
+    dimension: estimate.dimension,
+    epsilon,
+    guaranteedMinimum: estimate.dimension,
+    welchUpperBound,
+    thresholdDimension,
+    isExact: welchUpperBound === estimate.dimension,
+  };
+}
+
+/** Formats a rigorous floor, range, or exact capacity result. */
+export function formatCapacity(capacity: CapacityAnalysis): {
+  heading: string;
   primary: string;
   secondary: string;
 } {
-  const multiplier = 10 ** estimate.log10Size;
-  const log10Total = estimate.log10Size + Math.log10(estimate.dimension);
-  const secondary = `≈ ${multiplier.toFixed(4)}× dimension · total rounded down`;
-
-  if (log10Total <= Math.log10(Number.MAX_SAFE_INTEGER)) {
+  const minimum = capacity.guaranteedMinimum.toLocaleString("en-US");
+  if (capacity.isExact) {
     return {
-      primary: Math.floor(estimate.dimension * multiplier).toLocaleString("en-US"),
-      secondary,
+      heading: "Exact capacity",
+      primary: minimum,
+      secondary: "Orthogonal basis and Welch ceiling agree",
     };
   }
 
-  const exponent = Math.floor(log10Total);
-  const mantissa = 10 ** (log10Total - exponent);
-  const truncatedMantissa = Math.floor(mantissa * 100) / 100;
+  if (capacity.welchUpperBound !== null) {
+    return {
+      heading: "Rigorous capacity range",
+      primary: `${minimum}–${capacity.welchUpperBound.toLocaleString("en-US")}`,
+      secondary: "Guaranteed basis ≤ capacity ≤ Welch ceiling",
+    };
+  }
+
   return {
-    primary: `${truncatedMantissa.toFixed(2)} × 10^${exponent}`,
-    secondary,
+    heading: "Guaranteed capacity",
+    primary: `≥ ${minimum}`,
+    secondary: `Welch ceiling opens beyond ≈ ${Math.round(capacity.thresholdDimension).toLocaleString("en-US")} dimensions`,
   };
 }
 

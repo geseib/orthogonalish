@@ -10,7 +10,7 @@ test("replaces the starter preview with the vector theatre", async () => {
   ]);
 
   expect(page).toMatch(/How many arrows can stand/);
-  expect(page).toMatch(/Estimated total vectors/);
+  expect(page).toMatch(/Rigorous capacity range/);
   expect(page).toMatch(/Verified vectors found/);
   expect(page).toMatch(/What did that mean\?/);
   expect(page).toMatch(/new Worker/);

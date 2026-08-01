@@ -44,6 +44,18 @@ describe("calculator review regressions", () => {
     })).toEqual({});
   });
 
+  it("marks ranges that do not contain 90°", async () => {
+    const { getFieldErrors } = await reviewExports();
+
+    expect(getFieldErrors?.("100", "80", "89", {
+      dimension: 100,
+      lowerAngle: 80,
+      upperAngle: 89,
+    })).toMatchObject({
+      upperAngle: expect.stringMatching(/contain 90/i),
+    });
+  });
+
   it("chooses non-smooth scrolling when reduced motion is requested", async () => {
     const { getPreferredScrollBehavior } = await reviewExports();
 

@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  analyzeCapacity,
   estimateRandomSet,
-  formatEstimatedTotal,
+  formatCapacity,
   validateInputs,
 } from "./estimate";
 
@@ -18,6 +19,18 @@ describe("validateInputs", () => {
     expect(validateInputs(100, 88, 181)).not.toHaveLength(0);
     expect(validateInputs(100, 92, 88)).not.toHaveLength(0);
     expect(validateInputs(100, 90, 90)).not.toHaveLength(0);
+  });
+
+  it("requires a nearly orthogonal interval to contain 90°", () => {
+    expect(validateInputs(100, 80, 89)).toContain(
+      "The angle range must contain 90°.",
+    );
+    expect(validateInputs(100, 91, 100)).toContain(
+      "The angle range must contain 90°.",
+    );
+    expect(validateInputs(100, 88, 92)).not.toContain(
+      "The angle range must contain 90°.",
+    );
   });
 });
 
@@ -53,22 +66,50 @@ describe("estimateRandomSet", () => {
   });
 });
 
-describe("formatEstimatedTotal", () => {
-  it("multiplies the 1,000-dimensional estimate and rounds the total down", () => {
-    const estimate = estimateRandomSet(1_000, 88, 92);
-
-    expect(formatEstimatedTotal(estimate)).toEqual({
-      primary: "2,658",
-      secondary: "≈ 2.6586× dimension · total rounded down",
+describe("analyzeCapacity", () => {
+  it("proves that only three vectors fit in three dimensions at 88°–92°", () => {
+    expect(analyzeCapacity(estimateRandomSet(3, 88, 92))).toMatchObject({
+      guaranteedMinimum: 3,
+      welchUpperBound: 3,
+      isExact: true,
     });
   });
 
-  it("multiplies the 10,000-dimensional estimate and rounds the total down", () => {
-    const estimate = estimateRandomSet(10_000, 88, 92);
+  it("proves ten exactly and bounds one hundred between 100 and 113", () => {
+    expect(analyzeCapacity(estimateRandomSet(10, 88, 92))).toMatchObject({
+      guaranteedMinimum: 10,
+      welchUpperBound: 10,
+      isExact: true,
+    });
+    expect(analyzeCapacity(estimateRandomSet(100, 88, 92))).toMatchObject({
+      guaranteedMinimum: 100,
+      welchUpperBound: 113,
+      isExact: false,
+    });
+  });
 
-    expect(formatEstimatedTotal(estimate)).toEqual({
-      primary: "540,586",
-      secondary: "≈ 54.0587× dimension · total rounded down",
+  it("marks the Welch ceiling as open beyond the 821-dimension threshold", () => {
+    const capacity = analyzeCapacity(estimateRandomSet(1_000, 88, 92));
+
+    expect(capacity.thresholdDimension).toBeCloseTo(821.04, 1);
+    expect(capacity.welchUpperBound).toBeNull();
+    expect(capacity.isExact).toBe(false);
+  });
+});
+
+describe("formatCapacity", () => {
+  it("distinguishes exact, bounded, and open capacity results", () => {
+    expect(formatCapacity(analyzeCapacity(estimateRandomSet(3, 88, 92)))).toMatchObject({
+      heading: "Exact capacity",
+      primary: "3",
+    });
+    expect(formatCapacity(analyzeCapacity(estimateRandomSet(100, 88, 92)))).toMatchObject({
+      heading: "Rigorous capacity range",
+      primary: "100–113",
+    });
+    expect(formatCapacity(analyzeCapacity(estimateRandomSet(1_000, 88, 92)))).toMatchObject({
+      heading: "Guaranteed capacity",
+      primary: "≥ 1,000",
     });
   });
 });

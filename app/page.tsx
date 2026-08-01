@@ -10,8 +10,9 @@ import {
 } from "react";
 
 import {
+  analyzeCapacity,
   estimateRandomSet,
-  formatEstimatedTotal,
+  formatCapacity,
   validateInputs,
   type EstimateResult,
 } from "../lib/estimate";
@@ -291,7 +292,7 @@ export default function Home() {
           How many arrows can stand <em>nearly sideways?</em>
         </h1>
         <p className="hero-copy">
-          Estimate how many almost-perpendicular unit vectors might fit—then make
+          Bound how many almost-perpendicular unit vectors might fit—then make
           the conjecture face an experiment.
         </p>
         <a className="hero-link" href="#calculator">
@@ -487,21 +488,22 @@ export default function Home() {
 
       <footer>
         <p>The Nearly Orthogonal Society</p>
-        <p>A random-set estimate and a seeded experiment—not the last word in geometry.</p>
+        <p>A rigorous bound and a seeded experiment—not the last word in geometry.</p>
       </footer>
     </main>
   );
 }
 
 function EstimateCard({ estimate }: { estimate: EstimateResult | null }) {
-  const formatted = estimate ? formatEstimatedTotal(estimate) : null;
+  const capacity = estimate ? analyzeCapacity(estimate) : null;
+  const formatted = capacity ? formatCapacity(capacity) : null;
 
   return (
     <aside className="estimate-panel" aria-labelledby="estimate-title" aria-live="polite">
       <p className="section-number" aria-hidden="true">II</p>
       <div className="section-heading">
         <p className="eyebrow">The prediction</p>
-        <h2 id="estimate-title">Estimated total vectors</h2>
+        <h2 id="estimate-title">{formatted?.heading ?? "Rigorous capacity range"}</h2>
       </div>
       {estimate && formatted ? (
         <>
@@ -509,22 +511,24 @@ function EstimateCard({ estimate }: { estimate: EstimateResult | null }) {
           <p className="estimate-secondary">{formatted.secondary}</p>
           <dl className="estimate-metrics">
             <div>
-              <dt>Pair-pass probability</dt>
-              <dd>{formatProbability(estimate.pairPassProbability)}</dd>
+              <dt>Guaranteed minimum</dt>
+              <dd>{capacity?.guaranteedMinimum.toLocaleString("en-US")}</dd>
             </div>
             <div>
-              <dt>Allowed dot product</dt>
-              <dd>{formatInterval(estimate.dotMin, estimate.dotMax)}</dd>
+              <dt>Welch ceiling</dt>
+              <dd>{capacity?.welchUpperBound?.toLocaleString("en-US") ?? "Open here"}</dd>
             </div>
             <div>
-              <dt>Approximation</dt>
-              <dd>Normal(0, 1/N)</dd>
+              <dt>Tolerance ε</dt>
+              <dd>{capacity?.epsilon.toFixed(4)}</dd>
             </div>
           </dl>
-          {estimate.caveat ? <p className="caveat">{estimate.caveat}</p> : null}
           <p className="estimate-disclaimer">
-            A dimension-scaled 50% random-set threshold. It is a heuristic
-            estimate—not a proven maximum.
+            {capacity?.isExact
+              ? `An orthogonal basis supplies ${capacity.dimension.toLocaleString("en-US")} vectors, and the Welch bound rules out one more.`
+              : capacity?.welchUpperBound !== null
+                ? "A proven interval: the exact maximum lies somewhere between these two integers."
+                : "The guaranteed floor is still N. In this regime the Welch bound gives no finite ceiling, so the exact maximum remains unknown."}
           </p>
         </>
       ) : (
@@ -590,7 +594,7 @@ function EvidencePanel({
 
       {status === "idle" ? (
         <p className="evidence-empty">
-          No construction has been attempted. The estimate above is a prediction awaiting evidence.
+          No construction has been attempted. The bound above is awaiting constructive evidence.
         </p>
       ) : null}
 
@@ -685,6 +689,9 @@ export function getFieldErrors(
   if (messages.some((message) => message.includes("less than upper"))) {
     errors.upperAngle = "Upper angle must be greater than the lower angle.";
   }
+  if (messages.some((message) => message.includes("must contain 90"))) {
+    errors.upperAngle = "A nearly orthogonal angle range must contain 90°.";
+  }
   if (values.lowerAngle === 0 && values.upperAngle === 180) {
     errors.upperAngle =
       "The full 0°–180° range is geometrically degenerate; narrow either angle.";
@@ -740,15 +747,6 @@ function sceneAlt(scene: DialogueBeat["scene"]): string {
     closet:
       "Nested cupboards and multiplying cyan arrows recede impossibly backstage while Rosencrantz and Guildenstern confront the scale.",
   }[scene];
-}
-
-function formatProbability(probability: number): string {
-  if (probability < 0.001 || probability > 0.999) return probability.toExponential(4);
-  return `${(probability * 100).toFixed(3)}%`;
-}
-
-function formatInterval(minimum: number, maximum: number): string {
-  return `[${minimum.toFixed(4)}, ${maximum.toFixed(4)}]`;
 }
 
 function formatInteger(value: number): string {

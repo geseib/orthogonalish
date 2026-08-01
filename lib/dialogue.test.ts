@@ -78,6 +78,13 @@ describe("getDialogue", () => {
     expect(copy).not.toMatch(/\bmaximum\b/i);
   });
 
+  it("describes the rigorous capacity bound instead of a scaled random-set estimate", () => {
+    const lesson = getDialogue({ kind: "running", seed: 4 }).lesson;
+
+    expect(lesson).toMatch(/capacity|Welch/i);
+    expect(lesson).not.toMatch(/random-set estimate/i);
+  });
+
   it("chooses repeat-state variants deterministically from the seed", () => {
     const first = getDialogue({ kind: "running", seed: 10 });
     const repeated = getDialogue({ kind: "running", seed: 10 });
