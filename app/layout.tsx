@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Starter Project",
-  description: "A clean starting point for building your site.",
+  title: "The Nearly Orthogonal Society",
+  description:
+    "Estimate—and then test—how many nearly perpendicular vectors fit in N dimensions.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
