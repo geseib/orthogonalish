@@ -11,9 +11,18 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 
-const localBindingConfig = {
+export const localBindingConfig = {
   main: "./worker/index.ts",
   compatibility_flags: ["nodejs_compat"],
+  // vinext's image endpoint reads originals through ASSETS and transforms
+  // them through IMAGES. The Vite plugin only exposes named bindings when
+  // they are declared in the input Worker configuration.
+  assets: {
+    binding: "ASSETS",
+  },
+  images: {
+    binding: "IMAGES",
+  },
   d1_databases: d1
     ? [
         {
