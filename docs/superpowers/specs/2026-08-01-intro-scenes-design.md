@@ -49,21 +49,34 @@ The next down-arrow lands on the existing calculator. The calculator remains the
 
 Dialogue stays short enough to read without stopping the scroll. Rosencrantz pokes at the physical demonstration and stumbles onto the lesson; Guildenstern theorizes about what it means.
 
-Every scene contains:
+Every introductory scene contains three short beats:
+
+1. **Setup:** the characters name or physically arrange the problem.
+2. **Experiment:** Rosencrantz changes or pokes the demonstration.
+3. **Discovery:** the result appears and Guildenstern interprets it—usually just after Rosencrantz has lost interest.
+
+Every beat contains:
 
 - one Rosencrantz line;
 - one Guildenstern line;
 - one plain-language aside;
-- an optional “What did that mean?” expansion for a slightly deeper explanation.
+
+Each scene retains one optional “What did that mean?” expansion for a slightly deeper explanation of its discovery.
 
 Advanced terms such as dot product, tolerance, coherence, and named bounds do not appear in the default scene copy. They remain candidates for the later tooltip work.
 
 ## Navigation
 
 - The title card and both introductory scenes have a visible down control.
-- Down Arrow advances to the next full section.
-- Up Arrow returns to the previous full section.
+- Down Arrow advances to the next full section in a viewport-sized movement.
+- Up Arrow returns to the previous full section in a viewport-sized movement.
+- Right Arrow advances to the next dialogue beat inside the current introductory scene without scrolling the page.
+- Left Arrow returns to the previous dialogue beat inside the current introductory scene without scrolling the page.
+- Each introductory scene includes visible left and right controls that perform the same actions as the keyboard arrows.
+- Left and right movement stops at the first and last beat rather than wrapping into another section.
+- Moving up or down preserves each scene’s most recently viewed dialogue beat during the current visit.
 - Keyboard navigation does not intercept keys while the reader is typing in an input, textarea, or editable element.
+- Keyboard navigation also leaves native buttons, links, and form controls alone when they have focus.
 - Scrolling respects reduced-motion preferences.
 - Normal touchpad, mouse-wheel, and touch scrolling continue to work.
 - The existing calculator and later page sections remain reachable in document order.
@@ -84,7 +97,8 @@ This step does not add tooltips, change the calculator mathematics, redesign the
 ## Verification
 
 - Automated tests confirm the title → Scene I → Scene II → calculator order.
-- Tests confirm arrow-key navigation skips editable controls and respects reduced motion.
+- Tests confirm left/right beat boundaries and that beat changes do not scroll the page.
+- Tests confirm up/down section navigation skips interactive controls and respects reduced motion.
 - Tests confirm the required plain-language lesson and character roles.
 - Existing calculator, dialogue, worker, accessibility, and rendering tests remain green.
 - Lint and production build complete successfully.
