@@ -21,8 +21,12 @@ import {
   type DialogueBeat,
   type DialogueState,
 } from "../lib/dialogue";
+import { getPreferredScrollBehavior } from "../lib/story-navigation";
 import type { SimulationProgress, SimulationResult } from "../lib/simulation";
+import { IntroSequence } from "./intro-sequence";
 import type { WorkerOutgoingMessage } from "./vector-worker";
+
+export { getPreferredScrollBehavior } from "../lib/story-navigation";
 
 const dimensionPresets = [1, 10, 100, 1_000, 10_000, 12_588] as const;
 const initialSeed = 12_588;
@@ -55,14 +59,6 @@ export function safelyStartWorker<T extends StartableWorker>(
       error: "The experiment could not start in this browser.",
     };
   }
-}
-
-export function getPreferredScrollBehavior(
-  matchesReducedMotion: (query: string) => { matches: boolean },
-): ScrollBehavior {
-  return matchesReducedMotion("(prefers-reduced-motion: reduce)").matches
-    ? "auto"
-    : "smooth";
 }
 
 export default function Home() {
@@ -309,7 +305,7 @@ export default function Home() {
 
   return (
     <main>
-      <header className="hero">
+      <header className="hero" id="opening" data-story-section>
         <p className="eyebrow">An argument in many dimensions</p>
         <h1>
           How many arrows can stand <em>nearly sideways?</em>
@@ -318,12 +314,14 @@ export default function Home() {
           Bound how many almost-perpendicular unit vectors might fit—then make
           the conjecture face an experiment.
         </p>
-        <a className="hero-link" href="#calculator">
-          Enter the vector theatre <span aria-hidden="true">↓</span>
+        <a className="hero-link" href="#intro-right-angle">
+          Begin the experiment <span aria-hidden="true">↓</span>
         </a>
       </header>
 
-      <section className="calculator-shell" id="calculator" aria-labelledby="calculator-title">
+      <IntroSequence />
+
+      <section className="calculator-shell" id="calculator" data-story-section aria-labelledby="calculator-title">
         <div className="calculator-panel">
           <p className="section-number" aria-hidden="true">I</p>
           <div className="section-heading">
@@ -441,7 +439,7 @@ export default function Home() {
         <EstimateCard estimate={estimate} />
       </section>
 
-      <section className="stage" aria-labelledby="stage-title">
+      <section className="stage" id="stage" data-story-section aria-labelledby="stage-title">
         <div className="stage-heading">
           <div>
             <p className="eyebrow">Scene {romanScene(beat.scene)}</p>
@@ -601,7 +599,7 @@ function EvidencePanel({
   onRetest: () => void;
 }) {
   return (
-    <section className="evidence" id="evidence" aria-labelledby="evidence-title">
+    <section className="evidence" id="evidence" data-story-section aria-labelledby="evidence-title">
       <div className="evidence-heading">
         <div>
           <p className="eyebrow">The experiment</p>
