@@ -468,98 +468,20 @@ main {
 
 .scene-frame {
   aspect-ratio: 2 / 1;
-  background-image:
-    linear-gradient(90deg, rgba(11, 13, 15, 0.1), rgba(11, 13, 15, 0.35)),
-    var(--scene-image);
-  background-position: center;
-  background-size: cover;
+  background: var(--ink);
   border: 1px solid rgba(216, 173, 88, 0.65);
   box-shadow: inset 0 0 0 8px var(--charcoal), inset 0 0 0 9px rgba(216, 173, 88, 0.35);
-  isolation: isolate;
   min-height: 360px;
   overflow: hidden;
   position: relative;
 }
 
-.scene-frame::before {
-  background: radial-gradient(circle at 50% 115%, rgba(216, 173, 88, 0.23), transparent 45%);
-  content: "";
-  inset: 0;
-  position: absolute;
-  z-index: -1;
-}
-
-.scene-grid {
-  background:
-    linear-gradient(rgba(99, 217, 231, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(99, 217, 231, 0.1) 1px, transparent 1px);
-  background-size: 4rem 4rem;
-  inset: 9px;
-  mask-image: linear-gradient(to top, black, transparent 75%);
-  position: absolute;
-}
-
-.figure {
-  align-items: center;
-  background: #272c30;
-  border: 1px solid var(--gold);
-  border-radius: 50% 50% 12% 12%;
-  bottom: 3.5rem;
-  display: flex;
-  height: 42%;
-  justify-content: center;
-  position: absolute;
-  width: 17%;
-}
-
-.figure span {
-  color: var(--gold);
-  font-family: Georgia, serif;
-  font-size: clamp(2rem, 5vw, 5rem);
-  opacity: 0.32;
-}
-
-.figure-rosencrantz { left: 26%; transform: rotate(-3deg); }
-.figure-guildenstern { right: 25%; transform: rotate(2deg); }
-
-.vector {
-  background: var(--cyan);
-  box-shadow: 0 0 1.2rem rgba(99, 217, 231, 0.45);
-  height: 3px;
-  left: 50%;
-  position: absolute;
-  top: 26%;
-  transform-origin: left center;
-  width: 28%;
-}
-
-.vector::after {
-  border-bottom: 7px solid transparent;
-  border-left: 12px solid var(--cyan);
-  border-top: 7px solid transparent;
-  content: "";
-  position: absolute;
-  right: -3px;
-  top: -5px;
-}
-
-.vector-one { transform: rotate(16deg); }
-.vector-two { transform: rotate(-74deg); }
-
-.scene-audition .vector-one { animation: audition 2.4s ease-in-out infinite; }
-.scene-tribunal .scene-grid { opacity: 1; }
-.scene-closet .figure { border-radius: 4px; }
-
-.scene-placeholder {
-  bottom: 1.2rem;
-  color: rgba(243, 237, 221, 0.5);
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  left: 1.5rem;
-  letter-spacing: 0.1em;
-  margin: 0;
-  position: absolute;
-  text-transform: uppercase;
+.scene-art {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
 }
 
 .dialogue {
@@ -799,10 +721,6 @@ footer {
 
 @keyframes pulse {
   50% { box-shadow: 0 0 0 0.55rem rgba(27, 115, 127, 0.2); }
-}
-
-@keyframes audition {
-  50% { transform: translateX(1.5rem) rotate(16deg); }
 }
 
 @media (max-width: 900px) {

@@ -1,12 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import {
   useEffect,
   useMemo,
   useRef,
   useState,
   type ChangeEvent,
-  type CSSProperties,
 } from "react";
 
 import {
@@ -537,26 +537,21 @@ function EstimateCard({ estimate }: { estimate: EstimateResult | null }) {
 }
 
 function SceneFrame({ beat }: { beat: DialogueBeat }) {
-  const style = {
-    "--scene-image": `url("/scenes/${beat.scene}.webp")`,
-  } as CSSProperties;
+  const sceneFile = `/scenes/${beat.scene}.webp`;
 
   return (
     <div
       className={`scene-frame scene-${beat.scene}`}
-      style={style}
-      role="img"
-      aria-label={sceneAlt(beat.scene)}
-      data-scene-file={`/scenes/${beat.scene}.webp`}
+      data-scene-file={sceneFile}
     >
-      <div className="scene-grid" aria-hidden="true" />
-      <div className="vector vector-one" aria-hidden="true" />
-      <div className="vector vector-two" aria-hidden="true" />
-      <div className="figure figure-rosencrantz" aria-hidden="true"><span>R</span></div>
-      <div className="figure figure-guildenstern" aria-hidden="true"><span>G</span></div>
-      <p className="scene-placeholder" aria-hidden="true">
-        Illustrated folio · {sceneTitle(beat.scene)}
-      </p>
+      <Image
+        className="scene-art"
+        src={sceneFile}
+        alt={sceneAlt(beat.scene)}
+        width={1774}
+        height={887}
+        loading="lazy"
+      />
     </div>
   );
 }
@@ -731,10 +726,14 @@ function romanScene(scene: DialogueBeat["scene"]): string {
 
 function sceneAlt(scene: DialogueBeat["scene"]): string {
   return {
-    conjecture: "Rosencrantz gestures toward cyan vectors while Guildenstern measures a suspicious angle.",
-    audition: "Candidate vectors queue as Guildenstern checks each one against the assembled collection.",
-    tribunal: "The scientists inspect the connections between every pair of accepted vectors.",
-    closet: "The scientists face an overflowing prop cupboard of exponentially nested boxes.",
+    conjecture:
+      "Rosencrantz gestures toward a night sky of cyan arrows while Guildenstern measures a near-right angle with a brass protractor.",
+    audition:
+      "Cyan candidate arrows queue behind velvet ropes while Guildenstern checks one with his protractor and Rosencrantz welcomes the cast.",
+    tribunal:
+      "A complete web of inspection lines connects cyan arrows between Rosencrantz and Guildenstern as they verify every pair.",
+    closet:
+      "Nested cupboards and multiplying cyan arrows recede impossibly backstage while Rosencrantz and Guildenstern confront the scale.",
   }[scene];
 }
 

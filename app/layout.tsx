@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,15 +13,52 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "The Nearly Orthogonal Society",
-  description:
-    "Estimate—and then test—how many nearly perpendicular vectors fit in N dimensions.",
-  icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-  },
-};
+const title = "The Nearly Orthogonal Society";
+const description =
+  "Estimate—and then test—how many nearly perpendicular vectors fit in N dimensions.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const requestHeaders = await headers();
+  const forwardedHost = requestHeaders.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const host = forwardedHost || requestHeaders.get("host") || "localhost:3000";
+  const forwardedProtocol = requestHeaders.get("x-forwarded-proto")
+    ?.split(",")[0]
+    ?.trim();
+  const protocol = forwardedProtocol || (host.startsWith("localhost") ? "http" : "https");
+  const metadataBase = new URL(`${protocol}://${host}`);
+
+  return {
+    metadataBase,
+    title: "The Nearly Orthogonal Society",
+    description,
+    alternates: { canonical: "/" },
+    icons: {
+      icon: "/favicon.svg",
+      shortcut: "/favicon.svg",
+    },
+    openGraph: {
+      type: "website",
+      url: "/",
+      siteName: title,
+      title,
+      description,
+      images: [
+        {
+          url: "/og.png",
+          width: 1200,
+          height: 630,
+          alt: "Rosencrantz and Guildenstern measure a field of cyan vector arrows beside The Nearly Orthogonal Society title.",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og.png"],
+    },
+  };
+}
 
 export default function RootLayout({
   children,
