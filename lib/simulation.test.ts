@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { runSimulation } from "./simulation";
 
@@ -11,6 +11,10 @@ const options = {
   maxAttempts: 1_000,
   maxMilliseconds: 60_000,
 };
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe("runSimulation", () => {
   it("is deterministic for a fixed seed", () => {
@@ -80,5 +84,85 @@ describe("runSimulation", () => {
     expect(result.stopReason).toBe("cancelled");
     expect(result.attempts).toBe(0);
     expect(result.vectorsFound).toBe(0);
+  });
+
+  it("rejects dimensions above the bounded coordinate budget", () => {
+    expect(() =>
+      runSimulation({ ...options, dimension: 5_000_001 }),
+    ).toThrow(/dimension.*5,000,000/i);
+  });
+
+  it("allows the dimension at the bounded coordinate budget", () => {
+    const result = runSimulation({
+      ...options,
+      dimension: 5_000_000,
+      maxVectors: 0,
+    });
+
+    expect(result.stopReason).toBe("vector-cap");
+    expect(result.attempts).toBe(0);
+  });
+
+  it("expires during candidate generation instead of finishing the candidate", () => {
+    let now = 0;
+    vi.spyOn(Date, "now").mockImplementation(() => now++);
+
+    const result = runSimulation({
+      ...options,
+      dimension: 100_000,
+      maxMilliseconds: 5,
+    });
+
+    expect(result.stopReason).toBe("time-cap");
+    expect(result.attempts).toBe(1);
+  });
+
+  it("cancels during candidate generation", () => {
+    let cancellationChecks = 0;
+    const result = runSimulation(
+      { ...options, dimension: 100_000 },
+      undefined,
+      () => (cancellationChecks += 1) > 5,
+    );
+
+    expect(result.stopReason).toBe("cancelled");
+    expect(result.attempts).toBe(1);
+  });
+
+  it("expires during an in-flight pair comparison", () => {
+    let now = 0;
+    vi.spyOn(Date, "now").mockImplementation(() => now++);
+
+    const result = runSimulation({
+      ...options,
+      dimension: 1_000,
+      lowerAngle: 0,
+      upperAngle: 180,
+      maxMilliseconds: 3_200,
+    });
+
+    expect(result.stopReason).toBe("time-cap");
+    expect(result.vectorsFound).toBe(1);
+    expect(result.attempts).toBe(2);
+    expect(result.pairChecks).toBe(0);
+  });
+
+  it("cancels during an in-flight pair comparison", () => {
+    let cancellationChecks = 0;
+    const result = runSimulation(
+      {
+        ...options,
+        dimension: 100,
+        lowerAngle: 0,
+        upperAngle: 180,
+      },
+      undefined,
+      () => (cancellationChecks += 1) > 310,
+    );
+
+    expect(result.stopReason).toBe("cancelled");
+    expect(result.vectorsFound).toBe(1);
+    expect(result.attempts).toBe(2);
+    expect(result.pairChecks).toBe(0);
   });
 });
