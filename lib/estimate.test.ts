@@ -45,6 +45,12 @@ describe("estimateRandomSet", () => {
     expect(logSizes[1]).toBeGreaterThan(logSizes[0]);
     expect(logSizes[2]).toBeGreaterThan(logSizes[1]);
   });
+
+  it("marks low-dimensional estimates as illustrative", () => {
+    expect(estimateRandomSet(1, 88, 92).caveat).toContain("illustrative");
+    expect(estimateRandomSet(10, 88, 92).caveat).toContain("illustrative");
+    expect(estimateRandomSet(30, 88, 92).caveat).toBeUndefined();
+  });
 });
 
 describe("formatEstimate", () => {
