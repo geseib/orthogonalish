@@ -5,6 +5,7 @@ import {
   type WorkerIncomingMessage,
   type WorkerOutgoingMessage,
 } from "./vector-worker";
+import { createSimulationRunner } from "../lib/simulation";
 
 const options = {
   dimension: 8,
@@ -58,19 +59,20 @@ function createHarness() {
 }
 
 describe("vector worker", () => {
-  it("posts progress no more often than every 100 milliseconds and completes", () => {
+  it("suppresses accepted-vector progress emitted within 100 milliseconds", () => {
     const harness = createHarness();
-    harness.send({ type: "start", options });
-    harness.runAll(25);
+    harness.send({ type: "start", options: { ...options, maxVectors: 5 } });
+    harness.runAll();
 
     const progress = harness.messages.filter(({ message }) => message.type === "progress");
-    expect(progress.length).toBeGreaterThan(0);
-    for (let index = 1; index < progress.length; index += 1) {
-      expect(progress[index].at - progress[index - 1].at).toBeGreaterThanOrEqual(100);
-    }
+    expect(progress).toHaveLength(1);
+    expect(progress[0].message).toMatchObject({
+      type: "progress",
+      payload: { vectorsFound: 1 },
+    });
     expect(harness.messages.at(-1)?.message).toMatchObject({
       type: "complete",
-      payload: { stopReason: "vector-cap", vectorsFound: 3 },
+      payload: { stopReason: "vector-cap", vectorsFound: 5 },
     });
   });
 
@@ -110,5 +112,54 @@ describe("vector worker", () => {
         },
       },
     ]);
+  });
+
+  it("normalizes scheduled chunk errors and accepts a subsequent start", () => {
+    const messages: WorkerOutgoingMessage[] = [];
+    const scheduled: Array<() => void> = [];
+    let listener: MessageListener | undefined;
+    let runnerCount = 0;
+
+    attachVectorWorker(
+      {
+        addEventListener: (_type, nextListener) => {
+          listener = nextListener;
+        },
+        postMessage: (message) => messages.push(message),
+      },
+      {
+        schedule: (callback) => scheduled.push(callback),
+        createRunner: (...arguments_) => {
+          runnerCount += 1;
+          if (runnerCount === 1) {
+            return {
+              runChunk: () => {
+                throw "chunk exploded";
+              },
+            };
+          }
+          return createSimulationRunner(...arguments_);
+        },
+      },
+    );
+
+    listener?.({ data: { type: "start", options } } as MessageEvent<WorkerIncomingMessage>);
+    scheduled.shift()?.();
+    listener?.({
+      data: { type: "start", options: { ...options, maxVectors: 1 } },
+    } as MessageEvent<WorkerIncomingMessage>);
+    while (scheduled.length > 0) {
+      scheduled.shift()?.();
+    }
+
+    expect(messages[0]).toEqual({
+      type: "error",
+      payload: { message: "Unexpected simulation error" },
+    });
+    expect(messages.at(-1)).toMatchObject({
+      type: "complete",
+      payload: { stopReason: "vector-cap", vectorsFound: 1 },
+    });
+    expect(runnerCount).toBe(2);
   });
 });

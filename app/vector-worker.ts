@@ -26,6 +26,7 @@ type WorkerRuntimeOptions = {
   now?: () => number;
   schedule?: (callback: () => void) => void;
   workUnitsPerChunk?: number;
+  createRunner?: typeof createSimulationRunner;
 };
 
 const DEFAULT_WORK_UNITS_PER_CHUNK = 2_048;
@@ -38,6 +39,7 @@ export function attachVectorWorker(
   const now = runtime.now ?? Date.now;
   const schedule = runtime.schedule ?? ((callback) => setTimeout(callback, 0));
   const workUnitsPerChunk = runtime.workUnitsPerChunk ?? DEFAULT_WORK_UNITS_PER_CHUNK;
+  const createRunner = runtime.createRunner ?? createSimulationRunner;
   let cancelRequested = false;
   let running = false;
 
@@ -56,7 +58,7 @@ export function attachVectorWorker(
     let lastProgressAt = -Infinity;
 
     try {
-      const runner = createSimulationRunner(
+      const runner = createRunner(
         message.options,
         (progress) => {
           const progressAt = now();
