@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   estimateRandomSet,
-  formatEstimate,
+  formatEstimatedTotal,
   validateInputs,
 } from "./estimate";
 
@@ -53,11 +53,22 @@ describe("estimateRandomSet", () => {
   });
 });
 
-describe("formatEstimate", () => {
-  it("renders a scientific display for large estimates", () => {
-    const display = formatEstimate(123.45);
+describe("formatEstimatedTotal", () => {
+  it("multiplies the 1,000-dimensional estimate and rounds the total down", () => {
+    const estimate = estimateRandomSet(1_000, 88, 92);
 
-    expect(display.primary).toContain("10");
-    expect(display.primary).toContain("123");
+    expect(formatEstimatedTotal(estimate)).toEqual({
+      primary: "2,658",
+      secondary: "≈ 2.6586× dimension · total rounded down",
+    });
+  });
+
+  it("multiplies the 10,000-dimensional estimate and rounds the total down", () => {
+    const estimate = estimateRandomSet(10_000, 88, 92);
+
+    expect(formatEstimatedTotal(estimate)).toEqual({
+      primary: "540,586",
+      secondary: "≈ 54.0587× dimension · total rounded down",
+    });
   });
 });

@@ -79,31 +79,28 @@ export function estimateRandomSet(
   };
 }
 
-/** Formats a base-10 logarithmic estimate without trying to materialize its full value. */
-export function formatEstimate(log10Size: number): {
+/** Formats the dimension-scaled estimate as a floor-rounded total. */
+export function formatEstimatedTotal(estimate: EstimateResult): {
   primary: string;
   secondary: string;
 } {
-  if (!Number.isFinite(log10Size)) {
+  const multiplier = 10 ** estimate.log10Size;
+  const log10Total = estimate.log10Size + Math.log10(estimate.dimension);
+  const secondary = `≈ ${multiplier.toFixed(4)}× dimension · total rounded down`;
+
+  if (log10Total <= Math.log10(Number.MAX_SAFE_INTEGER)) {
     return {
-      primary: "Beyond numeric display",
-      secondary: "The random-set estimate exceeds ordinary notation.",
+      primary: Math.floor(estimate.dimension * multiplier).toLocaleString("en-US"),
+      secondary,
     };
   }
 
-  const exponent = Math.floor(log10Size);
-  const mantissa = 10 ** (log10Size - exponent);
-
-  if (exponent < 6) {
-    return {
-      primary: `≈ ${10 ** log10Size}`,
-      secondary: "50% random-set threshold",
-    };
-  }
-
+  const exponent = Math.floor(log10Total);
+  const mantissa = 10 ** (log10Total - exponent);
+  const truncatedMantissa = Math.floor(mantissa * 100) / 100;
   return {
-    primary: `≈ ${mantissa.toFixed(2)} × 10^${exponent}`,
-    secondary: `log₁₀(size) = ${log10Size.toFixed(2)}`,
+    primary: `${truncatedMantissa.toFixed(2)} × 10^${exponent}`,
+    secondary,
   };
 }
 

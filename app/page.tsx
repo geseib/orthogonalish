@@ -11,7 +11,7 @@ import {
 
 import {
   estimateRandomSet,
-  formatEstimate,
+  formatEstimatedTotal,
   validateInputs,
   type EstimateResult,
 } from "../lib/estimate";
@@ -494,14 +494,14 @@ export default function Home() {
 }
 
 function EstimateCard({ estimate }: { estimate: EstimateResult | null }) {
-  const formatted = estimate ? formatEstimate(estimate.log10Size) : null;
+  const formatted = estimate ? formatEstimatedTotal(estimate) : null;
 
   return (
     <aside className="estimate-panel" aria-labelledby="estimate-title" aria-live="polite">
       <p className="section-number" aria-hidden="true">II</p>
       <div className="section-heading">
         <p className="eyebrow">The prediction</p>
-        <h2 id="estimate-title">Random-set estimate</h2>
+        <h2 id="estimate-title">Estimated total vectors</h2>
       </div>
       {estimate && formatted ? (
         <>
@@ -523,7 +523,8 @@ function EstimateCard({ estimate }: { estimate: EstimateResult | null }) {
           </dl>
           {estimate.caveat ? <p className="caveat">{estimate.caveat}</p> : null}
           <p className="estimate-disclaimer">
-            A 50% random-set threshold. It is an estimate—not an exact limit.
+            A dimension-scaled 50% random-set threshold. It is a heuristic
+            estimate—not a proven maximum.
           </p>
         </>
       ) : (
