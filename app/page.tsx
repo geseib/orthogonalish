@@ -35,6 +35,36 @@ type FieldErrors = {
 
 type RunStatus = "idle" | "running" | "complete" | "capped" | "cancelled" | "error";
 
+type StartableWorker = Pick<Worker, "postMessage" | "terminate">;
+
+export function safelyStartWorker<T extends StartableWorker>(
+  createWorker: () => T,
+  prepareWorker: (worker: T) => void,
+  message: unknown,
+): { worker: T | null; error: string | null } {
+  let worker: T | null = null;
+  try {
+    worker = createWorker();
+    prepareWorker(worker);
+    worker.postMessage(message);
+    return { worker, error: null };
+  } catch {
+    worker?.terminate();
+    return {
+      worker: null,
+      error: "The experiment could not start in this browser.",
+    };
+  }
+}
+
+export function getPreferredScrollBehavior(
+  matchesReducedMotion: (query: string) => { matches: boolean },
+): ScrollBehavior {
+  return matchesReducedMotion("(prefers-reduced-motion: reduce)").matches
+    ? "auto"
+    : "smooth";
+}
+
 export default function Home() {
   const [dimensionValue, setDimensionValue] = useState("100");
   const [lowerAngleValue, setLowerAngleValue] = useState("88");
@@ -48,7 +78,9 @@ export default function Home() {
   const [progress, setProgress] = useState<SimulationProgress | null>(null);
   const [result, setResult] = useState<SimulationResult | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
+  const [progressAnnouncement, setProgressAnnouncement] = useState("");
   const workerRef = useRef<Worker | null>(null);
+  const lastProgressAnnouncementAtRef = useRef(0);
   const dimensionInputRef = useRef<HTMLInputElement>(null);
 
   const parsedInputs = useMemo(
@@ -111,11 +143,13 @@ export default function Home() {
 
   function markInputChange(kind: "dimension" | "angle") {
     stopCurrentRun();
+    setRunStatus("idle");
     setDialogueKind(kind);
     setLessonOpen(false);
     setProgress(null);
     setResult(null);
     setRunError(null);
+    setProgressAnnouncement("");
   }
 
   function changeDimension(event: ChangeEvent<HTMLInputElement>) {
@@ -141,59 +175,93 @@ export default function Home() {
     if (!isValid) return;
 
     stopCurrentRun();
-    const worker = new Worker(new URL("./vector-worker.ts", import.meta.url), {
-      type: "module",
-    });
-    workerRef.current = worker;
     setSeed(nextSeed);
-    setRunStatus("running");
     setProgress(null);
     setResult(null);
     setRunError(null);
+    setProgressAnnouncement("");
+    lastProgressAnnouncementAtRef.current = 0;
     setLessonOpen(false);
 
-    worker.onmessage = (event: MessageEvent<WorkerOutgoingMessage>) => {
-      if (workerRef.current !== worker) return;
+    const started = safelyStartWorker(
+      () =>
+        new Worker(new URL("./vector-worker.ts", import.meta.url), {
+          type: "module",
+        }),
+      (worker) => {
+        workerRef.current = worker;
+        worker.onmessage = (event: MessageEvent<WorkerOutgoingMessage>) => {
+          if (workerRef.current !== worker) return;
 
-      if (event.data.type === "progress") {
-        setProgress(event.data.payload as SimulationProgress);
-        return;
-      }
-      if (event.data.type === "complete") {
-        const completed = event.data.payload as SimulationResult;
-        setResult(completed);
-        setProgress(null);
-        setRunStatus(
-          completed.stopReason === "vector-cap"
-            ? "complete"
-            : completed.stopReason === "cancelled"
-              ? "cancelled"
-              : "capped",
-        );
-        worker.terminate();
-        workerRef.current = null;
-        return;
-      }
+          if (event.data.type === "progress") {
+            const nextProgress = event.data.payload as SimulationProgress;
+            setProgress(nextProgress);
+            const announcedAt = Date.now();
+            if (
+              lastProgressAnnouncementAtRef.current === 0 ||
+              announcedAt - lastProgressAnnouncementAtRef.current >= 1_500
+            ) {
+              setProgressAnnouncement(
+                `${nextProgress.vectorsFound} vectors accepted after ${nextProgress.attempts} candidates.`,
+              );
+              lastProgressAnnouncementAtRef.current = announcedAt;
+            }
+            return;
+          }
+          if (event.data.type === "complete") {
+            const completed = event.data.payload as SimulationResult;
+            setResult(completed);
+            setProgress(null);
+            setProgressAnnouncement("");
+            setRunStatus(
+              completed.stopReason === "vector-cap"
+                ? "complete"
+                : completed.stopReason === "cancelled"
+                  ? "cancelled"
+                  : "capped",
+            );
+            worker.terminate();
+            workerRef.current = null;
+            return;
+          }
 
-      const payload = event.data.payload as { message?: string };
-      setRunError(payload.message ?? "The experiment encountered an unexpected error.");
-      setRunStatus("error");
-      worker.terminate();
+          const payload = event.data.payload as { message?: string };
+          setRunError(
+            payload.message ?? "The experiment encountered an unexpected error.",
+          );
+          setRunStatus("error");
+          setProgress(null);
+          setProgressAnnouncement("");
+          worker.terminate();
+          workerRef.current = null;
+        };
+
+        worker.onerror = () => {
+          if (workerRef.current !== worker) return;
+          setRunError("The experiment could not start in this browser.");
+          setRunStatus("error");
+          setProgress(null);
+          setProgressAnnouncement("");
+          worker.terminate();
+          workerRef.current = null;
+        };
+      },
+      {
+        type: "start",
+        options: simulationOptions(parsedInputs, nextSeed),
+      },
+    );
+
+    if (started.error) {
       workerRef.current = null;
-    };
-
-    worker.onerror = () => {
-      if (workerRef.current !== worker) return;
-      setRunError("The experiment could not start in this browser.");
+      setRunError(started.error);
       setRunStatus("error");
-      worker.terminate();
-      workerRef.current = null;
-    };
-
-    worker.postMessage({
-      type: "start",
-      options: simulationOptions(parsedInputs, nextSeed),
-    });
+      setProgress(null);
+      setResult(null);
+      setProgressAnnouncement("");
+      return;
+    }
+    setRunStatus("running");
   }
 
   function cancelSimulation() {
@@ -208,7 +276,10 @@ export default function Home() {
     if (action === "continue") setLessonOpen(false);
     if (action === "change") {
       dimensionInputRef.current?.focus();
-      dimensionInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      dimensionInputRef.current?.scrollIntoView({
+        behavior: getPreferredScrollBehavior(window.matchMedia.bind(window)),
+        block: "center",
+      });
     }
   }
 
@@ -262,7 +333,7 @@ export default function Home() {
                 {fieldErrors.dimension}
               </p>
             ) : null}
-            <div className="presets" aria-label="Dimension presets">
+            <div className="presets" role="group" aria-label="Dimension presets">
               {dimensionPresets.map((preset) => (
                 <button
                   className={Number(dimensionValue) === preset ? "is-selected" : ""}
@@ -270,6 +341,7 @@ export default function Home() {
                   type="button"
                   onClick={() => chooseDimension(preset)}
                   aria-pressed={Number(dimensionValue) === preset}
+                  aria-label={`Set dimension to ${preset.toLocaleString("en-US")}`}
                 >
                   {preset.toLocaleString("en-US")}
                 </button>
@@ -373,9 +445,20 @@ export default function Home() {
           <p><span>Aside</span>{beat.aside}</p>
           {lessonOpen ? <p className="lesson">{beat.lesson}</p> : null}
           <div className="dialogue-actions">
+            {beat.actions.includes("explain") && beat.actions.includes("continue") ? (
+              <button
+                key="lesson-toggle"
+                type="button"
+                onClick={() =>
+                  handleDialogueAction(lessonOpen ? "continue" : "explain")
+                }
+                aria-expanded={lessonOpen}
+              >
+                {actionLabel(lessonOpen ? "continue" : "explain")}
+              </button>
+            ) : null}
             {beat.actions.map((action) => {
-              if (action === "continue" && !lessonOpen) return null;
-              if (action === "explain" && lessonOpen) return null;
+              if (action === "continue" || action === "explain") return null;
               return (
                 <button
                   className={action === "test" || action === "retest" ? "action-primary" : ""}
@@ -397,6 +480,7 @@ export default function Home() {
         progress={progress}
         result={result}
         error={runError}
+        progressAnnouncement={progressAnnouncement}
         onCancel={cancelSimulation}
         onRetest={() => startSimulation((seed + 1) >>> 0)}
       />
@@ -482,6 +566,7 @@ function EvidencePanel({
   progress,
   result,
   error,
+  progressAnnouncement,
   onCancel,
   onRetest,
 }: {
@@ -489,6 +574,7 @@ function EvidencePanel({
   progress: SimulationProgress | null;
   result: SimulationResult | null;
   error: string | null;
+  progressAnnouncement: string;
   onCancel: () => void;
   onRetest: () => void;
 }) {
@@ -509,7 +595,10 @@ function EvidencePanel({
       ) : null}
 
       {status === "running" ? (
-        <div className="run-progress" aria-live="polite">
+        <div className="run-progress">
+          <p className="progress-announcement" role="status" aria-live="polite" aria-atomic="true">
+            {progressAnnouncement}
+          </p>
           <div className="progress-copy">
             <p><strong>{progress?.vectorsFound ?? 0}</strong> vectors currently accepted</p>
             <p>{(progress?.attempts ?? 0).toLocaleString("en-US")} candidates tried</p>
@@ -568,7 +657,7 @@ function parseNumericInput(value: string): number {
   return value.trim() === "" ? Number.NaN : Number(value);
 }
 
-function getFieldErrors(
+export function getFieldErrors(
   dimensionValue: string,
   lowerAngleValue: string,
   upperAngleValue: string,
@@ -595,6 +684,10 @@ function getFieldErrors(
 
   if (messages.some((message) => message.includes("less than upper"))) {
     errors.upperAngle = "Upper angle must be greater than the lower angle.";
+  }
+  if (values.lowerAngle === 0 && values.upperAngle === 180) {
+    errors.upperAngle =
+      "The full 0°–180° range is geometrically degenerate; narrow either angle.";
   }
   return errors;
 }

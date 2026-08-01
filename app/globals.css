@@ -11,6 +11,7 @@
   --cyan: #63d9e7;
   --cyan-dark: #1b737f;
   --danger: #ff9c87;
+  --focus-dark: #153d43;
   --line: rgba(243, 237, 221, 0.17);
   --display: var(--font-geist-sans), "Helvetica Neue", sans-serif;
   --mono: var(--font-geist-mono), "SFMono-Regular", monospace;
@@ -50,6 +51,13 @@ a:focus-visible,
 input:focus-visible {
   outline: 3px solid var(--cyan);
   outline-offset: 4px;
+}
+
+.calculator-shell button:focus-visible,
+.calculator-shell input:focus-visible,
+.evidence button:focus-visible,
+.evidence input:focus-visible {
+  outline-color: var(--focus-dark);
 }
 
 button:disabled {
@@ -231,17 +239,12 @@ main {
   font-weight: 690;
   letter-spacing: -0.06em;
   min-width: 0;
-  outline: 0;
   padding: 0.2rem 0 0.35rem;
   width: 100%;
 }
 
 .input-with-unit input::-webkit-inner-spin-button {
   appearance: none;
-}
-
-.input-with-unit input:focus-visible {
-  outline: 0;
 }
 
 .input-with-unit > span {
@@ -669,7 +672,19 @@ main {
 }
 
 .evidence .eyebrow {
-  color: #624a1d;
+  color: #35270e;
+}
+
+.progress-announcement {
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .evidence-light {
