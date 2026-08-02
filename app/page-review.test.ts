@@ -35,16 +35,16 @@ describe("retired experiment removal", () => {
     expect(layout).toMatch(/alt: `\$\{title\}: \$\{illustratedLessonAlt\}`/);
   });
 
-  it("does not retain calculator, worker, simulation, or secondary dialogue modules", async () => {
+  it("restores the calculator, worker, simulation, and dialogue modules for the /machine route", async () => {
     const [appEntries, libEntries] = await Promise.all([
       readdir(new URL(".", import.meta.url)),
       readdir(new URL("../lib", import.meta.url)),
     ]);
 
-    expect(appEntries).not.toEqual(
+    expect(appEntries).toEqual(
       expect.arrayContaining(["vector-worker.ts", "vector-worker.test.ts"]),
     );
-    expect(libEntries).not.toEqual(
+    expect(libEntries).toEqual(
       expect.arrayContaining([
         "dialogue.ts",
         "dialogue.test.ts",
