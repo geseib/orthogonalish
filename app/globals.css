@@ -531,9 +531,7 @@ main {
   font-size: clamp(0.58rem, min(0.75vw, 1.25dvh), 0.72rem);
 }
 
-.story-term-wrap[data-open="true"] .story-tooltip,
-.story-term-wrap:focus-within .story-tooltip,
-.story-term-wrap:hover .story-tooltip {
+.story-term-wrap[data-open="true"] .story-tooltip {
   opacity: 1;
   transform: translateY(0);
   visibility: visible;

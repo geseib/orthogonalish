@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 import type {
   BubblePlacement,
@@ -25,16 +25,38 @@ export function bubbleClassName(placement: BubblePlacement) {
   return `story-bubble position-${placement.position} tail-${placement.tail}`;
 }
 
-export function shouldCloseTooltipOnMouseLeave(isTriggerFocused: boolean) {
-  return !isTriggerFocused;
-}
+export type TooltipState = {
+  isOpen: boolean;
+  pointerFocusPending: boolean;
+};
 
-export function tooltipNextState(
-  isOpen: boolean,
-  interaction: "click" | "hover" | "focus" | "escape" | "blur",
-) {
-  if (interaction === "click") return !isOpen;
-  return interaction === "hover" || interaction === "focus";
+export type TooltipInteraction =
+  | "pointer-down"
+  | "pointer-enter"
+  | "pointer-leave"
+  | "focus"
+  | "blur"
+  | "click"
+  | "escape";
+
+export function tooltipStateAfter(
+  state: TooltipState,
+  interaction: TooltipInteraction,
+): TooltipState {
+  switch (interaction) {
+    case "pointer-down":
+      return { ...state, pointerFocusPending: true };
+    case "pointer-enter":
+      return { isOpen: true, pointerFocusPending: false };
+    case "focus":
+      return state.pointerFocusPending ? state : { ...state, isOpen: true };
+    case "click":
+      return { isOpen: !state.isOpen, pointerFocusPending: false };
+    case "pointer-leave":
+    case "blur":
+    case "escape":
+      return { isOpen: false, pointerFocusPending: false };
+  }
 }
 
 export function StoryPanel({
@@ -173,27 +195,28 @@ function NarratorPanel({
 }
 
 function TermTooltip({ stepId, term }: { stepId: string; term: StoryTooltip }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [tooltipState, setTooltipState] = useState<TooltipState>({
+    isOpen: false,
+    pointerFocusPending: false,
+  });
   const tooltipId = `story-${stepId}-tooltip`;
+  const transitionTooltip = (interaction: TooltipInteraction) => {
+    setTooltipState((state) => tooltipStateAfter(state, interaction));
+  };
 
   return (
     <div
       className="story-term-wrap"
-      data-open={isOpen ? "true" : "false"}
-      onMouseEnter={() => setIsOpen((open) => tooltipNextState(open, "hover"))}
-      onMouseLeave={() => {
-        if (
-          shouldCloseTooltipOnMouseLeave(
-            document.activeElement === triggerRef.current,
-          )
-        ) {
-          setIsOpen((open) => tooltipNextState(open, "blur"));
-        }
+      data-open={tooltipState.isOpen ? "true" : "false"}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "touch") transitionTooltip("pointer-enter");
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType !== "touch") transitionTooltip("pointer-leave");
       }}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) {
-          setIsOpen((open) => tooltipNextState(open, "blur"));
+          transitionTooltip("blur");
         }
       }}
     >
@@ -201,16 +224,15 @@ function TermTooltip({ stepId, term }: { stepId: string; term: StoryTooltip }) {
       <button
         className="story-term"
         type="button"
-        ref={triggerRef}
         aria-label={term.label}
         aria-describedby={tooltipId}
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => tooltipNextState(open, "click"))}
-        onFocus={() => setIsOpen((open) => tooltipNextState(open, "focus"))}
+        aria-expanded={tooltipState.isOpen}
+        onPointerDown={() => transitionTooltip("pointer-down")}
+        onClick={() => transitionTooltip("click")}
+        onFocus={() => transitionTooltip("focus")}
         onKeyDown={(event) => {
           if (event.key === "Escape") {
-            setIsOpen((open) => tooltipNextState(open, "escape"));
-            event.currentTarget.blur();
+            transitionTooltip("escape");
           }
         }}
       >

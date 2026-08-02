@@ -6,8 +6,8 @@ import { describe, expect, it } from "vitest";
 import {
   StoryPanel,
   bubbleClassName,
-  shouldCloseTooltipOnMouseLeave,
-  tooltipNextState,
+  tooltipStateAfter,
+  type TooltipState,
 } from "./story-panel";
 
 describe("illustrated story panel", () => {
@@ -20,18 +20,32 @@ describe("illustrated story panel", () => {
     ).toBe("story-bubble position-lower-right tail-up-left");
   });
 
-  it("keeps the tooltip expanded when its trigger retains focus after mouse leave", () => {
-    expect(shouldCloseTooltipOnMouseLeave(true)).toBe(false);
-    expect(shouldCloseTooltipOnMouseLeave(false)).toBe(true);
-  });
+  it("keeps tooltip visibility and ARIA state synchronized across input methods", () => {
+    const initial: TooltipState = { isOpen: false, pointerFocusPending: false };
+    const interact = (
+      actions: Parameters<typeof tooltipStateAfter>[1][],
+      start = initial,
+    ) => actions.reduce(tooltipStateAfter, start);
 
-  it("updates tooltip state for touch/click, hover, focus, Escape, and blur", () => {
-    expect(tooltipNextState(false, "click")).toBe(true);
-    expect(tooltipNextState(true, "click")).toBe(false);
-    expect(tooltipNextState(false, "hover")).toBe(true);
-    expect(tooltipNextState(false, "focus")).toBe(true);
-    expect(tooltipNextState(true, "escape")).toBe(false);
-    expect(tooltipNextState(true, "blur")).toBe(false);
+    expect(interact(["focus"])).toMatchObject({ isOpen: true });
+    expect(interact(["focus", "escape"])).toMatchObject({ isOpen: false });
+    expect(interact(["pointer-enter", "focus", "escape"])).toMatchObject({
+      isOpen: false,
+    });
+    expect(interact(["pointer-enter", "pointer-leave"])).toMatchObject({
+      isOpen: false,
+    });
+
+    const openedByTouchClick = interact(["pointer-down", "focus", "click"]);
+    expect(openedByTouchClick).toMatchObject({ isOpen: true });
+    expect(interact(["pointer-down", "click"], openedByTouchClick)).toMatchObject({
+      isOpen: false,
+    });
+
+    expect(interact(["pointer-down", "focus", "click"], {
+      isOpen: true,
+      pointerFocusPending: false,
+    })).toMatchObject({ isOpen: false });
   });
 
   it("places every mobile speech-overlay dialogue over the artwork", async () => {
