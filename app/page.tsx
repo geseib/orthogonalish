@@ -21,14 +21,15 @@ import {
   type DialogueBeat,
   type DialogueState,
 } from "../lib/dialogue";
+import type { GuidedInput } from "../lib/story-deck";
 import { getPreferredScrollBehavior } from "../lib/story-navigation";
 import type { SimulationProgress, SimulationResult } from "../lib/simulation";
-import { IntroSequence } from "./intro-sequence";
+import { GuidedStory } from "./guided-story";
 import type { WorkerOutgoingMessage } from "./vector-worker";
 
 export { getPreferredScrollBehavior } from "../lib/story-navigation";
 
-const dimensionPresets = [1, 10, 100, 1_000, 10_000, 12_588] as const;
+const dimensionPresets = [1, 10, 100, 1_000, 10_000, 12_288, 12_588] as const;
 const initialSeed = 12_588;
 
 type FieldErrors = {
@@ -303,23 +304,23 @@ export default function Home() {
     }
   }
 
+  function acceptGuidedInput(input: GuidedInput) {
+    stopCurrentRun();
+    setDimensionValue(String(input.dimension));
+    setLowerAngleValue(String(input.lowerAngle));
+    setUpperAngleValue(String(input.upperAngle));
+    setDialogueKind("dimension");
+    setLessonOpen(false);
+    setRunStatus("idle");
+    setProgress(null);
+    setResult(null);
+    setRunError(null);
+    setProgressAnnouncement("");
+  }
+
   return (
     <main>
-      <header className="hero" id="opening" data-story-section>
-        <p className="eyebrow">An argument in many dimensions</p>
-        <h1>
-          How many arrows can stand <em>nearly sideways?</em>
-        </h1>
-        <p className="hero-copy">
-          Bound how many almost-perpendicular unit vectors might fit—then make
-          the conjecture face an experiment.
-        </p>
-        <a className="hero-link" href="#intro-right-angle">
-          Begin the experiment <span aria-hidden="true">↓</span>
-        </a>
-      </header>
-
-      <IntroSequence />
+      <GuidedStory onGuidedInput={acceptGuidedInput} />
 
       <section className="calculator-shell" id="calculator" data-story-section aria-labelledby="calculator-title">
         <div className="calculator-panel">

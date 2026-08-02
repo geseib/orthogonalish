@@ -2,14 +2,18 @@ import { readFile, readdir } from "node:fs/promises";
 import { expect, test } from "vitest";
 
 test("replaces the starter preview with the vector theatre", async () => {
-  const [page, layout, css, packageJson] = await Promise.all([
+  const [page, guidedStory, storyDeck, layout, css, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/guided-story.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/story-deck.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
 
-  expect(page).toMatch(/How many arrows can stand/);
+  expect(storyDeck).toMatch(/How many arrows can stand/);
+  expect(guidedStory).toMatch(/Previous story step/);
+  expect(guidedStory).toMatch(/Next story step/);
   expect(page).toMatch(/Estimated total vectors/);
   expect(page).toMatch(/Verified vectors found/);
   expect(page).toMatch(/What did that mean\?/);
