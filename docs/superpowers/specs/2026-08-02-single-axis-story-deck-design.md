@@ -7,7 +7,7 @@
 
 Turn the current long-form theatre page into a responsive, reversible story deck. A visitor must be able to experience the entire lesson using only Down to advance and Up to go back. No dialogue, numerical reveal, or required interaction may depend on Left or Right.
 
-The revised sequence must preserve the existing engraved theatrical style and the distinction between the characters: Rosencrantz learns by poking at the world, while Guildenstern theorizes and initially mishandles his own discovery.
+The revised sequence must preserve the existing engraved theatrical style and the distinction between the characters: Rosencrantz learns by poking at the world and accidentally makes the discovery, while Guildenstern theorizes and nearly reasons the discovery out of existence.
 
 ## Core Interaction
 
@@ -53,47 +53,49 @@ A compact story controller remains in a consistent lower-right safe area:
 
 The disabled state communicates the beginning and end of the sequence. Controls must not overlap dialogue or artwork at any supported breakpoint.
 
-The hero’s opening action enters step one. After the final guided reveal, Down enters the free calculator. From the calculator onward, Up still returns to the final guided step, while ordinary page controls remain directly usable.
+The first load opens on Rosencrantz’s solitary discovery. Down reveals the title, then continues through the lesson. After the final guided reveal, Down enters the free calculator. From the calculator onward, Up still returns to the final guided step, while ordinary page controls remain directly usable.
 
 ## Dramatic Sequence
 
-### Prologue — The Question
+### Cold Open — Rosencrantz Has Already Found It
 
-The opening establishes the visual metaphor: how many arrows can remain nearly sideways to every other arrow?
+1. Rosencrantz is alone with the apparatus, idly changing its dimension control without explaining what he is doing.
+2. At 12,288 dimensions and 88–92°, the apparatus displays **1,388,864 vectors**. Rosencrantz observes: “That seems more than I put in.” The aside tells the audience that he has stumbled onto the answer before hearing the question.
+3. He calls for Guildenstern. Before Guildenstern arrives, Down reveals the title and establishes the mystery: how can so many arrows remain nearly sideways to every other arrow?
 
 ### Act I — Two Different Ideas
 
-1. Two perpendicular lines meet at exactly 90°.
-2. Rosencrantz treats the lines as two ideas that do not interrupt each other.
-3. They conclude that two dimensions hold two perfectly independent directions.
+4. Two perpendicular lines meet at exactly 90°.
+5. Rosencrantz treats the lines as two ideas that do not interrupt each other.
+6. They conclude that two dimensions hold two perfectly independent directions.
 
 ### Act II — Surely One More
 
-4. Guildenstern makes an L with thumb and forefinger while Rosencrantz tries to place a third line between them.
-5. They relax the rule to 88–92°, but a third nearly perpendicular direction still does not fit in the plane.
-6. Three dimensions produce three obvious directions. The small examples appear stubbornly one-for-one.
+7. Guildenstern makes an L with thumb and forefinger while Rosencrantz tries to place a third line between them.
+8. They relax the rule to 88–92°, but a third nearly perpendicular direction still does not fit in the plane.
+9. Three dimensions produce three obvious directions. The small examples appear stubbornly one-for-one.
 
-### Act III — Guildenstern’s Discovery
+### Act III — Guildenstern Makes It Sensible
 
-7. Guildenstern, working alone with a large high-dimensional calculation, notices that the estimate has become unexpectedly large.
-8. He summons Rosencrantz to witness the discovery but, wishing to make it comprehensible, demonstrates with 10 dimensions.
-9. The answer is still 10. Rosencrantz laughs at Guildenstern’s supposedly momentous discovery and is perplexed that the theorist appears not to understand his own experiment.
-10. Rosencrantz insists on poking the dimension upward rather than debating it.
+10. Rosencrantz finally brings Guildenstern the 1,388,864 result he found in the cold open.
+11. Guildenstern distrusts an answer that arrived before its explanation. Wishing to make the experiment sensible, he reduces it to 10 dimensions.
+12. The answer is still 10. Rosencrantz laughs, perplexed that Guildenstern has made a remarkable discovery look ordinary; Guildenstern mistakes that ordinary result for insight.
+13. Rather than debate Guildenstern’s theory, Rosencrantz reaches for the dimension control and begins turning it upward again.
 
 ### Act IV — The Numbers Change Character
 
-11. At 100 dimensions, the displayed estimate is 113: only a hint of excess.
-12. At 1,000 dimensions and 88–92°, the displayed estimate is 2,658 vectors.
-13. At 10,000 dimensions and 88–92°, the displayed estimate is 540,586 vectors.
-14. The transition emphasizes that multiplying the dimensions by ten increased the capacity by far more than ten.
-15. Together they name the behavior **exponential growth with dimension**. Rosencrantz describes it in plain language as “multiplying room.”
+14. At 100 dimensions, the displayed estimate is 113: only a hint of excess.
+15. At 1,000 dimensions and 88–92°, the displayed estimate is 2,658 vectors.
+16. At 10,000 dimensions and 88–92°, the displayed estimate is 540,586 vectors.
+17. The transition emphasizes that multiplying the dimensions by ten increased the capacity by far more than ten.
+18. Together they name the behavior **exponential growth with dimension**. Rosencrantz describes it in plain language as “multiplying room.”
 
 The learner-facing aside states the fact without early jargon: for a fixed near-right-angle tolerance, the number of possible directions can grow exponentially with dimension. A later optional tooltip may identify the mathematical setting as a spherical-code or high-dimensional packing problem.
 
 ### Epilogue — Try the Machinery
 
-16. The guided sequence releases the visitor into the existing calculator with 10,000 and 88–92° already visible.
-17. The visitor may choose presets or enter custom values, test a construction, and open deeper explanations.
+19. The guided sequence releases the visitor into the existing calculator with 10,000 and 88–92° already visible.
+20. The visitor may choose presets or enter custom values, test a construction, and open deeper explanations.
 
 ## Numerical Behavior
 
@@ -104,6 +106,7 @@ The guided story reuses the existing estimate implementation rather than duplica
 - 100 dimensions at 88–92° displays 113.
 - 1,000 dimensions at 88–92° displays 2,658.
 - 10,000 dimensions at 88–92° displays 540,586.
+- 12,288 dimensions at 88–92° displays 1,388,864.
 - Exact 90°/90° remains one-for-one: 1,000 dimensions displays exactly 1,000 vectors and 10,000 displays exactly 10,000.
 - Guided values are deterministic and floor-rounded in the same manner as the free calculator.
 - Learner-facing copy calls these figures illustrative estimates of the exponential trend, not exact known maxima.
@@ -160,7 +163,7 @@ The stage shell and its height-based/narrow-layout variants live in the existing
 
 ### Story
 
-- Tests preserve the exact ordered beats: small-dimensional disappointment, Guildenstern’s failed demonstration, Rosencrantz’s intervention, 1,000/2,658, 10,000/540,586, and the exponential-growth conclusion.
+- Tests preserve the exact ordered beats: Rosencrantz’s solitary 12,288/1,388,864 discovery, small-dimensional disappointment, Guildenstern’s failed simplification, Rosencrantz’s intervention, 1,000/2,658, 10,000/540,586, and the exponential-growth conclusion.
 - No required line is accessible only through a horizontal control.
 
 ### Layout
