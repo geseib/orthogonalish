@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 import type {
   BubblePlacement,
@@ -23,6 +23,10 @@ const defaultGuildensternPlacement: BubblePlacement = {
 
 export function bubbleClassName(placement: BubblePlacement) {
   return `story-bubble position-${placement.position} tail-${placement.tail}`;
+}
+
+export function shouldCloseTooltipOnMouseLeave(isTriggerFocused: boolean) {
+  return !isTriggerFocused;
 }
 
 export function StoryPanel({
@@ -162,6 +166,7 @@ function NarratorPanel({
 
 function TermTooltip({ stepId, term }: { stepId: string; term: StoryTooltip }) {
   const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const tooltipId = `story-${stepId}-tooltip`;
 
   return (
@@ -169,7 +174,15 @@ function TermTooltip({ stepId, term }: { stepId: string; term: StoryTooltip }) {
       className="story-term-wrap"
       data-open={isOpen ? "true" : "false"}
       onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
+      onMouseLeave={() => {
+        if (
+          shouldCloseTooltipOnMouseLeave(
+            document.activeElement === triggerRef.current,
+          )
+        ) {
+          setIsOpen(false);
+        }
+      }}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setIsOpen(false);
       }}
@@ -178,6 +191,7 @@ function TermTooltip({ stepId, term }: { stepId: string; term: StoryTooltip }) {
       <button
         className="story-term"
         type="button"
+        ref={triggerRef}
         aria-label={term.label}
         aria-describedby={tooltipId}
         aria-expanded={isOpen}

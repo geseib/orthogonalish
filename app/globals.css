@@ -1718,12 +1718,12 @@ footer {
   }
 
   .story-stage-grid.story-speech-overlay .story-art-frame,
-  .story-stage-grid.story-speech-overlay .story-dialogue.has-two-speakers {
+  .story-stage-grid.story-speech-overlay .story-dialogue {
     grid-column: 1;
     grid-row: 2;
   }
 
-  .story-stage-grid.story-speech-overlay .story-dialogue.has-two-speakers {
+  .story-stage-grid.story-speech-overlay .story-dialogue {
     display: block;
   }
 

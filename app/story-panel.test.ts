@@ -1,8 +1,13 @@
+import { readFile } from "node:fs/promises";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { StoryPanel, bubbleClassName } from "./story-panel";
+import {
+  StoryPanel,
+  bubbleClassName,
+  shouldCloseTooltipOnMouseLeave,
+} from "./story-panel";
 
 describe("illustrated story panel", () => {
   it("derives semantic bubble placement classes", () => {
@@ -12,6 +17,19 @@ describe("illustrated story panel", () => {
     expect(
       bubbleClassName({ position: "lower-right", tail: "up-left" }),
     ).toBe("story-bubble position-lower-right tail-up-left");
+  });
+
+  it("keeps the tooltip expanded when its trigger retains focus after mouse leave", () => {
+    expect(shouldCloseTooltipOnMouseLeave(true)).toBe(false);
+    expect(shouldCloseTooltipOnMouseLeave(false)).toBe(true);
+  });
+
+  it("places every mobile speech-overlay dialogue over the artwork", async () => {
+    const css = await readFile(new URL("./globals.css", import.meta.url), "utf8");
+
+    expect(css).toMatch(
+      /\.story-stage-grid\.story-speech-overlay \.story-dialogue \{[\s\S]*?grid-column: 1;[\s\S]*?grid-row: 2;/,
+    );
   });
 
   it("renders narrator and tooltip semantics alongside both character citations", () => {
