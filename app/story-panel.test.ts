@@ -7,6 +7,7 @@ import {
   StoryPanel,
   bubbleClassName,
   shouldCloseTooltipOnMouseLeave,
+  tooltipNextState,
 } from "./story-panel";
 
 describe("illustrated story panel", () => {
@@ -22,6 +23,15 @@ describe("illustrated story panel", () => {
   it("keeps the tooltip expanded when its trigger retains focus after mouse leave", () => {
     expect(shouldCloseTooltipOnMouseLeave(true)).toBe(false);
     expect(shouldCloseTooltipOnMouseLeave(false)).toBe(true);
+  });
+
+  it("updates tooltip state for touch/click, hover, focus, Escape, and blur", () => {
+    expect(tooltipNextState(false, "click")).toBe(true);
+    expect(tooltipNextState(true, "click")).toBe(false);
+    expect(tooltipNextState(false, "hover")).toBe(true);
+    expect(tooltipNextState(false, "focus")).toBe(true);
+    expect(tooltipNextState(true, "escape")).toBe(false);
+    expect(tooltipNextState(true, "blur")).toBe(false);
   });
 
   it("places every mobile speech-overlay dialogue over the artwork", async () => {
@@ -64,6 +74,11 @@ describe("illustrated story panel", () => {
 
     expect(markup).toContain('role="tooltip"');
     expect(markup).toContain('aria-label="Orthogonal"');
+    expect(markup).toContain('aria-expanded="false"');
+    expect(markup).toContain(
+      'aria-describedby="story-right-angle-meeting-tooltip"',
+    );
+    expect(markup).toContain('id="story-right-angle-meeting-tooltip"');
     expect(markup).toContain("What the picture establishes");
     expect(markup).toContain("Rosencrantz · experimentalist");
     expect(markup).toContain("Guildenstern · theorist");

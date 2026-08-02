@@ -29,6 +29,14 @@ export function shouldCloseTooltipOnMouseLeave(isTriggerFocused: boolean) {
   return !isTriggerFocused;
 }
 
+export function tooltipNextState(
+  isOpen: boolean,
+  interaction: "click" | "hover" | "focus" | "escape" | "blur",
+) {
+  if (interaction === "click") return !isOpen;
+  return interaction === "hover" || interaction === "focus";
+}
+
 export function StoryPanel({
   step,
   estimate,
@@ -173,18 +181,20 @@ function TermTooltip({ stepId, term }: { stepId: string; term: StoryTooltip }) {
     <div
       className="story-term-wrap"
       data-open={isOpen ? "true" : "false"}
-      onMouseEnter={() => setIsOpen(true)}
+      onMouseEnter={() => setIsOpen((open) => tooltipNextState(open, "hover"))}
       onMouseLeave={() => {
         if (
           shouldCloseTooltipOnMouseLeave(
             document.activeElement === triggerRef.current,
           )
         ) {
-          setIsOpen(false);
+          setIsOpen((open) => tooltipNextState(open, "blur"));
         }
       }}
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setIsOpen(false);
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setIsOpen((open) => tooltipNextState(open, "blur"));
+        }
       }}
     >
       <p>Look closer</p>
@@ -195,11 +205,11 @@ function TermTooltip({ stepId, term }: { stepId: string; term: StoryTooltip }) {
         aria-label={term.label}
         aria-describedby={tooltipId}
         aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => !open)}
-        onFocus={() => setIsOpen(true)}
+        onClick={() => setIsOpen((open) => tooltipNextState(open, "click"))}
+        onFocus={() => setIsOpen((open) => tooltipNextState(open, "focus"))}
         onKeyDown={(event) => {
           if (event.key === "Escape") {
-            setIsOpen(false);
+            setIsOpen((open) => tooltipNextState(open, "escape"));
             event.currentTarget.blur();
           }
         }}

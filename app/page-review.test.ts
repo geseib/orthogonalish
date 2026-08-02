@@ -71,6 +71,23 @@ describe("retired experiment removal", () => {
     expect(css).toMatch(/grid-template-(?:columns|rows):[^;]*minmax\(0,/);
     expect(css).toMatch(/@media\s*\(max-height:\s*700px\)/);
     expect(css).toMatch(/@media\s*\(max-width:\s*620px\)/);
+    expect(css).toMatch(/@media\s*\(orientation:\s*landscape\)\s*and\s*\(max-height:\s*520px\)/);
     expect(css).toMatch(/\.story-controller\s*\{/);
+  });
+
+  it("puts mobile narrator panels beneath the art while keeping speech on it", async () => {
+    const css = await readFile(new URL("./globals.css", import.meta.url), "utf8");
+
+    const narrowPanelRules = css.match(
+      /@media\s*\(max-width:\s*620px\)\s*\{([\s\S]*?)@media\s*\(orientation:\s*landscape\)/,
+    )?.[1];
+
+    expect(narrowPanelRules).toBeDefined();
+    expect(narrowPanelRules).toMatch(
+      /\.story-stage-grid\.story-speech-overlay\s+\.story-dialogue\s*\{[\s\S]*?grid-row:\s*2;/,
+    );
+    expect(narrowPanelRules).toMatch(
+      /\.story-stage-grid\.story-speech-overlay\.has-context-panel\s+\.story-context-panel\s*\{[\s\S]*?grid-column:\s*1;[\s\S]*?grid-row:\s*3;/,
+    );
   });
 });

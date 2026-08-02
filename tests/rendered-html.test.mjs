@@ -1,5 +1,9 @@
 import { readFile, readdir } from "node:fs/promises";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test } from "vitest";
+
+import { StoryPanel } from "../app/story-panel";
 
 test("replaces the starter preview with the vector theatre", async () => {
   const [page, guidedStory, storyDeck, layout, css, packageJson, packageLock] = await Promise.all([
@@ -38,4 +42,38 @@ test("replaces the starter preview with the vector theatre", async () => {
     throw error;
   });
   expect(previewFiles).toEqual([]);
+});
+
+test("renders each optional lesson tooltip as a collapsed accessible control", () => {
+  const html = renderToStaticMarkup(
+    createElement(StoryPanel, {
+      estimate: null,
+      step: {
+        id: "rendered-tooltip",
+        scene: "right-angle",
+        eyebrow: "A precise term",
+        title: "A picture with optional depth",
+        image: "/images/two-ideas-right-angle.webp",
+        alt: "Two perpendicular glowing lines.",
+        rosencrantz: "Show me the extra definition if I ask for it.",
+        aside: "The default story remains complete without the definition.",
+        bubbles: {
+          rosencrantz: { position: "upper-left", tail: "down-right" },
+        },
+        contextPanel: {
+          narrator: "The term is supplementary rather than required reading.",
+          term: {
+            label: "Orthogonal",
+            definition: "Directions meeting at exactly 90 degrees.",
+            llmConnection: "Separated features can interfere less.",
+          },
+        },
+      },
+    }),
+  );
+
+  expect(html).toContain('aria-expanded="false"');
+  expect(html).toContain('aria-describedby="story-rendered-tooltip-tooltip"');
+  expect(html).toContain('id="story-rendered-tooltip-tooltip"');
+  expect(html).toContain('role="tooltip"');
 });
