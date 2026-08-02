@@ -185,6 +185,17 @@ export const storySteps: readonly StoryStep[] = [
       "Suppose this line is one idea, and that line another. Can they interrupt each other?",
     guildenstern: "Not in this picture. Each has its own direction.",
     aside: "Perpendicular directions are a clean picture of distinct ideas.",
+    contextPanel: {
+      narrator:
+        "Give each idea its own perpendicular direction and neither can be mistaken for the other. A perfectly perpendicular pair is the ideal of two things stored without confusion.",
+      term: {
+        label: "Vector",
+        definition:
+          "A vector is a direction with a length, written as a list of numbers — one value per dimension.",
+        llmConnection:
+          "A language model represents each token as a vector; the direction it points in is what carries the meaning.",
+      },
+    },
   },
   {
     id: "right-angle-two",
@@ -197,6 +208,17 @@ export const storySteps: readonly StoryStep[] = [
     rosencrantz: "Two dimensions. Two ideas. A well-behaved universe.",
     guildenstern: "Enjoy it. We are about to relax the rules.",
     aside: "In two dimensions, two perfectly perpendicular directions fit.",
+    contextPanel: {
+      narrator:
+        "A flat plane has exactly two perpendicular directions, so it can hold exactly two perfectly separate ideas — no more. For now, capacity equals the number of dimensions.",
+      term: {
+        label: "Embedding",
+        definition:
+          "An embedding is the vector a model assigns to a word or token; each coordinate is one dimension of meaning.",
+        llmConnection:
+          "Real models use large embeddings — GPT-3's are 12,288-dimensional, the very number Rosencrantz's machine reported.",
+      },
+    },
   },
   {
     id: "one-more-room",
@@ -211,6 +233,10 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "Room for a finger, perhaps. Not for a third direction nearly 90° from both.",
     aside: "The flat plane has already used its two independent directions.",
+    contextPanel: {
+      narrator:
+        "The plane is already full: a third arrow must lean toward one of the first two. With only exact right angles allowed, a space can never hold more separate directions than it has dimensions — a ceiling far too low for a model that must store thousands of features.",
+    },
   },
   {
     id: "one-more-tolerance",
@@ -224,6 +250,17 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "Generosity has not made a third line fit. It has merely made the failure less tidy.",
     aside: "A small relaxation changes nothing obvious in two dimensions.",
+    contextPanel: {
+      narrator:
+        "Loosening 'perpendicular' to a narrow band around 90° is the pivotal move. It changes nothing in two dimensions — but it is the crack through which enormous capacity will later pour.",
+      term: {
+        label: "Cosine similarity",
+        definition:
+          "The cosine of the angle between two vectors — 1 when aligned, 0 at a right angle, −1 when opposed.",
+        llmConnection:
+          "Language models judge how related two embeddings are by their cosine similarity; a value near zero means two features barely overlap.",
+      },
+    },
   },
   {
     id: "one-more-dimension",
@@ -236,6 +273,10 @@ export const storySteps: readonly StoryStep[] = [
     rosencrantz: "Then add one dimension.",
     guildenstern: "Three dimensions, three obvious directions. Still ordinary.",
     aside: "Small spaces remain stubbornly one-for-one.",
+    contextPanel: {
+      narrator:
+        "Each new dimension adds one more axis to move along. In small spaces the tally stays stubbornly fair — three dimensions, three directions — and the near-right-angle allowance still buys nothing visible.",
+    },
     guidedInput: nearRightAngle(3),
   },
   {
@@ -250,6 +291,10 @@ export const storySteps: readonly StoryStep[] = [
       "The estimate gives 1,388,864 directions in 12,288 dimensions. The box was quite definite.",
     guildenstern: "A result arriving before its explanation is merely an ambush.",
     aside: "Rosencrantz brings the fact. Guildenstern requires it to become reasonable.",
+    contextPanel: {
+      narrator:
+        "The machine claims a hundred times more directions than dimensions. Held against everything just shown in two and three dimensions, the figure looks impossible — which is exactly why it demands an explanation rather than applause.",
+    },
     guidedInput: nearRightAngle(12_288),
   },
   {
@@ -264,6 +309,17 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "Ten dimensions. Now the experiment is small enough to understand.",
     aside: "Guildenstern simplifies the phenomenon until it almost disappears.",
+    contextPanel: {
+      narrator:
+        "Shrunk to ten dimensions, the phenomenon nearly vanishes: about ten directions, one per axis. Small spaces hide the effect, which is why intuition trained on them misleads.",
+      term: {
+        label: "Basis",
+        definition:
+          "A basis is a set of perpendicular axes that span a space; a space of D dimensions has exactly D of them.",
+        llmConnection:
+          "If a model used only its perpendicular basis directions, it could store just one feature per dimension — a few thousand in all.",
+      },
+    },
     guidedInput: nearRightAngle(10),
   },
   {
@@ -277,6 +333,10 @@ export const storySteps: readonly StoryStep[] = [
     rosencrantz: "Ten directions. Your great explanation has discovered ten.",
     guildenstern: "An admirably ordinary result. The earlier number was suspect.",
     aside: "The theorist mistakes an ordinary example for the whole truth.",
+    contextPanel: {
+      narrator:
+        "The theorist mistakes a small, tidy example for the whole law. The near-right-angle allowance is present here too — it is only waiting for enough dimensions to matter.",
+    },
     guidedInput: nearRightAngle(10),
   },
   {
@@ -290,6 +350,10 @@ export const storySteps: readonly StoryStep[] = [
     rosencrantz: "Or we could turn the handle and ask the world again.",
     guildenstern: "That is not a theory.",
     aside: "It is, however, an experiment.",
+    contextPanel: {
+      narrator:
+        "Theory has stalled at ten; the experiment is willing to keep asking. Scaling the dimension back up is the one move that will expose what small spaces conceal.",
+    },
     guidedInput: nearRightAngle(10),
   },
   {
@@ -303,6 +367,17 @@ export const storySteps: readonly StoryStep[] = [
     rosencrantz: "One hundred dimensions. The box says 113.",
     guildenstern: "A small excess. Possibly clerical.",
     aside: "At first, the advantage is easy to dismiss.",
+    contextPanel: {
+      narrator:
+        "At a hundred dimensions a faint surplus appears — a few more directions than axes. It is the first visible interest paid by the near-right-angle allowance.",
+      term: {
+        label: "Near-orthogonality",
+        definition:
+          "Directions that are close to, but not exactly, perpendicular — a small overlap is tolerated.",
+        llmConnection:
+          "Model features are almost never exactly perpendicular; being near-orthogonal is enough to keep them from interfering much.",
+      },
+    },
     guidedInput: nearRightAngle(100),
   },
   {
@@ -317,6 +392,10 @@ export const storySteps: readonly StoryStep[] = [
       "One thousand dimensions. The estimate gives two thousand, six hundred fifty-eight directions.",
     guildenstern: "The excess is becoming impertinent.",
     aside: "At 1,000 dimensions, the estimate has begun to pull away.",
+    contextPanel: {
+      narrator:
+        "By a thousand dimensions the surplus is unmistakable: more than twice as many usable directions as axes. The allowance that bought nothing in the plane now compounds with every added dimension.",
+    },
     guidedInput: nearRightAngle(1_000),
   },
   {
@@ -331,6 +410,17 @@ export const storySteps: readonly StoryStep[] = [
       "Ten thousand dimensions. The estimate gives five hundred forty thousand, five hundred eighty-six directions.",
     guildenstern: "I withdraw clerical.",
     aside: "A tenfold increase in dimensions produced far more than ten times the capacity.",
+    contextPanel: {
+      narrator:
+        "Ten thousand dimensions yield over half a million near-perpendicular directions — fifty times the number of axes. The space now holds vastly more separate ideas than it has dimensions to name them.",
+      term: {
+        label: "Superposition",
+        definition:
+          "Storing more features than there are dimensions by letting each feature ride a near-perpendicular direction that only slightly overlaps the others.",
+        llmConnection:
+          "Superposition is how a language model packs far more learned features into its embedding space than it has dimensions.",
+      },
+    },
     guidedInput: nearRightAngle(10_000),
   },
   {
@@ -344,6 +434,10 @@ export const storySteps: readonly StoryStep[] = [
     rosencrantz: "So the room is not merely getting larger.",
     guildenstern: "No. Each increase makes the next increase more consequential.",
     aside: "The growth is multiplying rather than merely adding.",
+    contextPanel: {
+      narrator:
+        "The capacity is not adding, it is multiplying: each extra dimension scales up what all the earlier ones could hold. That is the signature of exponential growth, and the reason the machine's number stopped looking clerical.",
+    },
     guidedInput: nearRightAngle(10_000),
   },
   {
@@ -359,6 +453,17 @@ export const storySteps: readonly StoryStep[] = [
       "Exponential growth with dimension. Your phrase is less dignified and more memorable.",
     aside:
       "With a fixed near-right-angle tolerance, possible directions can grow exponentially with dimension.",
+    contextPanel: {
+      narrator:
+        "With a fixed near-right-angle tolerance, the count of near-perpendicular directions grows exponentially with dimension. This is the whole engine behind the cold-open's impossible number.",
+      term: {
+        label: "Embedding capacity",
+        definition:
+          "How many distinct near-perpendicular directions an embedding space can hold — far more than its dimension count.",
+        llmConnection:
+          "It is why a model with only a few thousand embedding dimensions can represent an enormous vocabulary of features at once.",
+      },
+    },
     guidedInput: nearRightAngle(10_000),
   },
   {
