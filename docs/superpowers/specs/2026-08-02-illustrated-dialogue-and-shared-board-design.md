@@ -1,7 +1,7 @@
 # Illustrated Dialogue and Shared Board Design
 
 **Date:** 2026-08-02  
-**Status:** Approved direction; written specification awaiting final review
+**Status:** Approved
 
 ## Purpose
 
@@ -11,6 +11,7 @@ The completed experience should remain playful, elegant, and legible to a reader
 
 ## Decisions
 
+- Name the public site **orthogonalish**, styled in lowercase everywhere.
 - Remove the calculator, seeded construction, test controls, evidence panel, and their secondary dialogue system from the public lesson.
 - Preserve the verified numerical story already used in the guided sequence: 10, 100, 1,000, 10,000, and 12,288 dimensions.
 - Keep one linear story axis. Down advances exactly one beat; Up reverses exactly one beat. Left and Right are never required.
@@ -19,6 +20,7 @@ The completed experience should remain playful, elegant, and legible to a reader
 - Put optional mathematical and modern-LLM depth behind accessible term tooltips.
 - Extend the story with an eight-panel Shared Board act and an existential final beat.
 - Generate new artwork only after the dialogue and panel sequence are fixed by this specification.
+- Replace the starter README with project documentation for orthogonalish, including its purpose, interaction model, mathematical caveats, local commands, and principal source files.
 
 ## Division of Labor on Every Panel
 
