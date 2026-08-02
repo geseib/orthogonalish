@@ -27,6 +27,16 @@ const sceneOrder = storySteps.reduce<StoryScene[]>((scenes, step) => {
 
 const transitionMilliseconds = 360;
 
+export function keyboardStoryDirection(
+  key: string,
+): "previous" | "next" | null {
+  if (key === "ArrowDown" || key === "PageDown" || key === " " || key === "Spacebar") {
+    return "next";
+  }
+  if (key === "ArrowUp" || key === "PageUp") return "previous";
+  return null;
+}
+
 export function GuidedStory() {
   const [activeIndex, setActiveIndex] = useState(0);
   const transitionLockedRef = useRef(false);
@@ -81,14 +91,10 @@ export function GuidedStory() {
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (isInteractiveTarget(event.target as HTMLElement | null)) return;
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        navigate("next");
-      }
-      if (event.key === "ArrowUp") {
-        event.preventDefault();
-        navigate("previous");
-      }
+      const direction = keyboardStoryDirection(event.key);
+      if (!direction) return;
+      event.preventDefault();
+      navigate(direction);
     }
 
     window.addEventListener("keydown", onKeyDown);

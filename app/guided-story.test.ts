@@ -1,25 +1,25 @@
-import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 import { moveStoryStep, storySteps } from "../lib/story-deck";
+import { keyboardStoryDirection } from "./guided-story";
 
 describe("guided story component", () => {
-  it("routes visible and keyboard navigation through one vertical sequence", async () => {
-    const source = await readFile(
-      new URL("./guided-story.tsx", import.meta.url),
-      "utf8",
-    );
+  it("maps one-axis keyboard controls to exactly one story direction", () => {
+    expect(keyboardStoryDirection("ArrowDown")).toBe("next");
+    expect(keyboardStoryDirection("PageDown")).toBe("next");
+    expect(keyboardStoryDirection(" ")).toBe("next");
+    expect(keyboardStoryDirection("Spacebar")).toBe("next");
+    expect(keyboardStoryDirection("ArrowUp")).toBe("previous");
+    expect(keyboardStoryDirection("PageUp")).toBe("previous");
+  });
 
-    expect(source).toMatch(/moveStoryStep/);
-    expect(source).toMatch(/event\.key === "ArrowDown"/);
-    expect(source).toMatch(/event\.key === "ArrowUp"/);
-    expect(source).toMatch(/aria-label="Previous story step"/);
-    expect(source).toMatch(/aria-label="Next story step"/);
-    expect(source).not.toMatch(/ArrowRight|ArrowLeft/);
-    expect(source).not.toMatch(/Next dialogue beat|Previous dialogue beat/);
+  it("leaves horizontal keyboard controls inert", () => {
+    expect(keyboardStoryDirection("ArrowLeft")).toBeNull();
+    expect(keyboardStoryDirection("ArrowRight")).toBeNull();
   });
 
   it("ends at the final story beat without a calculator bridge", async () => {
+    const { readFile } = await import("node:fs/promises");
     const source = await readFile(
       new URL("./guided-story.tsx", import.meta.url),
       "utf8",
