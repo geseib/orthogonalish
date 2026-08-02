@@ -29,6 +29,7 @@ describe("illustrated story panel", () => {
 
     expect(interact(["focus"])).toMatchObject({ isOpen: true });
     expect(interact(["focus", "escape"])).toMatchObject({ isOpen: false });
+    expect(interact(["focus", "blur"])).toMatchObject({ isOpen: false });
     expect(interact(["pointer-enter", "focus", "escape"])).toMatchObject({
       isOpen: false,
     });
