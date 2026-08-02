@@ -102,7 +102,7 @@ export const storySteps: readonly StoryStep[] = [
     alt: "Rosencrantz stands alone at a brass apparatus as cyan vector arrows multiply across the dark stage.",
     bubbles: { rosencrantz: rosencrantzBubble },
     rosencrantz:
-      "One million, three hundred eighty-eight thousand, eight hundred sixty-four. That seems more than I put in.",
+      "The estimate gives one million, three hundred eighty-eight thousand, eight hundred sixty-four. That seems more than I put in.",
     aside: "He has stumbled onto the answer before hearing the question.",
     guidedInput: nearRightAngle(12_288),
   },
@@ -228,7 +228,7 @@ export const storySteps: readonly StoryStep[] = [
     alt: "Rosencrantz presents a field of cyan arrows while Guildenstern prepares to measure them.",
     bubbles: twoSpeakerBubbles,
     rosencrantz:
-      "I found 1,388,864 directions in 12,288 dimensions. The box was quite definite.",
+      "The estimate gives 1,388,864 directions in 12,288 dimensions. The box was quite definite.",
     guildenstern: "A result arriving before its explanation is merely an ambush.",
     aside: "Rosencrantz brings the fact. Guildenstern requires it to become reasonable.",
     guidedInput: nearRightAngle(12_288),
@@ -294,7 +294,8 @@ export const storySteps: readonly StoryStep[] = [
     image: "/images/exponential-prop-closet.webp",
     alt: "Nested cupboards and multiplying cyan arrows recede impossibly backstage.",
     bubbles: twoSpeakerBubbles,
-    rosencrantz: "One thousand dimensions. Two thousand, six hundred fifty-eight directions.",
+    rosencrantz:
+      "One thousand dimensions. The estimate gives two thousand, six hundred fifty-eight directions.",
     guildenstern: "The excess is becoming impertinent.",
     aside: "At 1,000 dimensions, the estimate has begun to pull away.",
     guidedInput: nearRightAngle(1_000),
@@ -308,7 +309,7 @@ export const storySteps: readonly StoryStep[] = [
     alt: "Nested cupboards and multiplying cyan arrows recede impossibly backstage.",
     bubbles: twoSpeakerBubbles,
     rosencrantz:
-      "Ten thousand dimensions. Five hundred forty thousand, five hundred eighty-six directions.",
+      "Ten thousand dimensions. The estimate gives five hundred forty thousand, five hundred eighty-six directions.",
     guildenstern: "I withdraw clerical.",
     aside: "A tenfold increase in dimensions produced far more than ten times the capacity.",
     guidedInput: nearRightAngle(10_000),

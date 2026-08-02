@@ -37,6 +37,21 @@ describe("guided story", () => {
     expect(getGuidedEstimate(stepAtDimension(10_000))?.total).toBe(540_586);
   });
 
+  it("frames the large numerical reveals as illustrative estimates", () => {
+    const largeReveals = [
+      "cold-open-result",
+      "failed-demo-report",
+      "growth-thousand",
+      "growth-ten-thousand",
+    ];
+
+    for (const id of largeReveals) {
+      expect(storySteps.find((step) => step.id === id)?.rosencrantz).toMatch(
+        /estimate/i,
+      );
+    }
+  });
+
   it("tells the failed simplification before naming the growth", () => {
     const script = storySteps
       .map((step) => `${step.rosencrantz} ${step.guildenstern ?? ""}`)
