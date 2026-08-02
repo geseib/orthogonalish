@@ -152,14 +152,15 @@ describe("calculator review regressions", () => {
     expect(page).not.toMatch(/Ideas stored|Speaking at once|Possible casts|The bend appears/);
   });
 
-  it("styles the introductory scenes as part of the same theatre", async () => {
+  it("fits each guided story scene to the visual viewport", async () => {
     const css = await readFile(new URL("./globals.css", import.meta.url), "utf8");
 
-    expect(css).toMatch(/\.intro-scene\s*\{/);
-    expect(css).toMatch(/\.intro-art-frame\s*\{/);
-    expect(css).toMatch(/\.intro-dialogue\s*\{/);
-    expect(css).toMatch(/\.intro-controls\s*\{/);
-    expect(css).toMatch(/\.story-down\s*\{/);
+    expect(css).toMatch(/\.story-scene\s*\{[^}]*height:\s*100dvh/s);
+    expect(css).toMatch(/\.story-scene\s*\{[^}]*overflow:\s*hidden/s);
+    expect(css).toMatch(/grid-template-(?:columns|rows):[^;]*minmax\(0,/);
+    expect(css).toMatch(/@media\s*\(max-height:\s*700px\)/);
+    expect(css).toMatch(/@media\s*\(max-width:\s*620px\)/);
+    expect(css).toMatch(/\.story-controller\s*\{/);
   });
 
   it("returns the exact orthogonal basis instead of randomly searching for 90°", async () => {
