@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -16,6 +18,18 @@ function stepAtDimension(dimension: number): StoryStep {
 }
 
 describe("guided story", () => {
+  it("ships every referenced story image under public", () => {
+    const referencedImages = storySteps.flatMap((step) =>
+      step.image ? [step.image] : [],
+    );
+
+    expect(referencedImages).not.toHaveLength(0);
+
+    for (const image of referencedImages) {
+      expect(existsSync(join(process.cwd(), "public", image))).toBe(true);
+    }
+  });
+
   it("opens with Rosencrantz accidentally finding the million-vector result", () => {
     expect(storySteps[0]).toMatchObject({
       scene: "cold-open",
