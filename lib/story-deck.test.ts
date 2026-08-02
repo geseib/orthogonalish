@@ -121,7 +121,8 @@ describe("guided story", () => {
   });
 
   it("ends with the ordered Shared Board act", () => {
-    expect(storySteps.slice(-8).map((step) => step.id)).toEqual([
+    expect(storySteps.slice(-9).map((step) => step.id)).toEqual([
+      "board-question",
       "board-empty",
       "board-fingerprint",
       "board-writing",
@@ -181,7 +182,7 @@ describe("guided story", () => {
       aside: "The board grows faster than its ordinary wobble.",
       contextPanel: {
         narrator:
-          "Blow the board up to 12,288 boxes and the same coin-flip wobble now leaves only about 111 mismatched signs — under one percent. The typical overlap between two unrelated patterns is roughly 1 / sqrt(12,288), about 0.9%, and the exact amount varies from pair to pair.",
+          "Blow the board up to 12,288 boxes and the same coin-flip wobble now leaves only about 111 mismatched signs — under one percent. Flip N ±1 coins and you land only about sqrt(N) away from even; that leftover is a vanishing slice of the whole N, which is why the overlap shrinks like 1 / sqrt(N). The typical overlap between two unrelated patterns is roughly 1 / sqrt(12,288), about 0.9%, and the exact amount varies from pair to pair — and a 0.9% overlap per unrelated pair is precisely why about a million near-orthogonal directions still fit inside 12,288 dimensions.",
       },
     });
   });
@@ -190,7 +191,7 @@ describe("guided story", () => {
     const sharedBoard = storySteps.filter(
       (step) => step.scene === "shared-board",
     );
-    expect(sharedBoard).toHaveLength(8);
+    expect(sharedBoard).toHaveLength(9);
     expect(sharedBoard.every((step) => step.image && step.contextPanel)).toBe(
       true,
     );

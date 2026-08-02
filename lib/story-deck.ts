@@ -488,7 +488,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Near-sideways room grows exponentially with dimension",
       narrator:
-        "Keep the 'good enough' angle fixed and the count of near-perpendicular directions grows exponentially as dimensions rise. That single fact is the whole engine behind the cold-open's impossible number — and behind an AI's oversized memory.",
+        "Keep the 'good enough' angle fixed and the count of near-perpendicular directions grows exponentially as dimensions rise. The reason: in high dimensions two randomly chosen directions are almost always already nearly perpendicular, so there's room for exponentially many. That single fact is the whole engine behind the cold-open's impossible number — and behind an AI's oversized memory.",
       term: {
         label: "Embedding capacity",
         definition:
@@ -498,6 +498,36 @@ export const storySteps: readonly StoryStep[] = [
       },
     },
     guidedInput: nearRightAngle(10_000),
+  },
+  {
+    id: "board-question",
+    scene: "shared-board",
+    eyebrow: "The Shared Board",
+    title: "What are they for?",
+    image: "/images/shared-board-empty.webp",
+    alt: "Guildenstern questions Rosencrantz as six numbered boxes appear on a shared theatrical board.",
+    rosencrantz: "Store things in them. Here — watch.",
+    guildenstern:
+      "But why hoard so many dimensions — whatever will you do with them all?",
+    aside: "A direction is only useful once something is stored in it.",
+    bubbles: diagonalSharedBoardBubbles,
+    contextPanel: {
+      heading: "The boxes ARE the numbers that make a direction",
+      narrator:
+        "Time to cash in all that room. Remember: a 'direction' was never anything but a list of numbers — and these boxes are exactly those numbers, one per box. So 'nearly perpendicular' from the arrow slides is the very same thing you're about to watch on the board: two patterns whose box-signs mostly cancel. Same idea, now with coordinates you can point at.",
+      term: {
+        label: "Coordinates",
+        definition:
+          "The individual numbers that pin down a direction — here, one value written in each box.",
+        llmConnection:
+          "An AI's embedding is literally this list of numbers; each box is one coordinate the model reads and writes.",
+      },
+    },
+    prop: {
+      kind: "boxes",
+      label: "Six boxes",
+      values: ["1", "2", "3", "4", "5", "6"],
+    },
   },
   {
     id: "board-empty",
@@ -588,11 +618,11 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Unrelated patterns cancel out to nearly zero",
       narrator:
-        "Check the board for MONEY while RIVER is written on it: three boxes agree, three disagree, and they cancel. An unrelated idea leaves almost no trace when you go looking for a different one.",
+        "Check the board for MONEY while RIVER is written on it: three boxes agree, three disagree, and they cancel. That agreement score is the very same ruler as the 'overlap' — the cosine similarity — from the right-angle slides: one measurement, different names. An unrelated idea leaves almost no trace when you go looking for a different one.",
       term: {
         label: "Dot product",
         definition:
-          "Add up the box-by-box agreements between two patterns — matches count positive, clashes negative.",
+          "Add up the box-by-box agreements between two patterns — matches count positive, clashes negative. It's the same overlap measure as cosine similarity, just unnormalized.",
         llmConnection:
           "A near-zero dot product is one reason two AI features can share the same space with little interference.",
       },
@@ -666,7 +696,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "In 12,288 boxes, the overlap shrinks to under 1%",
       narrator:
-        "Blow the board up to 12,288 boxes and the same coin-flip wobble now leaves only about 111 mismatched signs — under one percent. The typical overlap between two unrelated patterns is roughly 1 / sqrt(12,288), about 0.9%, and the exact amount varies from pair to pair.",
+        "Blow the board up to 12,288 boxes and the same coin-flip wobble now leaves only about 111 mismatched signs — under one percent. Flip N ±1 coins and you land only about sqrt(N) away from even; that leftover is a vanishing slice of the whole N, which is why the overlap shrinks like 1 / sqrt(N). The typical overlap between two unrelated patterns is roughly 1 / sqrt(12,288), about 0.9%, and the exact amount varies from pair to pair — and a 0.9% overlap per unrelated pair is precisely why about a million near-orthogonal directions still fit inside 12,288 dimensions.",
       term: {
         label: "Interference",
         definition:
@@ -693,13 +723,13 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Millions can be stored; only a few speak at once",
       narrator:
-        "One board can hold kings, rivers, coins, deaths — millions of possible ideas. What keeps them from colliding isn't only the board's size; it's that just a small handful are strongly active in any single moment.",
+        "One board can hold kings, rivers, coins, deaths — millions of possible ideas. Sparsity is what makes the whole trick possible, not just a nice bonus: each pair's overlap is tiny, but if too many ideas shout at once their small overlaps pile up and start to interfere. Keep only a small handful strongly active in any single moment and the sum stays quiet.",
       term: {
         label: "Sparsity",
         definition:
-          "Only a small fraction of all possible features are strongly active at any one time.",
+          "Only a small fraction of all possible features are strongly active at any one time — the condition the trick requires.",
         llmConnection:
-          "Sparse activity lets an AI draw on a huge repertoire while rarely having many strong features collide at once.",
+          "The trick only holds while activity stays sparse: an AI can draw on a huge repertoire because few strong features collide at once, so their small overlaps never add up to real interference.",
       },
     },
     prop: {
