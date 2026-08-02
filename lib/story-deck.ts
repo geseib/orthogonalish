@@ -36,6 +36,14 @@ export type BubblePlacement = {
   tail: BubbleTail;
 };
 
+export type StorySpeaker = "rosencrantz" | "guildenstern";
+
+export type StoryDialogueTurn = {
+  speaker: StorySpeaker;
+  text: string;
+  placement: BubblePlacement;
+};
+
 export type StoryTooltip = {
   label: string;
   definition: string;
@@ -58,6 +66,7 @@ export type StoryStep = {
   alt?: string;
   rosencrantz: string;
   guildenstern?: string;
+  dialogue?: readonly StoryDialogueTurn[];
   aside: string;
   bubbles?: {
     rosencrantz: BubblePlacement;
@@ -490,7 +499,25 @@ export const storySteps: readonly StoryStep[] = [
     alt: "The six-box prop unfolds into a board of 12,288 marks.",
     rosencrantz: "There are more mistakes.",
     guildenstern:
-      "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent. And far less mistake compared with the board.",
+      "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent.",
+    dialogue: [
+      {
+        speaker: "guildenstern",
+        text:
+          "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent.",
+        placement: { position: "lower-right", tail: "up-right" },
+      },
+      {
+        speaker: "rosencrantz",
+        text: "There are more mistakes.",
+        placement: { position: "upper-left", tail: "down-left" },
+      },
+      {
+        speaker: "guildenstern",
+        text: "And far less mistake compared with the board.",
+        placement: { position: "upper-right", tail: "down-right" },
+      },
+    ],
     aside: "The board grows faster than its ordinary wobble.",
     bubbles: diagonalSharedBoardBubbles,
     contextPanel: {

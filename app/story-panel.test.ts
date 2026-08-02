@@ -9,6 +9,7 @@ import {
   tooltipStateAfter,
   type TooltipState,
 } from "./story-panel";
+import { storySteps } from "../lib/story-deck";
 
 describe("illustrated story panel", () => {
   it("derives semantic bubble placement classes", () => {
@@ -159,5 +160,29 @@ describe("illustrated story panel", () => {
     });
 
     expect(tooltipKeys).toEqual(["right-angle-meeting", "shared-board"]);
+  });
+
+  it("renders the vast-board exchange in its authored turn order", () => {
+    const markup = renderToStaticMarkup(
+      createElement(StoryPanel, {
+        estimate: null,
+        step: storySteps.find((step) => step.id === "board-vast")!,
+      }),
+    );
+    const firstGuildenstern =
+      "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent.";
+    const rosencrantz = "There are more mistakes.";
+    const finalGuildenstern =
+      "And far less mistake compared with the board.";
+
+    expect(markup).toContain(firstGuildenstern);
+    expect(markup).toContain(rosencrantz);
+    expect(markup).toContain(finalGuildenstern);
+    expect(markup.indexOf(firstGuildenstern)).toBeLessThan(
+      markup.indexOf(rosencrantz),
+    );
+    expect(markup.indexOf(rosencrantz)).toBeLessThan(
+      markup.indexOf(finalGuildenstern),
+    );
   });
 });

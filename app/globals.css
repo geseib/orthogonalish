@@ -408,6 +408,10 @@ main {
   max-width: min(47%, 27rem);
 }
 
+.story-speech-overlay .story-dialogue.has-three-turns .story-bubble {
+  max-width: min(42%, 23rem);
+}
+
 .story-context-panel {
   background:
     radial-gradient(circle at 85% 8%, rgba(216, 173, 88, 0.14), transparent 38%),
@@ -847,6 +851,10 @@ footer {
   .story-speech-overlay .story-bubble {
     max-width: 47%;
     padding: 0.55rem 0.62rem;
+  }
+
+  .story-speech-overlay .story-dialogue.has-three-turns .story-bubble {
+    max-width: 42%;
   }
 
   .story-speech-overlay .story-bubble p {

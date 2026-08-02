@@ -6,7 +6,9 @@ import { useState, type ReactNode } from "react";
 import type { StoryEstimate } from "../lib/estimate";
 import type {
   BubblePlacement,
+  StoryDialogueTurn,
   StoryProp,
+  StorySpeaker,
   StoryStep,
   StoryTooltip,
 } from "../lib/story-deck";
@@ -68,7 +70,8 @@ export function StoryPanel({
   estimate: StoryEstimate | null;
   priority?: boolean;
 }) {
-  const hasSpeechOverlay = Boolean(step.bubbles);
+  const dialogueTurns = storyDialogueTurns(step);
+  const hasSpeechOverlay = Boolean(step.bubbles || step.dialogue);
   const hasContextPanel = Boolean(step.contextPanel);
   const isTitle = step.scene === "title";
 
@@ -99,24 +102,19 @@ export function StoryPanel({
       )}
 
       <div
-        className={`story-dialogue${step.guildenstern ? " has-two-speakers" : ""}`}
+        className={`story-dialogue${dialogueTurns.length > 1 ? " has-two-speakers" : ""}${dialogueTurns.length === 3 ? " has-three-turns" : ""}`}
         aria-live="polite"
         aria-atomic="true"
       >
-        <SpeechBubble
-          speaker="rosencrantz"
-          placement={step.bubbles?.rosencrantz ?? defaultRosencrantzPlacement}
-        >
-          {step.rosencrantz}
-        </SpeechBubble>
-        {step.guildenstern ? (
+        {dialogueTurns.map((turn, index) => (
           <SpeechBubble
-            speaker="guildenstern"
-            placement={step.bubbles?.guildenstern ?? defaultGuildensternPlacement}
+            key={`${turn.speaker}-${index}`}
+            speaker={turn.speaker}
+            placement={turn.placement}
           >
-            {step.guildenstern}
+            {turn.text}
           </SpeechBubble>
-        ) : null}
+        ))}
       </div>
 
       {step.guidedInput && estimate ? (
@@ -144,12 +142,34 @@ export function StoryPanel({
   );
 }
 
+function storyDialogueTurns(step: StoryStep): readonly StoryDialogueTurn[] {
+  if (step.dialogue) return step.dialogue;
+
+  const turns: StoryDialogueTurn[] = [
+    {
+      speaker: "rosencrantz",
+      text: step.rosencrantz,
+      placement: step.bubbles?.rosencrantz ?? defaultRosencrantzPlacement,
+    },
+  ];
+
+  if (step.guildenstern) {
+    turns.push({
+      speaker: "guildenstern",
+      text: step.guildenstern,
+      placement: step.bubbles?.guildenstern ?? defaultGuildensternPlacement,
+    });
+  }
+
+  return turns;
+}
+
 function SpeechBubble({
   speaker,
   placement,
   children,
 }: {
-  speaker: "rosencrantz" | "guildenstern";
+  speaker: StorySpeaker;
   placement: BubblePlacement;
   children: ReactNode;
 }) {

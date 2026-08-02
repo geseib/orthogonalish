@@ -156,10 +156,27 @@ describe("guided story", () => {
   });
 
   it("retains the complete approved Panel 6 script", () => {
-    expect(storySteps.find((step) => step.id === "board-vast")).toMatchObject({
-      rosencrantz: "There are more mistakes.",
-      guildenstern:
-        "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent. And far less mistake compared with the board.",
+    const vast = storySteps.find((step) => step.id === "board-vast")!;
+
+    expect(vast.dialogue).toEqual([
+      {
+        speaker: "guildenstern",
+        text:
+          "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent.",
+        placement: { position: "lower-right", tail: "up-right" },
+      },
+      {
+        speaker: "rosencrantz",
+        text: "There are more mistakes.",
+        placement: { position: "upper-left", tail: "down-left" },
+      },
+      {
+        speaker: "guildenstern",
+        text: "And far less mistake compared with the board.",
+        placement: { position: "upper-right", tail: "down-right" },
+      },
+    ]);
+    expect(vast).toMatchObject({
       aside: "The board grows faster than its ordinary wobble.",
       contextPanel: {
         narrator:
