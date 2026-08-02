@@ -50,6 +50,8 @@ export type StoryTooltip = {
   llmConnection: string;
 };
 
+export type StoryDiagram = "axes-2d" | "cube-3d";
+
 export type StoryProp =
   | { kind: "boxes"; label: string; values: readonly string[] }
   | { kind: "tags"; values: readonly string[] }
@@ -75,6 +77,7 @@ export type StoryStep = {
   contextPanel?: {
     heading?: string;
     narrator: string;
+    diagram?: StoryDiagram;
     term?: StoryTooltip;
   };
   prop?: StoryProp;
@@ -224,9 +227,10 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "Enjoy it. We are about to relax the rules.",
     aside: "In two dimensions, two perfectly perpendicular directions fit.",
     contextPanel: {
-      heading: "In 2D you get exactly two perfect directions — no more",
+      heading: "Flatland offers exactly two clean directions",
       narrator:
-        "A flat sheet has room for exactly two directions at right angles, so it holds exactly two perfectly-separate ideas. Right now capacity equals the number of dimensions — one idea per dimension. Hold onto that, because it's about to break.",
+        "On a flat sheet there are only two honest ways to move — up-and-down and left-and-right. Two axes, two ideas, and no room for a third that doesn't borrow from them. It all looks reassuringly tidy… which, to an investigator, is usually the hush right before the rules get bent.",
+      diagram: "axes-2d",
       term: {
         label: "Dimension",
         definition:
@@ -292,9 +296,10 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "Three dimensions, three obvious directions. Still ordinary.",
     aside: "Small spaces remain stubbornly one-for-one.",
     contextPanel: {
-      heading: "Adding a dimension just adds one more direction",
+      heading: "Step into the room and a third direction appears",
       narrator:
-        "Step from a flat sheet into a room and you gain a third axis — up. Three dimensions, three obvious right-angle directions. In small spaces the score stays stubbornly fair, one direction per dimension, and the near-right-angle allowance still buys nothing you can see.",
+        "Off the page and into a room: back-and-forth now joins up-and-down and left-and-right. That's a cube — three axes, three clean directions. Rosencrantz has the right instinct, to keep adding dimensions… but the trap is to stop at three and call the case closed. Does he press on, or settle for the tidy little cube?",
+      diagram: "cube-3d",
     },
     guidedInput: nearRightAngle(3),
   },

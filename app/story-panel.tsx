@@ -6,6 +6,7 @@ import { useState, type ReactNode } from "react";
 import type { StoryEstimate } from "../lib/estimate";
 import type {
   BubblePlacement,
+  StoryDiagram,
   StoryDialogueTurn,
   StoryProp,
   StorySpeaker,
@@ -132,6 +133,7 @@ export function StoryPanel({
           stepId={step.id}
           heading={step.contextPanel.heading}
           narrator={step.contextPanel.narrator}
+          diagram={step.contextPanel.diagram}
           aside={step.aside}
           term={step.contextPanel.term}
         />
@@ -193,12 +195,14 @@ function NarratorPanel({
   stepId,
   heading,
   narrator,
+  diagram,
   aside,
   term,
 }: {
   stepId: string;
   heading?: string;
   narrator: string;
+  diagram?: StoryDiagram;
   aside: string;
   term?: StoryTooltip;
 }) {
@@ -211,12 +215,83 @@ function NarratorPanel({
         {heading ?? "What the picture establishes"}
       </h2>
       <p className="story-context-copy">{narrator}</p>
+      {diagram ? <ContextDiagram kind={diagram} /> : null}
       {term ? <TermTooltip key={stepId} stepId={stepId} term={term} /> : null}
       <p className="story-context-aside">
         <span>Aside</span>
         {aside}
       </p>
     </aside>
+  );
+}
+
+function ContextDiagram({ kind }: { kind: StoryDiagram }) {
+  return (
+    <figure className={`story-context-diagram diagram-${kind}`} aria-hidden="true">
+      {kind === "axes-2d" ? <AxesTwoDiagram /> : <CubeThreeDiagram />}
+    </figure>
+  );
+}
+
+// Drawn in the sidebar's own ink (stroke inherits the panel text colour) with a
+// non-scaling stroke so the line weight tracks the surrounding type at any size.
+function AxesTwoDiagram() {
+  return (
+    <svg viewBox="0 0 160 96" role="img" aria-label="Two perpendicular directions on a flat plane">
+      <g
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+      >
+        {/* left/right axis */}
+        <line x1="40" y1="48" x2="120" y2="48" />
+        <polyline points="47,42 40,48 47,54" />
+        <polyline points="113,42 120,48 113,54" />
+        {/* up/down axis */}
+        <line x1="80" y1="24" x2="80" y2="72" />
+        <polyline points="74,31 80,24 86,31" />
+        <polyline points="74,65 80,72 86,65" />
+      </g>
+      <g className="diagram-label">
+        <text x="80" y="15" textAnchor="middle">up</text>
+        <text x="80" y="90" textAnchor="middle">down</text>
+        <text x="36" y="51" textAnchor="end">left</text>
+        <text x="124" y="51" textAnchor="start">right</text>
+      </g>
+    </svg>
+  );
+}
+
+function CubeThreeDiagram() {
+  return (
+    <svg viewBox="0 0 160 96" role="img" aria-label="Three perpendicular directions on a cube">
+      <g
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+      >
+        {/* front face */}
+        <rect x="44" y="36" width="42" height="42" />
+        {/* back face, offset up-right */}
+        <rect x="68" y="20" width="42" height="42" />
+        {/* connecting edges */}
+        <line x1="44" y1="36" x2="68" y2="20" />
+        <line x1="86" y1="36" x2="110" y2="20" />
+        <line x1="44" y1="78" x2="68" y2="62" />
+        <line x1="86" y1="78" x2="110" y2="62" />
+      </g>
+      <g className="diagram-label">
+        <text x="65" y="92" textAnchor="middle">left · right</text>
+        <text x="40" y="60" textAnchor="end">up · down</text>
+        <text x="89" y="13" textAnchor="middle">back · forth</text>
+      </g>
+    </svg>
   );
 }
 
