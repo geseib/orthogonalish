@@ -12,13 +12,13 @@ test("replaces the starter preview with the vector theatre", async () => {
   ]);
 
   expect(storyDeck).toMatch(/How many arrows can stand/);
+  expect(storyDeck).toMatch(/Are we ideas\?/);
+  expect(storyDeck).toMatch(/At present, rather active ones/);
   expect(guidedStory).toMatch(/Previous story step/);
   expect(guidedStory).toMatch(/Next story step/);
-  expect(page).toMatch(/Estimated total vectors/);
-  expect(page).toMatch(/Verified vectors found/);
-  expect(page).toMatch(/What did that mean\?/);
-  expect(page).toMatch(/new Worker/);
-  expect(page).toMatch(/workerRef\.current\?\.terminate\(\)/);
+  expect(page).not.toMatch(
+    /new Worker|Test it|Verified vectors found|Candidate attempts/,
+  );
   expect(css).toMatch(/prefers-reduced-motion:\s*reduce/);
 
   expect(layout).toMatch(/title:\s*"The Nearly Orthogonal Society"/);

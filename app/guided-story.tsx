@@ -12,7 +12,6 @@ import {
   getGuidedEstimate,
   moveStoryStep,
   storySteps,
-  type GuidedInput,
   type StoryScene,
 } from "../lib/story-deck";
 import {
@@ -21,10 +20,6 @@ import {
 } from "../lib/story-navigation";
 import { StoryPanel } from "./story-panel";
 
-type GuidedStoryProps = {
-  onGuidedInput: (input: GuidedInput) => void;
-};
-
 const sceneOrder = storySteps.reduce<StoryScene[]>((scenes, step) => {
   if (!scenes.includes(step.scene)) scenes.push(step.scene);
   return scenes;
@@ -32,21 +27,11 @@ const sceneOrder = storySteps.reduce<StoryScene[]>((scenes, step) => {
 
 const transitionMilliseconds = 360;
 
-export function GuidedStory({ onGuidedInput }: GuidedStoryProps) {
+export function GuidedStory() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [atCalculator, setAtCalculator] = useState(false);
   const transitionLockedRef = useRef(false);
-  const guidedInputCallbackRef = useRef(onGuidedInput);
   const unlockTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const step = storySteps[activeIndex];
-
-  useEffect(() => {
-    guidedInputCallbackRef.current = onGuidedInput;
-  }, [onGuidedInput]);
-
-  useEffect(() => {
-    if (step.guidedInput) guidedInputCallbackRef.current(step.guidedInput);
-  }, [activeIndex, step.guidedInput]);
 
   useEffect(
     () => () => {
@@ -80,24 +65,6 @@ export function GuidedStory({ onGuidedInput }: GuidedStoryProps) {
     (direction: "previous" | "next") => {
       if (transitionLockedRef.current) return;
 
-      if (atCalculator) {
-        if (direction === "previous") {
-          transitionLockedRef.current = true;
-          setAtCalculator(false);
-          scrollTo(`story-${storySteps[activeIndex].scene}`);
-          releaseNavigationLock();
-        }
-        return;
-      }
-
-      if (direction === "next" && activeIndex === storySteps.length - 1) {
-        transitionLockedRef.current = true;
-        setAtCalculator(true);
-        scrollTo("calculator");
-        releaseNavigationLock();
-        return;
-      }
-
       const destination = moveStoryStep(activeIndex, direction);
       if (destination.index === activeIndex) return;
 
@@ -108,7 +75,7 @@ export function GuidedStory({ onGuidedInput }: GuidedStoryProps) {
         requestAnimationFrame(() => scrollTo(`story-${nextScene}`));
       }
       releaseNavigationLock();
-    }, [activeIndex, atCalculator, releaseNavigationLock, scrollTo],
+    }, [activeIndex, releaseNavigationLock, scrollTo],
   );
 
   useEffect(() => {
@@ -166,19 +133,18 @@ export function GuidedStory({ onGuidedInput }: GuidedStoryProps) {
           type="button"
           aria-label="Previous story step"
           onClick={() => navigate("previous")}
-          disabled={!atCalculator && activeIndex === 0}
+          disabled={activeIndex === 0}
         >
           ↑
         </button>
         <span aria-live="polite">
-          {atCalculator ? storySteps.length + 1 : activeIndex + 1} /{" "}
-          {storySteps.length + 1}
+          {activeIndex + 1} / {storySteps.length}
         </span>
         <button
           type="button"
           aria-label="Next story step"
           onClick={() => navigate("next")}
-          disabled={atCalculator}
+          disabled={activeIndex === storySteps.length - 1}
         >
           ↓
         </button>
