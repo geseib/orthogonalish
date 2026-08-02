@@ -490,7 +490,7 @@ export const storySteps: readonly StoryStep[] = [
     alt: "The six-box prop unfolds into a board of 12,288 marks.",
     rosencrantz: "There are more mistakes.",
     guildenstern:
-      "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent.",
+      "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent. And far less mistake compared with the board.",
     aside: "The board grows faster than its ordinary wobble.",
     bubbles: diagonalSharedBoardBubbles,
     contextPanel: {

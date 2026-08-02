@@ -109,4 +109,55 @@ describe("illustrated story panel", () => {
     expect(markup).toContain("Rosencrantz · experimentalist");
     expect(markup).toContain("Guildenstern · theorist");
   });
+
+  it("uses each step ID as the term tooltip reconciliation boundary", () => {
+    const steps = [
+      {
+        id: "right-angle-meeting",
+        scene: "right-angle" as const,
+        eyebrow: "Two different ideas",
+        title: "A perfect right angle",
+        rosencrantz: "Two lines meet.",
+        aside: "A right angle marks separate directions.",
+        contextPanel: {
+          narrator: "A right angle is the cleanest possible separation.",
+          term: {
+            label: "Orthogonal",
+            definition: "Directions that meet at exactly 90°.",
+            llmConnection: "They interfere very little.",
+          },
+        },
+      },
+      {
+        id: "shared-board",
+        scene: "shared-board" as const,
+        eyebrow: "The Shared Board",
+        title: "A shared space",
+        rosencrantz: "One board holds many ideas.",
+        aside: "The board is shared.",
+        contextPanel: {
+          narrator: "A large space keeps unrelated patterns separate.",
+          term: {
+            label: "Interference",
+            definition: "Unwanted overlap between represented features.",
+            llmConnection: "Small overlap helps a language model read features.",
+          },
+        },
+      },
+    ];
+
+    const tooltipKeys = steps.map((step) => {
+      const panel = StoryPanel({ estimate: null, step });
+      const contextPanel = panel.props.children.find(
+        (child: { props?: { stepId?: string } }) =>
+          child?.props?.stepId === step.id,
+      );
+      const context = contextPanel.type(contextPanel.props);
+      const tooltip = context.props.children[3];
+
+      return tooltip.key;
+    });
+
+    expect(tooltipKeys).toEqual(["right-angle-meeting", "shared-board"]);
+  });
 });

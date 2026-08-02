@@ -155,6 +155,19 @@ describe("guided story", () => {
     );
   });
 
+  it("retains the complete approved Panel 6 script", () => {
+    expect(storySteps.find((step) => step.id === "board-vast")).toMatchObject({
+      rosencrantz: "There are more mistakes.",
+      guildenstern:
+        "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent. And far less mistake compared with the board.",
+      aside: "The board grows faster than its ordinary wobble.",
+      contextPanel: {
+        narrator:
+          "For unrelated random sign patterns, the typical normalized overlap is about 1 / sqrt(12,288), or 0.9%. The exact imbalance varies.",
+      },
+    });
+  });
+
   it("supplies visual and narration metadata for every Shared Board beat", () => {
     const sharedBoard = storySteps.filter(
       (step) => step.scene === "shared-board",

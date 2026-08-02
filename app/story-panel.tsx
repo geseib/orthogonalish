@@ -185,7 +185,7 @@ function NarratorPanel({
       <p className="story-context-kicker">Narrator</p>
       <h2 id={`story-${stepId}-context-title`}>What the picture establishes</h2>
       <p className="story-context-copy">{narrator}</p>
-      {term ? <TermTooltip stepId={stepId} term={term} /> : null}
+      {term ? <TermTooltip key={stepId} stepId={stepId} term={term} /> : null}
       <p className="story-context-aside">
         <span>Aside</span>
         {aside}
