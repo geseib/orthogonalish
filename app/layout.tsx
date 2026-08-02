@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
+import BackgroundMusic from "./background-music";
 import {
   parseTrustedForwardedHosts,
   resolveMetadataBase,
@@ -65,7 +66,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <BackgroundMusic />
+      </body>
     </html>
   );
 }

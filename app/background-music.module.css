@@ -1,0 +1,109 @@
+/*
+ * Floating background-music control.
+ * Sits bottom-LEFT so it never collides with the story navigation
+ * controller (.story-controller), which is fixed bottom-right.
+ */
+
+.dock {
+  bottom: max(0.7rem, env(safe-area-inset-bottom));
+  left: max(0.7rem, env(safe-area-inset-left));
+  position: fixed;
+  z-index: 30;
+}
+
+.button {
+  align-items: center;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  background: rgba(11, 13, 15, 0.72);
+  border: 1px solid rgba(216, 173, 88, 0.42);
+  border-radius: 99px;
+  color: var(--gold, #d8ad58);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 0.5rem;
+  height: 2.5rem;
+  justify-content: center;
+  padding: 0 0.85rem 0 0.75rem;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.button:hover {
+  background: rgba(11, 13, 15, 0.9);
+  border-color: var(--cyan, #63d9e7);
+  color: var(--cyan, #63d9e7);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--cyan, #63d9e7);
+  outline-offset: 4px;
+}
+
+/* Icon glyph (triangle / bars) drawn with the label text hidden. */
+.icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 0.95rem;
+  width: 0.95rem;
+}
+
+.icon svg {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.label {
+  color: var(--ivory-dim, #bdb6a7);
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Tiny equalizer that bobs while playing. */
+.equalizer {
+  align-items: flex-end;
+  display: inline-flex;
+  gap: 2px;
+  height: 0.95rem;
+}
+
+.equalizer span {
+  background: currentColor;
+  display: block;
+  height: 40%;
+  width: 3px;
+}
+
+.playing .equalizer span {
+  animation: eqBob 900ms ease-in-out infinite;
+}
+
+.playing .equalizer span:nth-child(2) {
+  animation-delay: 180ms;
+}
+
+.playing .equalizer span:nth-child(3) {
+  animation-delay: 360ms;
+}
+
+@keyframes eqBob {
+  0%,
+  100% {
+    height: 35%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playing .equalizer span {
+    animation: none;
+    height: 70%;
+  }
+}
