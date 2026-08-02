@@ -74,15 +74,7 @@ test("keeps app and library sources in the Vercel typecheck", async () => {
     expect.arrayContaining(["**/*.ts", "**/*.tsx"]),
   );
   expect(tsconfig.exclude).toEqual(
-    expect.arrayContaining([
-      "node_modules",
-      "db/**",
-      "worker/**",
-      "vite.config.ts",
-      "build/**",
-      "drizzle.config.ts",
-      "examples/**",
-    ]),
+    expect.arrayContaining(["node_modules"]),
   );
   expect(tsconfig.exclude).not.toEqual(
     expect.arrayContaining(["app/**", "lib/**"]),
