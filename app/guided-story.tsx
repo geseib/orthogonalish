@@ -145,6 +145,8 @@ export function GuidedStory({ onGuidedInput }: GuidedStoryProps) {
         const visibleStep = step.scene === scene ? step : firstStepByScene[scene];
         const estimate = getGuidedEstimate(visibleStep);
         const isTitle = scene === "title";
+        const hasSpeechOverlay = visibleStep.presentation === "speech-overlay";
+        const hasContextPanel = Boolean(visibleStep.contextPanel);
 
         return (
           <section
@@ -154,7 +156,10 @@ export function GuidedStory({ onGuidedInput }: GuidedStoryProps) {
             key={scene}
             aria-labelledby={`story-${scene}-title`}
           >
-            <div className={`story-stage-grid${isTitle ? " story-title-grid" : ""}`}>
+            <div
+              className={`story-stage-grid${isTitle ? " story-title-grid" : ""}${hasSpeechOverlay ? " story-speech-overlay" : ""}${hasContextPanel ? " has-context-panel" : ""}`}
+              data-dialogue-placement={hasSpeechOverlay ? "overlay" : "beside"}
+            >
               <header className="story-heading">
                 <p className="eyebrow">{visibleStep.eyebrow}</p>
                 <h1 id={`story-${scene}-title`}>{visibleStep.title}</h1>
@@ -202,10 +207,49 @@ export function GuidedStory({ onGuidedInput }: GuidedStoryProps) {
                 </aside>
               ) : null}
 
-              <p className="story-aside">
-                <span>Aside</span>
-                {visibleStep.aside}
-              </p>
+              {visibleStep.contextPanel ? (
+                <aside
+                  className="story-context-panel"
+                  aria-labelledby={`story-${visibleStep.id}-context-title`}
+                >
+                  <p className="story-context-kicker">Narrator</p>
+                  <h2 id={`story-${visibleStep.id}-context-title`}>
+                    What the picture establishes
+                  </h2>
+                  <p className="story-context-copy">
+                    {visibleStep.contextPanel.narrator}
+                  </p>
+                  <div className="story-term-wrap">
+                    <p>Look closer</p>
+                    <button
+                      className="story-term"
+                      type="button"
+                      aria-label={visibleStep.contextPanel.term.label}
+                      aria-describedby={`story-${visibleStep.id}-tooltip`}
+                    >
+                      {visibleStep.contextPanel.term.label}
+                      <span aria-hidden="true">?</span>
+                    </button>
+                    <span
+                      className="story-tooltip"
+                      id={`story-${visibleStep.id}-tooltip`}
+                      role="tooltip"
+                    >
+                      <strong>{visibleStep.contextPanel.term.definition}</strong>
+                      <span>{visibleStep.contextPanel.term.llmConnection}</span>
+                    </span>
+                  </div>
+                  <p className="story-context-aside">
+                    <span>Aside</span>
+                    {visibleStep.aside}
+                  </p>
+                </aside>
+              ) : (
+                <p className="story-aside">
+                  <span>Aside</span>
+                  {visibleStep.aside}
+                </p>
+              )}
             </div>
           </section>
         );

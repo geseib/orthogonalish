@@ -28,6 +28,15 @@ export type StoryStep = {
   rosencrantz: string;
   guildenstern?: string;
   aside: string;
+  presentation?: "speech-overlay";
+  contextPanel?: {
+    narrator: string;
+    term: {
+      label: string;
+      definition: string;
+      llmConnection: string;
+    };
+  };
   guidedInput?: GuidedInput;
 };
 
@@ -84,6 +93,18 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "They meet at exactly 90°. Neither points even slightly along the other.",
     aside: "A right angle marks two completely separate directions.",
+    presentation: "speech-overlay",
+    contextPanel: {
+      narrator:
+        "A right angle is the cleanest possible separation: neither direction contains any part of the other.",
+      term: {
+        label: "Orthogonal",
+        definition:
+          "The mathematical word for directions that meet at exactly 90°.",
+        llmConnection:
+          "In a modern language model, two feature directions with a dot product near zero interfere very little when the shared activation space is read.",
+      },
+    },
   },
   {
     id: "right-angle-ideas",
