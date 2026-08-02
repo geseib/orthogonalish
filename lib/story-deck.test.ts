@@ -51,30 +51,32 @@ describe("guided story", () => {
     );
   });
 
-  it("reserves the speech-overlay comparison for one existing slide", () => {
-    const overlaySteps = storySteps.filter(
-      (step) => step.presentation === "speech-overlay",
+  it("uses the approved bubble placement for the reference comparison", () => {
+    const comparison = storySteps.find(
+      (step) => step.id === "right-angle-meeting",
     );
 
-    expect(overlaySteps.map((step) => step.id)).toEqual([
-      "right-angle-meeting",
-    ]);
-    expect(overlaySteps[0]).toMatchObject({
+    expect(comparison).toMatchObject({
       image: "/images/two-ideas-right-angle.webp",
       rosencrantz:
         "Two lines. They have met and immediately agreed to face elsewhere.",
       guildenstern:
         "They meet at exactly 90°. Neither points even slightly along the other.",
+      bubbles: {
+        rosencrantz: { position: "upper-left", tail: "down-right" },
+        guildenstern: { position: "lower-right", tail: "up-left" },
+      },
     });
   });
 
-  it("gives only the comparison slide a narrator panel with optional depth", () => {
+  it("keeps the comparison slide's narrator panel with optional depth", () => {
     const contextualSteps = storySteps.filter((step) => step.contextPanel);
 
-    expect(contextualSteps.map((step) => step.id)).toEqual([
-      "right-angle-meeting",
-    ]);
-    expect(contextualSteps[0].contextPanel).toMatchObject({
+    const comparison = contextualSteps.find(
+      (step) => step.id === "right-angle-meeting",
+    );
+
+    expect(comparison?.contextPanel).toMatchObject({
       narrator:
         "A right angle is the cleanest possible separation: neither direction contains any part of the other.",
       term: {
@@ -83,9 +85,61 @@ describe("guided story", () => {
           "The mathematical word for directions that meet at exactly 90°.",
       },
     });
-    expect(contextualSteps[0].contextPanel?.term.llmConnection).toMatch(
+    expect(comparison?.contextPanel?.term?.llmConnection).toMatch(
       /language model|LLM/i,
     );
+  });
+
+  it("ends with the ordered Shared Board act", () => {
+    expect(storySteps.slice(-8).map((step) => step.id)).toEqual([
+      "board-empty",
+      "board-fingerprint",
+      "board-writing",
+      "board-cancellation",
+      "board-cramped",
+      "board-vast",
+      "board-company",
+      "board-active",
+    ]);
+    expect(storySteps.at(-1)?.rosencrantz).toBe("Are we ideas?");
+    expect(storySteps.at(-1)?.guildenstern).toBe(
+      "At present, rather active ones.",
+    );
+  });
+
+  it("preserves the approved estimates and cautious vast-board explanation", () => {
+    expect(
+      getGuidedEstimate(
+        storySteps.find((step) => step.id === "growth-ten-thousand")!,
+      )?.total,
+    ).toBe(540_586);
+    expect(
+      getGuidedEstimate(
+        storySteps.find((step) => step.id === "cold-open-result")!,
+      )?.total,
+    ).toBe(1_388_864);
+
+    const vast = storySteps.find((step) => step.id === "board-vast")!;
+    expect(vast.contextPanel?.narrator).toMatch(/varies|typical/i);
+    expect(vast.contextPanel?.term?.llmConnection).not.toMatch(
+      /unlimited|never confused/i,
+    );
+  });
+
+  it("supplies visual and narration metadata for every Shared Board beat", () => {
+    const sharedBoard = storySteps.filter(
+      (step) => step.scene === "shared-board",
+    );
+    expect(sharedBoard).toHaveLength(8);
+    expect(sharedBoard.every((step) => step.image && step.contextPanel)).toBe(
+      true,
+    );
+    expect(sharedBoard.every((step) => step.bubbles?.rosencrantz)).toBe(true);
+    expect(
+      storySteps
+        .filter((step) => step.guildenstern && step.image)
+        .every((step) => step.bubbles?.guildenstern),
+    ).toBe(true);
   });
 
   it("moves one step at a time without wrapping and reports scene changes", () => {

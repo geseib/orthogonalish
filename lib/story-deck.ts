@@ -10,13 +10,44 @@ export type StoryScene =
   | "right-angle"
   | "one-more"
   | "failed-demo"
-  | "growth";
+  | "growth"
+  | "shared-board";
 
 export type GuidedInput = {
   dimension: number;
   lowerAngle: number;
   upperAngle: number;
 };
+
+export type BubblePosition =
+  | "upper-left"
+  | "upper-right"
+  | "lower-left"
+  | "lower-right";
+
+export type BubbleTail =
+  | "down-left"
+  | "down-right"
+  | "up-left"
+  | "up-right";
+
+export type BubblePlacement = {
+  position: BubblePosition;
+  tail: BubbleTail;
+};
+
+export type StoryTooltip = {
+  label: string;
+  definition: string;
+  llmConnection: string;
+};
+
+export type StoryProp =
+  | { kind: "boxes"; label: string; values: readonly string[] }
+  | { kind: "tags"; values: readonly string[] }
+  | { kind: "ratio"; expression: string; caption: string }
+  | { kind: "vast-board"; count: 12_288 }
+  | { kind: "call"; lines: readonly [string, string] };
 
 export type StoryStep = {
   id: string;
@@ -28,15 +59,15 @@ export type StoryStep = {
   rosencrantz: string;
   guildenstern?: string;
   aside: string;
-  presentation?: "speech-overlay";
+  bubbles?: {
+    rosencrantz: BubblePlacement;
+    guildenstern?: BubblePlacement;
+  };
   contextPanel?: {
     narrator: string;
-    term: {
-      label: string;
-      definition: string;
-      llmConnection: string;
-    };
+    term?: StoryTooltip;
   };
+  prop?: StoryProp;
   guidedInput?: GuidedInput;
 };
 
@@ -46,6 +77,21 @@ const nearRightAngle = (dimension: number): GuidedInput => ({
   upperAngle: 92,
 });
 
+const rosencrantzBubble = {
+  position: "upper-left",
+  tail: "down-right",
+} as const;
+
+const guildensternBubble = {
+  position: "lower-right",
+  tail: "up-left",
+} as const;
+
+const twoSpeakerBubbles = {
+  rosencrantz: rosencrantzBubble,
+  guildenstern: guildensternBubble,
+} as const;
+
 export const storySteps: readonly StoryStep[] = [
   {
     id: "cold-open-result",
@@ -54,6 +100,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "More than I put in",
     image: "/images/rosencrantz-discovery.webp",
     alt: "Rosencrantz stands alone at a brass apparatus as cyan vector arrows multiply across the dark stage.",
+    bubbles: { rosencrantz: rosencrantzBubble },
     rosencrantz:
       "One million, three hundred eighty-eight thousand, eight hundred sixty-four. That seems more than I put in.",
     aside: "He has stumbled onto the answer before hearing the question.",
@@ -66,6 +113,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "More than I put in",
     image: "/images/rosencrantz-discovery.webp",
     alt: "Rosencrantz stands alone at a brass apparatus as cyan vector arrows multiply across the dark stage.",
+    bubbles: { rosencrantz: rosencrantzBubble },
     rosencrantz:
       "Guildenstern! The machine has produced more directions than it has dimensions.",
     aside: "The experimentalist has found a fact. An explanation has yet to arrive.",
@@ -88,12 +136,12 @@ export const storySteps: readonly StoryStep[] = [
     title: "A perfect right angle",
     image: "/images/two-ideas-right-angle.webp",
     alt: "Rosencrantz and Guildenstern examine two luminous lines meeting at a right angle.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz:
       "Two lines. They have met and immediately agreed to face elsewhere.",
     guildenstern:
       "They meet at exactly 90°. Neither points even slightly along the other.",
     aside: "A right angle marks two completely separate directions.",
-    presentation: "speech-overlay",
     contextPanel: {
       narrator:
         "A right angle is the cleanest possible separation: neither direction contains any part of the other.",
@@ -113,6 +161,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "A perfect right angle",
     image: "/images/two-ideas-right-angle.webp",
     alt: "Rosencrantz and Guildenstern examine two luminous lines meeting at a right angle.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz:
       "Suppose this line is one idea, and that line another. Can they interrupt each other?",
     guildenstern: "Not in this picture. Each has its own direction.",
@@ -125,6 +174,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "A perfect right angle",
     image: "/images/two-ideas-right-angle.webp",
     alt: "Rosencrantz and Guildenstern examine two luminous lines meeting at a right angle.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz: "Two dimensions. Two ideas. A well-behaved universe.",
     guildenstern: "Enjoy it. We are about to relax the rules.",
     aside: "In two dimensions, two perfectly perpendicular directions fit.",
@@ -136,6 +186,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "The finger that will not fit",
     image: "/images/one-more-finger.webp",
     alt: "Guildenstern forms an L with his fingers while Rosencrantz tries to place a third glowing line between them.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz:
       "Your thumb and finger make two directions. There is plainly room between them.",
     guildenstern:
@@ -149,6 +200,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "The finger that will not fit",
     image: "/images/one-more-finger.webp",
     alt: "Guildenstern forms an L with his fingers while Rosencrantz tries to place a third glowing line between them.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz: "I shall be generous: anywhere from 88° to 92°.",
     guildenstern:
       "Generosity has not made a third line fit. It has merely made the failure less tidy.",
@@ -161,6 +213,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "The finger that will not fit",
     image: "/images/one-more-finger.webp",
     alt: "Guildenstern forms an L with his fingers while Rosencrantz tries to place a third glowing line between them.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz: "Then add one dimension.",
     guildenstern: "Three dimensions, three obvious directions. Still ordinary.",
     aside: "Small spaces remain stubbornly one-for-one.",
@@ -173,6 +226,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "Guildenstern makes it sensible",
     image: "/images/grand-conjecture.webp",
     alt: "Rosencrantz presents a field of cyan arrows while Guildenstern prepares to measure them.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz:
       "I found 1,388,864 directions in 12,288 dimensions. The box was quite definite.",
     guildenstern: "A result arriving before its explanation is merely an ambush.",
@@ -186,6 +240,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "Guildenstern makes it sensible",
     image: "/images/grand-conjecture.webp",
     alt: "Rosencrantz presents a field of cyan arrows while Guildenstern prepares to measure them.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz: "You have made the machine smaller.",
     guildenstern:
       "Ten dimensions. Now the experiment is small enough to understand.",
@@ -199,6 +254,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "Guildenstern makes it sensible",
     image: "/images/grand-conjecture.webp",
     alt: "Rosencrantz presents a field of cyan arrows while Guildenstern prepares to measure them.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz: "Ten directions. Your great explanation has discovered ten.",
     guildenstern: "An admirably ordinary result. The earlier number was suspect.",
     aside: "The theorist mistakes an ordinary example for the whole truth.",
@@ -211,6 +267,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "Guildenstern makes it sensible",
     image: "/images/grand-conjecture.webp",
     alt: "Rosencrantz presents a field of cyan arrows while Guildenstern prepares to measure them.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz: "Or we could turn the handle and ask the world again.",
     guildenstern: "That is not a theory.",
     aside: "It is, however, an experiment.",
@@ -223,6 +280,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "Multiplying room",
     image: "/images/exponential-prop-closet.webp",
     alt: "Nested cupboards and multiplying cyan arrows recede impossibly backstage.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz: "One hundred dimensions. The box says 113.",
     guildenstern: "A small excess. Possibly clerical.",
     aside: "At first, the advantage is easy to dismiss.",
@@ -235,6 +293,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "Multiplying room",
     image: "/images/exponential-prop-closet.webp",
     alt: "Nested cupboards and multiplying cyan arrows recede impossibly backstage.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz: "One thousand dimensions. Two thousand, six hundred fifty-eight directions.",
     guildenstern: "The excess is becoming impertinent.",
     aside: "At 1,000 dimensions, the estimate has begun to pull away.",
@@ -247,6 +306,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "Multiplying room",
     image: "/images/exponential-prop-closet.webp",
     alt: "Nested cupboards and multiplying cyan arrows recede impossibly backstage.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz:
       "Ten thousand dimensions. Five hundred forty thousand, five hundred eighty-six directions.",
     guildenstern: "I withdraw clerical.",
@@ -260,6 +320,7 @@ export const storySteps: readonly StoryStep[] = [
     title: "Multiplying room",
     image: "/images/exponential-prop-closet.webp",
     alt: "Nested cupboards and multiplying cyan arrows recede impossibly backstage.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz: "So the room is not merely getting larger.",
     guildenstern: "No. Each increase makes the next increase more consequential.",
     aside: "The growth is multiplying rather than merely adding.",
@@ -272,12 +333,224 @@ export const storySteps: readonly StoryStep[] = [
     title: "Exponential growth",
     image: "/images/exponential-prop-closet.webp",
     alt: "Nested cupboards and multiplying cyan arrows recede impossibly backstage.",
+    bubbles: twoSpeakerBubbles,
     rosencrantz: "Multiplying room.",
     guildenstern:
       "Exponential growth with dimension. Your phrase is less dignified and more memorable.",
     aside:
       "With a fixed near-right-angle tolerance, possible directions can grow exponentially with dimension.",
     guidedInput: nearRightAngle(10_000),
+  },
+  {
+    id: "board-empty",
+    scene: "shared-board",
+    eyebrow: "The Shared Board",
+    title: "Six boxes",
+    image: "/images/shared-board-empty.webp",
+    alt: "Six numbered boxes sit on a shared theatrical board.",
+    rosencrantz: "They have declined their assignments. They are only boxes.",
+    guildenstern:
+      "Six boxes. One might assign a meaning to each and proceed sensibly.",
+    aside: "The boxes share their work.",
+    bubbles: twoSpeakerBubbles,
+    contextPanel: {
+      narrator:
+        "A model's working numbers act like shared scratch space. Individual positions need not have fixed human meanings.",
+    },
+    prop: {
+      kind: "boxes",
+      label: "Six boxes",
+      values: ["1", "2", "3", "4", "5", "6"],
+    },
+  },
+  {
+    id: "board-fingerprint",
+    scene: "shared-board",
+    eyebrow: "The Shared Board",
+    title: "A fingerprint, not a drawer",
+    image: "/images/shared-board-fingerprint.webp",
+    alt: "The word MONEY spans six boxes as a distributed pattern.",
+    rosencrantz:
+      "So the idea is nowhere in particular, but unmistakably everywhere?",
+    guildenstern: "MONEY is not in a box. It is the pattern across all six.",
+    aside: "The idea belongs to the whole board.",
+    bubbles: twoSpeakerBubbles,
+    contextPanel: {
+      narrator:
+        "An idea can be represented by a distributed direction across the whole board.",
+      term: {
+        label: "Feature direction",
+        definition:
+          "A feature direction is a pattern of values across a shared space; the plus and minus signs here are a teaching model, while learned directions use varied continuous values.",
+        llmConnection:
+          "Language models can represent a feature as a direction spread across many coordinates rather than a single named slot.",
+      },
+    },
+    prop: {
+      kind: "boxes",
+      label: "MONEY",
+      values: ["+", "+", "−", "+", "−", "−"],
+    },
+  },
+  {
+    id: "board-writing",
+    scene: "shared-board",
+    eyebrow: "The Shared Board",
+    title: "Writing with confidence",
+    image: "/images/shared-board-writing.webp",
+    alt: "DEPOSITED, CASH, and BANK add a MONEY pattern strongly to the board.",
+    rosencrantz:
+      "I deposited cash at the bank. The sentence appears rather sure of itself.",
+    guildenstern:
+      "Then it writes the MONEY pattern strongly. Confidence is how firmly the pattern is added.",
+    aside: "The pattern can be written more or less strongly.",
+    bubbles: twoSpeakerBubbles,
+    contextPanel: {
+      narrator:
+        "Writing an idea means adding some amount of its fingerprint to the shared board. This is an intuition, not a literal account of every model computation.",
+    },
+    prop: { kind: "tags", values: ["DEPOSITED", "CASH", "BANK"] },
+  },
+  {
+    id: "board-cancellation",
+    scene: "shared-board",
+    eyebrow: "The Shared Board",
+    title: "Reading by agreement",
+    image: "/images/shared-board-cancellation.webp",
+    alt: "MONEY is compared with RIVER, with three agreeing and three disagreeing signs.",
+    rosencrantz:
+      "The river is plainly present. The money inspector is simply unable to hear it.",
+    guildenstern:
+      "Three agreements. Three disagreements. Add them, and the river leaves no money behind.",
+    aside: "The unrelated pattern cancels out.",
+    bubbles: twoSpeakerBubbles,
+    contextPanel: {
+      narrator:
+        "The agreement score is a simplified dot product. Perpendicular patterns cancel to zero.",
+      term: {
+        label: "Dot product",
+        definition:
+          "A dot product adds the coordinate-by-coordinate agreements between two directions.",
+        llmConnection:
+          "A small dot product is one reason two model features can be read with relatively little direct interference.",
+      },
+    },
+    prop: {
+      kind: "boxes",
+      label: "MONEY × RIVER",
+      values: ["✓", "×", "✓", "×", "×", "✓"],
+    },
+  },
+  {
+    id: "board-cramped",
+    scene: "shared-board",
+    eyebrow: "The Shared Board",
+    title: "Six is a cramped stage",
+    image: "/images/shared-board-cramped.webp",
+    alt: "A small six-box board shows an imbalance of two agreements out of six.",
+    rosencrantz: "One stray agreement in six seems an awfully loud accident.",
+    guildenstern:
+      "Small boards magnify coincidence. This is why our earlier tiny spaces refused the trick.",
+    aside: "A small board makes coincidence conspicuous.",
+    bubbles: twoSpeakerBubbles,
+    contextPanel: {
+      narrator:
+        "Near-perpendicularity becomes useful only after the space is large enough for small imbalances to become proportionally tiny. The displayed numbers are illustrative of scale, not a deterministic outcome for every random fingerprint.",
+      term: {
+        label: "Tolerance",
+        definition:
+          "Tolerance is the small amount of overlap allowed when directions are nearly, rather than exactly, perpendicular.",
+        llmConnection:
+          "Model features need not be perfectly separate to be useful; their overlap only needs to be small enough for the task and activity level.",
+      },
+    },
+    prop: {
+      kind: "ratio",
+      expression: "2 ÷ 6 = 33%",
+      caption: "A small imbalance looms large.",
+    },
+  },
+  {
+    id: "board-vast",
+    scene: "shared-board",
+    eyebrow: "The Shared Board",
+    title: "Twelve thousand boxes",
+    image: "/images/shared-board-vast.webp",
+    alt: "The six-box prop unfolds into a board of 12,288 marks.",
+    rosencrantz: "There are more mistakes.",
+    guildenstern:
+      "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent.",
+    aside: "The board grows faster than its ordinary wobble.",
+    bubbles: twoSpeakerBubbles,
+    contextPanel: {
+      narrator:
+        "For unrelated random sign patterns, the typical normalized overlap is about 1 / sqrt(12,288), or 0.9%. The exact imbalance varies.",
+      term: {
+        label: "Interference",
+        definition:
+          "Interference is the unwanted overlap that makes one represented feature affect another when it is read.",
+        llmConnection:
+          "In language models, unrelated feature directions often have small overlap, but the amount and its effects vary with the learned features and context.",
+      },
+    },
+    prop: { kind: "vast-board", count: 12_288 },
+  },
+  {
+    id: "board-company",
+    scene: "shared-board",
+    eyebrow: "The Shared Board",
+    title: "The whole play at once",
+    image: "/images/shared-board-company.webp",
+    alt: "Many named ideas share one illuminated theatrical board.",
+    rosencrantz:
+      "Then a single board may know kings, rivers, coins, deaths—and us?",
+    guildenstern:
+      "Millions of possible ideas. Only a modest company needs to be active in any one moment.",
+    aside: "The active company matters.",
+    bubbles: twoSpeakerBubbles,
+    contextPanel: {
+      narrator:
+        "Capacity depends strongly on how many features are active together, not only on how many have been learned.",
+      term: {
+        label: "Sparsity",
+        definition:
+          "Sparsity means that only a small fraction of possible features are strongly active at once.",
+        llmConnection:
+          "Sparse activity lets a language model draw on a large repertoire while reducing the chances that many strong features collide at the same moment.",
+      },
+    },
+    prop: {
+      kind: "tags",
+      values: [
+        "MONEY",
+        "RIVER",
+        "KING",
+        "COIN",
+        "FRIEND",
+        "DEATH",
+        "PAST",
+        "QUESTION",
+        "JOURNEY",
+        "BETRAYAL",
+      ],
+    },
+  },
+  {
+    id: "board-active",
+    scene: "shared-board",
+    eyebrow: "The Shared Board",
+    title: "Presently active",
+    image: "/images/shared-board-active.webp",
+    alt: "An unseen call illuminates the Rosencrantz and Guildenstern fingerprints on the board.",
+    rosencrantz: "Are we ideas?",
+    guildenstern: "At present, rather active ones.",
+    aside: "The characters leave before completing the discovery.",
+    bubbles: twoSpeakerBubbles,
+    contextPanel: {
+      narrator:
+        "A language model can hold an enormous repertoire because only a fraction of what it knows must speak strongly at each word.",
+    },
+    prop: { kind: "call", lines: ["ROSENCRANTZ!", "GUILDENSTERN!"] },
   },
 ] as const;
 
