@@ -46,14 +46,13 @@ describe("validateInputs", () => {
 
 describe("estimateStoryTotal", () => {
   it("restores the large dimension-scaled estimates that drive the lesson", () => {
-    expect(estimateStoryTotal(estimateRandomSet(1_000, 88, 92))).toMatchObject({
-      total: 2_658,
-      multiplier: 2.6586137298206878,
-    });
-    expect(estimateStoryTotal(estimateRandomSet(10_000, 88, 92))).toMatchObject({
-      total: 540_586,
-      multiplier: 54.05869647852782,
-    });
+    const thousand = estimateStoryTotal(estimateRandomSet(1_000, 88, 92));
+    expect(thousand.total).toBe(2_658);
+    expect(thousand.multiplier).toBeCloseTo(2.6586137298206878, 10);
+
+    const tenThousand = estimateStoryTotal(estimateRandomSet(10_000, 88, 92));
+    expect(tenThousand.total).toBe(540_586);
+    expect(tenThousand.multiplier).toBeCloseTo(54.05869647852782, 10);
   });
 
   it("lets known low-dimensional limits quietly correct the estimate", () => {

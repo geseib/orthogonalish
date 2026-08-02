@@ -154,7 +154,7 @@ describe("illustrated story panel", () => {
           child?.props?.stepId === step.id,
       );
       const context = contextPanel.type(contextPanel.props);
-      const tooltip = context.props.children[3];
+      const tooltip = context.props.children[2];
 
       return tooltip.key;
     });

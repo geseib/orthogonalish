@@ -106,16 +106,17 @@ describe("guided story", () => {
     );
 
     expect(comparison?.contextPanel).toMatchObject({
+      heading: "Two directions at 90° never get in each other's way",
       narrator:
-        "A right angle is the cleanest possible separation: neither direction contains any part of the other.",
+        "Picture two arrows meeting at a perfect right angle. Neither leans even slightly toward the other, so you can follow one without disturbing the other at all. That 'zero overlap' is the gold standard for keeping two ideas cleanly apart.",
       term: {
         label: "Orthogonal",
         definition:
-          "The mathematical word for directions that meet at exactly 90°.",
+          "The math word for two directions that meet at exactly 90° — zero overlap.",
       },
     });
     expect(comparison?.contextPanel?.term?.llmConnection).toMatch(
-      /language model|LLM/i,
+      /language model|LLM|AI/i,
     );
   });
 
@@ -180,7 +181,7 @@ describe("guided story", () => {
       aside: "The board grows faster than its ordinary wobble.",
       contextPanel: {
         narrator:
-          "For unrelated random sign patterns, the typical normalized overlap is about 1 / sqrt(12,288), or 0.9%. The exact imbalance varies.",
+          "Blow the board up to 12,288 boxes and the same coin-flip wobble now leaves only about 111 mismatched signs — under one percent. The typical overlap between two unrelated patterns is roughly 1 / sqrt(12,288), about 0.9%, and the exact amount varies from pair to pair.",
       },
     });
   });

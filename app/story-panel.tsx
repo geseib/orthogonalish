@@ -101,21 +101,23 @@ export function StoryPanel({
         <div className="story-title-mark" aria-hidden="true" />
       )}
 
-      <div
-        className={`story-dialogue${dialogueTurns.length > 1 ? " has-two-speakers" : ""}${dialogueTurns.length === 3 ? " has-three-turns" : ""}`}
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {dialogueTurns.map((turn, index) => (
-          <SpeechBubble
-            key={`${turn.speaker}-${index}`}
-            speaker={turn.speaker}
-            placement={turn.placement}
-          >
-            {turn.text}
-          </SpeechBubble>
-        ))}
-      </div>
+      {isTitle ? null : (
+        <div
+          className={`story-dialogue${dialogueTurns.length > 1 ? " has-two-speakers" : ""}${dialogueTurns.length === 3 ? " has-three-turns" : ""}`}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {dialogueTurns.map((turn, index) => (
+            <SpeechBubble
+              key={`${turn.speaker}-${index}`}
+              speaker={turn.speaker}
+              placement={turn.placement}
+            >
+              {turn.text}
+            </SpeechBubble>
+          ))}
+        </div>
+      )}
 
       {step.guidedInput && estimate ? (
         <aside className="story-estimate" aria-live="polite">
@@ -128,6 +130,7 @@ export function StoryPanel({
       {step.contextPanel ? (
         <NarratorPanel
           stepId={step.id}
+          heading={step.contextPanel.heading}
           narrator={step.contextPanel.narrator}
           aside={step.aside}
           term={step.contextPanel.term}
@@ -188,11 +191,13 @@ function SpeechBubble({
 
 function NarratorPanel({
   stepId,
+  heading,
   narrator,
   aside,
   term,
 }: {
   stepId: string;
+  heading?: string;
   narrator: string;
   aside: string;
   term?: StoryTooltip;
@@ -202,8 +207,9 @@ function NarratorPanel({
       className="story-context-panel"
       aria-labelledby={`story-${stepId}-context-title`}
     >
-      <p className="story-context-kicker">Narrator</p>
-      <h2 id={`story-${stepId}-context-title`}>What the picture establishes</h2>
+      <h2 id={`story-${stepId}-context-title`}>
+        {heading ?? "What the picture establishes"}
+      </h2>
       <p className="story-context-copy">{narrator}</p>
       {term ? <TermTooltip key={stepId} stepId={stepId} term={term} /> : null}
       <p className="story-context-aside">

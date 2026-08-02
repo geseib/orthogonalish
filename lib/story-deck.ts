@@ -73,6 +73,7 @@ export type StoryStep = {
     guildenstern?: BubblePlacement;
   };
   contextPanel?: {
+    heading?: string;
     narrator: string;
     term?: StoryTooltip;
   };
@@ -123,6 +124,18 @@ export const storySteps: readonly StoryStep[] = [
     rosencrantz:
       "The estimate gives one million, three hundred eighty-eight thousand, eight hundred sixty-four. That seems more than I put in.",
     aside: "He has stumbled onto the answer before hearing the question.",
+    contextPanel: {
+      heading: "How AI fits millions of ideas into a few thousand numbers",
+      narrator:
+        "This is the puzzle the whole story unpacks. An AI language model describes every word as a short list of numbers — really just a direction to point in. It has only a few thousand of those slots, yet it keeps millions of distinct ideas from blurring together. Rosencrantz just cranked a machine and got that impossible-looking count. The next slides show exactly why it works.",
+      term: {
+        label: "Embedding",
+        definition:
+          "The short list of numbers an AI assigns to a word — its position, or direction, in meaning-space.",
+        llmConnection:
+          "Every word you type into a chatbot becomes an embedding before the model does any reasoning with it.",
+      },
+    },
     guidedInput: nearRightAngle(12_288),
   },
   {
@@ -162,14 +175,15 @@ export const storySteps: readonly StoryStep[] = [
       "They meet at exactly 90°. Neither points even slightly along the other.",
     aside: "A right angle marks two completely separate directions.",
     contextPanel: {
+      heading: "Two directions at 90° never get in each other's way",
       narrator:
-        "A right angle is the cleanest possible separation: neither direction contains any part of the other.",
+        "Picture two arrows meeting at a perfect right angle. Neither leans even slightly toward the other, so you can follow one without disturbing the other at all. That 'zero overlap' is the gold standard for keeping two ideas cleanly apart.",
       term: {
         label: "Orthogonal",
         definition:
-          "The mathematical word for directions that meet at exactly 90°.",
+          "The math word for two directions that meet at exactly 90° — zero overlap.",
         llmConnection:
-          "In a modern language model, two feature directions with a dot product near zero interfere very little when the shared activation space is read.",
+          "When two features inside an AI point in orthogonal directions, reading one barely stirs the other.",
       },
     },
   },
@@ -186,14 +200,15 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "Not in this picture. Each has its own direction.",
     aside: "Perpendicular directions are a clean picture of distinct ideas.",
     contextPanel: {
+      heading: "Perpendicular means two ideas can't be confused",
       narrator:
-        "Give each idea its own perpendicular direction and neither can be mistaken for the other. A perfectly perpendicular pair is the ideal of two things stored without confusion.",
+        "If one arrow means 'cat' and the other means 'money', a right angle guarantees that turning one up adds nothing to the other. Separate directions are how you store separate meanings without them bleeding together.",
       term: {
         label: "Vector",
         definition:
-          "A vector is a direction with a length, written as a list of numbers — one value per dimension.",
+          "A direction with a length — really just a list of numbers, one per dimension.",
         llmConnection:
-          "A language model represents each token as a vector; the direction it points in is what carries the meaning.",
+          "An AI represents each word as a vector; the way it points is what the word means.",
       },
     },
   },
@@ -209,14 +224,15 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "Enjoy it. We are about to relax the rules.",
     aside: "In two dimensions, two perfectly perpendicular directions fit.",
     contextPanel: {
+      heading: "In 2D you get exactly two perfect directions — no more",
       narrator:
-        "A flat plane has exactly two perpendicular directions, so it can hold exactly two perfectly separate ideas — no more. For now, capacity equals the number of dimensions.",
+        "A flat sheet has room for exactly two directions at right angles, so it holds exactly two perfectly-separate ideas. Right now capacity equals the number of dimensions — one idea per dimension. Hold onto that, because it's about to break.",
       term: {
-        label: "Embedding",
+        label: "Dimension",
         definition:
-          "An embedding is the vector a model assigns to a word or token; each coordinate is one dimension of meaning.",
+          "One coordinate in a vector; the dimension count is how many numbers each direction uses.",
         llmConnection:
-          "Real models use large embeddings — GPT-3's are 12,288-dimensional, the very number Rosencrantz's machine reported.",
+          "An embedding's size — its number of dimensions — sets how much raw room a model starts with before the trick multiplies it.",
       },
     },
   },
@@ -234,8 +250,9 @@ export const storySteps: readonly StoryStep[] = [
       "Room for a finger, perhaps. Not for a third direction nearly 90° from both.",
     aside: "The flat plane has already used its two independent directions.",
     contextPanel: {
+      heading: "A flat plane can't hold a third sideways direction",
       narrator:
-        "The plane is already full: a third arrow must lean toward one of the first two. With only exact right angles allowed, a space can never hold more separate directions than it has dimensions — a ceiling far too low for a model that must store thousands of features.",
+        "There's visible space between thumb and finger, but any arrow you draw there leans toward one of them. With strict right angles, a space can never hold more separate directions than it has dimensions — a ceiling far too low for a model that needs thousands.",
     },
   },
   {
@@ -251,14 +268,15 @@ export const storySteps: readonly StoryStep[] = [
       "Generosity has not made a third line fit. It has merely made the failure less tidy.",
     aside: "A small relaxation changes nothing obvious in two dimensions.",
     contextPanel: {
+      heading: "'Good enough' right angles are where the magic starts",
       narrator:
-        "Loosening 'perpendicular' to a narrow band around 90° is the pivotal move. It changes nothing in two dimensions — but it is the crack through which enormous capacity will later pour.",
+        "Rosencrantz relaxes the rule: a direction counts as sideways if it lands anywhere from 88° to 92°. In a flat 2D world this still fits nothing new — but that tiny bit of slack is the whole secret. Once there are many dimensions, it lets a huge number of directions crowd in while barely overlapping.",
       term: {
         label: "Cosine similarity",
         definition:
-          "The cosine of the angle between two vectors — 1 when aligned, 0 at a right angle, −1 when opposed.",
+          "A score for how aligned two directions are: 1 means identical, 0 means a right angle, −1 means opposite.",
         llmConnection:
-          "Language models judge how related two embeddings are by their cosine similarity; a value near zero means two features barely overlap.",
+          "AI models gauge how related two words are by the cosine similarity of their embeddings; near 0 means 'basically unrelated'.",
       },
     },
   },
@@ -274,8 +292,9 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "Three dimensions, three obvious directions. Still ordinary.",
     aside: "Small spaces remain stubbornly one-for-one.",
     contextPanel: {
+      heading: "Adding a dimension just adds one more direction",
       narrator:
-        "Each new dimension adds one more axis to move along. In small spaces the tally stays stubbornly fair — three dimensions, three directions — and the near-right-angle allowance still buys nothing visible.",
+        "Step from a flat sheet into a room and you gain a third axis — up. Three dimensions, three obvious right-angle directions. In small spaces the score stays stubbornly fair, one direction per dimension, and the near-right-angle allowance still buys nothing you can see.",
     },
     guidedInput: nearRightAngle(3),
   },
@@ -292,8 +311,9 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "A result arriving before its explanation is merely an ambush.",
     aside: "Rosencrantz brings the fact. Guildenstern requires it to become reasonable.",
     contextPanel: {
+      heading: "The machine claims 100× more directions than dimensions",
       narrator:
-        "The machine claims a hundred times more directions than dimensions. Held against everything just shown in two and three dimensions, the figure looks impossible — which is exactly why it demands an explanation rather than applause.",
+        "Held against everything we just saw in 2D and 3D, this number looks impossible: a hundred times more directions than the space has dimensions. That's exactly why it needs an explanation instead of applause — a real rule, not a lucky reading.",
     },
     guidedInput: nearRightAngle(12_288),
   },
@@ -310,14 +330,15 @@ export const storySteps: readonly StoryStep[] = [
       "Ten dimensions. Now the experiment is small enough to understand.",
     aside: "Guildenstern simplifies the phenomenon until it almost disappears.",
     contextPanel: {
+      heading: "Shrink it to 10 dimensions and the effect nearly vanishes",
       narrator:
-        "Shrunk to ten dimensions, the phenomenon nearly vanishes: about ten directions, one per axis. Small spaces hide the effect, which is why intuition trained on them misleads.",
+        "Guildenstern makes the space small — ten dimensions — and gets about ten directions, one per axis. Tiny spaces hide the trick completely, which is exactly why our everyday intuition, built in 2D and 3D, leads us astray.",
       term: {
         label: "Basis",
         definition:
-          "A basis is a set of perpendicular axes that span a space; a space of D dimensions has exactly D of them.",
+          "A set of perpendicular axes that span a space; a space of D dimensions has exactly D of them.",
         llmConnection:
-          "If a model used only its perpendicular basis directions, it could store just one feature per dimension — a few thousand in all.",
+          "If an AI used only these perfectly-perpendicular axes, it could store just one feature per dimension — a few thousand in all.",
       },
     },
     guidedInput: nearRightAngle(10),
@@ -334,8 +355,9 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "An admirably ordinary result. The earlier number was suspect.",
     aside: "The theorist mistakes an ordinary example for the whole truth.",
     contextPanel: {
+      heading: "A small, tidy example is not the whole law",
       narrator:
-        "The theorist mistakes a small, tidy example for the whole law. The near-right-angle allowance is present here too — it is only waiting for enough dimensions to matter.",
+        "The theorist declares victory at ten and calls the earlier million a mistake. But the near-right-angle allowance is quietly present here too — it's just waiting for enough dimensions before it does anything dramatic.",
     },
     guidedInput: nearRightAngle(10),
   },
@@ -351,8 +373,9 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "That is not a theory.",
     aside: "It is, however, an experiment.",
     contextPanel: {
+      heading: "When the theory stalls, run the experiment again",
       narrator:
-        "Theory has stalled at ten; the experiment is willing to keep asking. Scaling the dimension back up is the one move that will expose what small spaces conceal.",
+        "Theory has parked at ten; the experiment is happy to keep asking. Turning the dimension back up is the one move that reveals what small spaces were hiding all along.",
     },
     guidedInput: nearRightAngle(10),
   },
@@ -368,14 +391,15 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "A small excess. Possibly clerical.",
     aside: "At first, the advantage is easy to dismiss.",
     contextPanel: {
+      heading: "At 100 dimensions, a small surplus finally appears",
       narrator:
-        "At a hundred dimensions a faint surplus appears — a few more directions than axes. It is the first visible interest paid by the near-right-angle allowance.",
+        "A hundred dimensions yields about 113 directions — a few more than the space has axes. Easy to wave away as a rounding quirk, but it's the first visible interest paid by that 'good enough' angle allowance.",
       term: {
         label: "Near-orthogonality",
         definition:
-          "Directions that are close to, but not exactly, perpendicular — a small overlap is tolerated.",
+          "Directions that are close to, but not exactly, perpendicular — a little overlap is allowed.",
         llmConnection:
-          "Model features are almost never exactly perpendicular; being near-orthogonal is enough to keep them from interfering much.",
+          "Features inside an AI are almost never exactly perpendicular; being near-orthogonal is enough to keep them from interfering much.",
       },
     },
     guidedInput: nearRightAngle(100),
@@ -393,8 +417,9 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "The excess is becoming impertinent.",
     aside: "At 1,000 dimensions, the estimate has begun to pull away.",
     contextPanel: {
+      heading: "At 1,000 dimensions, the surplus more than doubles",
       narrator:
-        "By a thousand dimensions the surplus is unmistakable: more than twice as many usable directions as axes. The allowance that bought nothing in the plane now compounds with every added dimension.",
+        "A thousand dimensions gives over 2,600 usable directions — more than twice the number of axes. The allowance that bought nothing in a flat plane now compounds with every dimension you add. This is no longer a rounding error.",
     },
     guidedInput: nearRightAngle(1_000),
   },
@@ -411,14 +436,15 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "I withdraw clerical.",
     aside: "A tenfold increase in dimensions produced far more than ten times the capacity.",
     contextPanel: {
+      heading: "10,000 dimensions hold over 500,000 near-sideways directions",
       narrator:
-        "Ten thousand dimensions yield over half a million near-perpendicular directions — fifty times the number of axes. The space now holds vastly more separate ideas than it has dimensions to name them.",
+        "Push the space up to ten thousand dimensions and the count explodes past half a million usable directions — fifty times the number of dimensions. There's now room for far more separate ideas than there are number-slots to store them in. That surplus is the entire point.",
       term: {
         label: "Superposition",
         definition:
-          "Storing more features than there are dimensions by letting each feature ride a near-perpendicular direction that only slightly overlaps the others.",
+          "Fitting more features than you have dimensions by giving each one a near-perpendicular direction that only slightly overlaps the rest.",
         llmConnection:
-          "Superposition is how a language model packs far more learned features into its embedding space than it has dimensions.",
+          "Superposition is how an AI crams far more learned concepts into its embedding space than it has dimensions.",
       },
     },
     guidedInput: nearRightAngle(10_000),
@@ -435,8 +461,9 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern: "No. Each increase makes the next increase more consequential.",
     aside: "The growth is multiplying rather than merely adding.",
     contextPanel: {
+      heading: "Capacity multiplies, it doesn't just add",
       narrator:
-        "The capacity is not adding, it is multiplying: each extra dimension scales up what all the earlier ones could hold. That is the signature of exponential growth, and the reason the machine's number stopped looking clerical.",
+        "Each extra dimension doesn't add a fixed number of directions — it scales up everything the earlier dimensions could already hold. That compounding is the signature of exponential growth, and why the machine's number stopped looking like a clerical slip.",
     },
     guidedInput: nearRightAngle(10_000),
   },
@@ -454,14 +481,15 @@ export const storySteps: readonly StoryStep[] = [
     aside:
       "With a fixed near-right-angle tolerance, possible directions can grow exponentially with dimension.",
     contextPanel: {
+      heading: "Near-sideways room grows exponentially with dimension",
       narrator:
-        "With a fixed near-right-angle tolerance, the count of near-perpendicular directions grows exponentially with dimension. This is the whole engine behind the cold-open's impossible number.",
+        "Keep the 'good enough' angle fixed and the count of near-perpendicular directions grows exponentially as dimensions rise. That single fact is the whole engine behind the cold-open's impossible number — and behind an AI's oversized memory.",
       term: {
         label: "Embedding capacity",
         definition:
           "How many distinct near-perpendicular directions an embedding space can hold — far more than its dimension count.",
         llmConnection:
-          "It is why a model with only a few thousand embedding dimensions can represent an enormous vocabulary of features at once.",
+          "It's why an AI with only a few thousand embedding dimensions can juggle an enormous vocabulary of features at once.",
       },
     },
     guidedInput: nearRightAngle(10_000),
@@ -479,8 +507,9 @@ export const storySteps: readonly StoryStep[] = [
     aside: "The boxes share their work.",
     bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
+      heading: "The numbers are shared scratch space, not labeled drawers",
       narrator:
-        "A model's working numbers act like shared scratch space. Individual positions need not have fixed human meanings.",
+        "Six blank boxes. You could assign one fixed meaning to each — box 1 is 'money', box 2 is 'river' — but that wastes them. A model's working numbers behave more like shared scratch space, where no single box owns a fixed human meaning.",
     },
     prop: {
       kind: "boxes",
@@ -501,14 +530,15 @@ export const storySteps: readonly StoryStep[] = [
     aside: "The idea belongs to the whole board.",
     bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
+      heading: "An idea is a pattern across all the boxes, not one box",
       narrator:
-        "An idea can be represented by a distributed direction across the whole board.",
+        "'MONEY' isn't hiding in box 3. It's a fingerprint spread across all six boxes — a specific pattern of pluses and minuses. The idea belongs to the whole board at once.",
       term: {
         label: "Feature direction",
         definition:
-          "A feature direction is a pattern of values across a shared space; the plus and minus signs here are a teaching model, while learned directions use varied continuous values.",
+          "A pattern of values spread across the whole space. The ± here is a teaching stand-in; real ones use smooth, varied numbers.",
         llmConnection:
-          "Language models can represent a feature as a direction spread across many coordinates rather than a single named slot.",
+          "An AI can store a concept as a direction smeared across many coordinates rather than in one labeled slot.",
       },
     },
     prop: {
@@ -531,8 +561,9 @@ export const storySteps: readonly StoryStep[] = [
     aside: "The pattern can be written more or less strongly.",
     bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
+      heading: "Confidence just means writing the pattern more strongly",
       narrator:
-        "Writing an idea means adding some amount of its fingerprint to the shared board. This is an intuition, not a literal account of every model computation.",
+        "'I deposited cash at the bank' is very sure it's about money, so it stamps the MONEY fingerprint onto the board strongly. How firmly a pattern is added is just how confident the model is about that idea. (This is an intuition, not a literal account of every computation.)",
     },
     prop: { kind: "tags", values: ["DEPOSITED", "CASH", "BANK"] },
   },
@@ -550,14 +581,15 @@ export const storySteps: readonly StoryStep[] = [
     aside: "The unrelated pattern cancels out.",
     bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
+      heading: "Unrelated patterns cancel out to nearly zero",
       narrator:
-        "The agreement score is a simplified dot product. Perpendicular patterns cancel to zero.",
+        "Check the board for MONEY while RIVER is written on it: three boxes agree, three disagree, and they cancel. An unrelated idea leaves almost no trace when you go looking for a different one.",
       term: {
         label: "Dot product",
         definition:
-          "A dot product adds the coordinate-by-coordinate agreements between two directions.",
+          "Add up the box-by-box agreements between two patterns — matches count positive, clashes negative.",
         llmConnection:
-          "A small dot product is one reason two model features can be read with relatively little direct interference.",
+          "A near-zero dot product is one reason two AI features can share the same space with little interference.",
       },
     },
     prop: {
@@ -579,14 +611,15 @@ export const storySteps: readonly StoryStep[] = [
     aside: "A small board makes coincidence conspicuous.",
     bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
+      heading: "On a tiny board, one accident looks huge",
       narrator:
-        "Near-perpendicularity becomes useful only after the space is large enough for small imbalances to become proportionally tiny. The displayed numbers are illustrative of scale, not a deterministic outcome for every random fingerprint.",
+        "With only six boxes, a couple of stray agreements is already a third of the board — a loud 33% of coincidence. Small boards make accidents look important, which is exactly why our earlier tiny 2D and 3D spaces refused the trick. (The numbers illustrate scale, not a fixed outcome.)",
       term: {
         label: "Tolerance",
         definition:
-          "Tolerance is the small amount of overlap allowed when directions are nearly, rather than exactly, perpendicular.",
+          "The small amount of overlap you allow when directions are nearly, rather than exactly, perpendicular.",
         llmConnection:
-          "Model features need not be perfectly separate to be useful; their overlap only needs to be small enough for the task and activity level.",
+          "AI features don't need to be perfectly separate — their overlap just has to stay small enough for the task.",
       },
     },
     prop: {
@@ -626,14 +659,15 @@ export const storySteps: readonly StoryStep[] = [
     aside: "The board grows faster than its ordinary wobble.",
     bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
+      heading: "In 12,288 boxes, the overlap shrinks to under 1%",
       narrator:
-        "For unrelated random sign patterns, the typical normalized overlap is about 1 / sqrt(12,288), or 0.9%. The exact imbalance varies.",
+        "Blow the board up to 12,288 boxes and the same coin-flip wobble now leaves only about 111 mismatched signs — under one percent. The typical overlap between two unrelated patterns is roughly 1 / sqrt(12,288), about 0.9%, and the exact amount varies from pair to pair.",
       term: {
         label: "Interference",
         definition:
-          "Interference is the unwanted overlap that makes one represented feature affect another when it is read.",
+          "The unwanted overlap that lets one stored idea bleed into another when you read it.",
         llmConnection:
-          "In language models, unrelated feature directions often have small overlap, but the amount and its effects vary with the learned features and context.",
+          "In an AI, unrelated feature directions usually overlap only a little, though how much varies with what was learned.",
       },
     },
     prop: { kind: "vast-board", count: 12_288 },
@@ -652,14 +686,15 @@ export const storySteps: readonly StoryStep[] = [
     aside: "The active company matters.",
     bubbles: ensembleSharedBoardBubbles,
     contextPanel: {
+      heading: "Millions can be stored; only a few speak at once",
       narrator:
-        "Capacity depends strongly on how many features are active together, not only on how many have been learned.",
+        "One board can hold kings, rivers, coins, deaths — millions of possible ideas. What keeps them from colliding isn't only the board's size; it's that just a small handful are strongly active in any single moment.",
       term: {
         label: "Sparsity",
         definition:
-          "Sparsity means that only a small fraction of possible features are strongly active at once.",
+          "Only a small fraction of all possible features are strongly active at any one time.",
         llmConnection:
-          "Sparse activity lets a language model draw on a large repertoire while reducing the chances that many strong features collide at the same moment.",
+          "Sparse activity lets an AI draw on a huge repertoire while rarely having many strong features collide at once.",
       },
     },
     prop: {
@@ -690,8 +725,9 @@ export const storySteps: readonly StoryStep[] = [
     aside: "The characters leave before completing the discovery.",
     bubbles: twoSpeakerBubbles,
     contextPanel: {
+      heading: "A huge repertoire works because little of it speaks at once",
       narrator:
-        "A language model can hold an enormous repertoire because only a fraction of what it knows must speak strongly at each word.",
+        "The characters realize they might be ideas on the board too — presently very active ones. That's the whole resolution: an AI can hold an enormous store of concepts precisely because only a fraction needs to speak strongly at each word.",
     },
     prop: { kind: "call", lines: ["ROSENCRANTZ!", "GUILDENSTERN!"] },
   },
