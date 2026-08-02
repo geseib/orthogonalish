@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
@@ -14,6 +15,24 @@ describe("retired experiment removal", () => {
     expect(layout).toMatch(/const title = "orthogonalish"/);
     expect(layout).toMatch(/illustrated lesson/i);
     expect(layout).not.toMatch(/Nearly Orthogonal Society|Estimate—and then test/);
+  });
+
+  it("ships the reviewed orthogonalish social card", async () => {
+    const [layout, socialCard] = await Promise.all([
+      readFile(new URL("./layout.tsx", import.meta.url), "utf8"),
+      readFile(new URL("../public/og.png", import.meta.url)),
+    ]);
+
+    expect(socialCard.subarray(0, 8)).toEqual(
+      Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
+    );
+    expect(socialCard.readUInt32BE(16)).toBe(1200);
+    expect(socialCard.readUInt32BE(20)).toBe(630);
+    expect(createHash("sha256").update(socialCard).digest("hex")).toBe(
+      "2f4c60f534b146a13ddd8d5ae40deeec610a0af2f090181b972bb6340c4982d1",
+    );
+    expect(layout).toMatch(/url: "\/og\.png"/);
+    expect(layout).toMatch(/alt: `\$\{title\}: \$\{illustratedLessonAlt\}`/);
   });
 
   it("does not retain calculator, worker, simulation, or secondary dialogue modules", async () => {
