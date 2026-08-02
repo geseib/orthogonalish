@@ -1,0 +1,53 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, it } from "vitest";
+
+import { StoryPanel, bubbleClassName } from "./story-panel";
+
+describe("illustrated story panel", () => {
+  it("derives semantic bubble placement classes", () => {
+    expect(
+      bubbleClassName({ position: "upper-left", tail: "down-right" }),
+    ).toBe("story-bubble position-upper-left tail-down-right");
+    expect(
+      bubbleClassName({ position: "lower-right", tail: "up-left" }),
+    ).toBe("story-bubble position-lower-right tail-up-left");
+  });
+
+  it("renders narrator and tooltip semantics alongside both character citations", () => {
+    const markup = renderToStaticMarkup(
+      createElement(StoryPanel, {
+        estimate: null,
+        step: {
+          id: "right-angle-meeting",
+          scene: "right-angle",
+          eyebrow: "Two different ideas",
+          title: "A perfect right angle",
+          image: "/images/two-ideas-right-angle.webp",
+          alt: "Two luminous lines meet at a right angle.",
+          rosencrantz: "Two lines meet.",
+          guildenstern: "They meet at exactly 90°.",
+          bubbles: {
+            rosencrantz: { position: "upper-left", tail: "down-right" },
+            guildenstern: { position: "lower-right", tail: "up-left" },
+          },
+          aside: "A right angle marks separate directions.",
+          contextPanel: {
+            narrator: "A right angle is the cleanest possible separation.",
+            term: {
+              label: "Orthogonal",
+              definition: "Directions that meet at exactly 90°.",
+              llmConnection: "They interfere very little.",
+            },
+          },
+        },
+      }),
+    );
+
+    expect(markup).toContain('role="tooltip"');
+    expect(markup).toContain('aria-label="Orthogonal"');
+    expect(markup).toContain("What the picture establishes");
+    expect(markup).toContain("Rosencrantz · experimentalist");
+    expect(markup).toContain("Guildenstern · theorist");
+  });
+});

@@ -455,6 +455,7 @@ main {
   grid-row: 2;
   min-height: 0;
   overflow: hidden;
+  position: relative;
 }
 
 .story-art-frame img {
@@ -463,6 +464,87 @@ main {
   object-fit: cover;
   object-position: center;
   width: 100%;
+}
+
+.story-prop {
+  align-items: center;
+  background: rgba(11, 13, 15, 0.82);
+  border: 1px solid rgba(216, 173, 88, 0.68);
+  color: var(--ivory);
+  display: flex;
+  font-family: var(--mono);
+  gap: 0.45rem;
+  letter-spacing: 0.08em;
+  padding: 0.55rem 0.65rem;
+  position: absolute;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.story-prop-boxes,
+.story-prop-ratio,
+.story-prop-vast-board {
+  bottom: 0.8rem;
+  left: 0.8rem;
+}
+
+.story-prop-boxes {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.story-prop-boxes strong,
+.story-prop-ratio strong,
+.story-prop-call strong {
+  color: var(--gold-bright);
+  font-size: 0.64rem;
+  font-weight: 650;
+}
+
+.story-prop-boxes > div,
+.story-prop-tags,
+.story-prop-call {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.story-prop-boxes > div span,
+.story-prop-tags span {
+  align-items: center;
+  border: 1px solid rgba(99, 217, 231, 0.68);
+  display: inline-flex;
+  font-size: 0.64rem;
+  justify-content: center;
+  min-height: 1.55rem;
+  min-width: 1.55rem;
+}
+
+.story-prop-tags {
+  bottom: 0.8rem;
+  left: 0.8rem;
+  max-width: min(70%, 32rem);
+}
+
+.story-prop-tags span {
+  padding: 0 0.35rem;
+}
+
+.story-prop-ratio {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.story-prop-ratio > span,
+.story-prop-vast-board {
+  color: var(--ivory-dim);
+  font-size: 0.62rem;
+}
+
+.story-prop-call {
+  bottom: 0.8rem;
+  flex-direction: column;
+  left: 0.8rem;
 }
 
 .story-dialogue {
@@ -478,7 +560,7 @@ main {
   grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
-.story-speech {
+.story-bubble {
   background: var(--ivory);
   border-top: 4px solid var(--cyan);
   color: var(--charcoal);
@@ -491,11 +573,11 @@ main {
   padding: clamp(0.85rem, 2.1dvh, 1.8rem);
 }
 
-.story-speech-guildenstern {
+.story-bubble.speaker-guildenstern {
   border-color: var(--gold);
 }
 
-.story-speech p {
+.story-bubble p {
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1rem, min(1.62vw, 2.55dvh), 1.6rem);
   line-height: 1.24;
@@ -503,13 +585,21 @@ main {
   text-wrap: balance;
 }
 
-.story-speech cite {
+.story-bubble cite {
   color: #656057;
   font-family: var(--mono);
   font-size: clamp(0.48rem, 0.85dvh, 0.59rem);
   font-style: normal;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.story-bubble.speaker-rosencrantz cite {
+  color: #176873;
+}
+
+.story-bubble.speaker-guildenstern cite {
+  color: #76571d;
 }
 
 .story-speech-overlay .story-art-frame {
@@ -525,7 +615,7 @@ main {
   z-index: 3;
 }
 
-.story-speech-overlay .story-speech {
+.story-speech-overlay .story-bubble {
   background:
     radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.34), transparent 32%),
     linear-gradient(135deg, rgba(249, 240, 216, 0.97), rgba(225, 207, 169, 0.95));
@@ -540,55 +630,77 @@ main {
   overflow: visible;
   padding: clamp(0.75rem, 1.8dvh, 1.35rem) clamp(0.85rem, 1.35vw, 1.3rem);
   position: absolute;
+  --bubble-edge: clamp(0.8rem, 1.7vw, 1.7rem);
+  --bubble-tail: rgba(229, 212, 175, 0.98);
   width: max-content;
 }
 
-.story-speech-overlay .story-speech::after {
+.story-speech-overlay .story-bubble::after {
   border: 0.8rem solid transparent;
   content: "";
   position: absolute;
 }
 
-.story-speech-overlay .story-speech-rosencrantz {
-  left: clamp(0.8rem, 1.7vw, 1.7rem);
-  top: clamp(0.8rem, 2.2dvh, 1.6rem);
+.story-bubble.position-upper-left {
+  left: var(--bubble-edge);
+  top: var(--bubble-edge);
 }
 
-.story-speech-overlay .story-speech-rosencrantz::after {
+.story-bubble.position-upper-right {
+  right: var(--bubble-edge);
+  top: var(--bubble-edge);
+}
+
+.story-bubble.position-lower-left {
+  bottom: var(--bubble-edge);
+  left: var(--bubble-edge);
+}
+
+.story-bubble.position-lower-right {
+  bottom: var(--bubble-edge);
+  right: var(--bubble-edge);
+}
+
+.story-bubble.tail-down-right::after {
   border-left: 0;
-  border-top-color: rgba(229, 212, 175, 0.98);
+  border-top-color: var(--bubble-tail);
   bottom: -1.25rem;
-  left: auto;
   right: 1.35rem;
   transform: rotate(-9deg);
 }
 
-.story-speech-overlay .story-speech-guildenstern {
-  border-radius: 1rem 1.15rem 0.9rem 1.3rem;
-  bottom: clamp(0.8rem, 2.2dvh, 1.6rem);
-  right: clamp(0.8rem, 1.7vw, 1.7rem);
+.story-bubble.tail-down-left::after {
+  border-right: 0;
+  border-top-color: var(--bubble-tail);
+  bottom: -1.25rem;
+  left: 1.35rem;
+  transform: rotate(9deg);
 }
 
-.story-speech-overlay .story-speech-guildenstern::after {
-  border-bottom-color: rgba(242, 229, 200, 0.98);
+.story-bubble.tail-up-left::after {
+  border-bottom-color: var(--bubble-tail);
   border-right: 0;
   left: 1.35rem;
-  right: auto;
   top: -1.25rem;
   transform: rotate(9deg);
 }
 
-.story-speech-overlay .story-speech p {
+.story-bubble.tail-up-right::after {
+  border-bottom-color: var(--bubble-tail);
+  border-left: 0;
+  right: 1.35rem;
+  top: -1.25rem;
+  transform: rotate(-9deg);
+}
+
+.story-bubble.speaker-guildenstern {
+  --bubble-tail: rgba(242, 229, 200, 0.98);
+  border-radius: 1rem 1.15rem 0.9rem 1.3rem;
+}
+
+.story-speech-overlay .story-bubble p {
   font-size: clamp(0.95rem, min(1.55vw, 2.35dvh), 1.5rem);
   text-wrap: pretty;
-}
-
-.story-speech-overlay .story-speech-rosencrantz cite {
-  color: #176873;
-}
-
-.story-speech-overlay .story-speech-guildenstern cite {
-  color: #76571d;
 }
 
 .story-stage-grid.story-speech-overlay.has-context-panel {
@@ -601,7 +713,7 @@ main {
   grid-row: 2;
 }
 
-.story-stage-grid.story-speech-overlay.has-context-panel .story-speech {
+.story-stage-grid.story-speech-overlay.has-context-panel .story-bubble {
   max-width: min(47%, 27rem);
 }
 
@@ -728,6 +840,7 @@ main {
   font-size: clamp(0.58rem, min(0.75vw, 1.25dvh), 0.72rem);
 }
 
+.story-term-wrap[data-open="true"] .story-tooltip,
 .story-term-wrap:focus-within .story-tooltip,
 .story-term-wrap:hover .story-tooltip {
   opacity: 1;
@@ -1473,11 +1586,11 @@ footer {
     font-size: clamp(2rem, min(4.8vw, 7.2dvh), 4.3rem);
   }
 
-  .story-speech {
+  .story-bubble {
     padding: 0.65rem 0.8rem;
   }
 
-  .story-speech p {
+  .story-bubble p {
     font-size: clamp(0.82rem, min(1.35vw, 2.15dvh), 1.18rem);
   }
 
@@ -1587,16 +1700,16 @@ footer {
     grid-template-rows: minmax(0, 1fr);
   }
 
-  .story-speech {
+  .story-bubble {
     padding: 0.65rem;
   }
 
-  .story-speech p {
+  .story-bubble p {
     font-size: clamp(0.78rem, min(3.4vw, 1.8dvh), 1rem);
     line-height: 1.2;
   }
 
-  .story-speech cite {
+  .story-bubble cite {
     font-size: 0.43rem;
   }
 
@@ -1614,12 +1727,12 @@ footer {
     display: block;
   }
 
-  .story-speech-overlay .story-speech {
+  .story-speech-overlay .story-bubble {
     max-width: 47%;
     padding: 0.55rem 0.62rem;
   }
 
-  .story-speech-overlay .story-speech p {
+  .story-speech-overlay .story-bubble p {
     font-size: clamp(0.7rem, min(3.2vw, 1.75dvh), 0.92rem);
     line-height: 1.16;
   }
