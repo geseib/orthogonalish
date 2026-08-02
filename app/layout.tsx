@@ -17,9 +17,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = "The Nearly Orthogonal Society";
+const title = "orthogonalish";
 const description =
-  "Estimate—and then test—how many nearly perpendicular vectors fit in N dimensions.";
+  "An illustrated argument about near-orthogonal vectors, superposition, and how language models make room for meaning.";
+const illustratedLessonAlt =
+  "illustrated lesson with Rosencrantz and Guildenstern measuring a field of cyan vector arrows.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
@@ -31,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase,
-    title: "The Nearly Orthogonal Society",
+    title,
     description,
     alternates: { canonical: "/" },
     icons: {
@@ -49,7 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/og.png",
           width: 1200,
           height: 630,
-          alt: "Rosencrantz and Guildenstern measure a field of cyan vector arrows beside The Nearly Orthogonal Society title.",
+          alt: `${title}: ${illustratedLessonAlt}`,
         },
       ],
     },
@@ -57,7 +59,12 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["/og.png"],
+      images: [
+        {
+          url: "/og.png",
+          alt: `${title}: ${illustratedLessonAlt}`,
+        },
+      ],
     },
   };
 }

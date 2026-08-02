@@ -2,6 +2,20 @@ import { readdir, readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 describe("retired experiment removal", () => {
+  it("brands the public project as lowercase orthogonalish", async () => {
+    const [layout, packageJson, packageLock] = await Promise.all([
+      readFile(new URL("./layout.tsx", import.meta.url), "utf8"),
+      readFile(new URL("../package.json", import.meta.url), "utf8"),
+      readFile(new URL("../package-lock.json", import.meta.url), "utf8"),
+    ]);
+
+    expect(JSON.parse(packageJson).name).toBe("orthogonalish");
+    expect(JSON.parse(packageLock).name).toBe("orthogonalish");
+    expect(layout).toMatch(/const title = "orthogonalish"/);
+    expect(layout).toMatch(/illustrated lesson/i);
+    expect(layout).not.toMatch(/Nearly Orthogonal Society|Estimate—and then test/);
+  });
+
   it("does not retain calculator, worker, simulation, or secondary dialogue modules", async () => {
     const [appEntries, libEntries] = await Promise.all([
       readdir(new URL(".", import.meta.url)),
