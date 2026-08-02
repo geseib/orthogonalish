@@ -92,6 +92,16 @@ const twoSpeakerBubbles = {
   guildenstern: guildensternBubble,
 } as const;
 
+const diagonalSharedBoardBubbles = {
+  rosencrantz: { position: "upper-left", tail: "down-left" },
+  guildenstern: { position: "lower-right", tail: "up-right" },
+} as const;
+
+const ensembleSharedBoardBubbles = {
+  rosencrantz: { position: "lower-right", tail: "up-left" },
+  guildenstern: { position: "upper-right", tail: "down-left" },
+} as const;
+
 export const storySteps: readonly StoryStep[] = [
   {
     id: "cold-open-result",
@@ -353,7 +363,7 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "Six boxes. One might assign a meaning to each and proceed sensibly.",
     aside: "The boxes share their work.",
-    bubbles: twoSpeakerBubbles,
+    bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
       narrator:
         "A model's working numbers act like shared scratch space. Individual positions need not have fixed human meanings.",
@@ -375,7 +385,7 @@ export const storySteps: readonly StoryStep[] = [
       "So the idea is nowhere in particular, but unmistakably everywhere?",
     guildenstern: "MONEY is not in a box. It is the pattern across all six.",
     aside: "The idea belongs to the whole board.",
-    bubbles: twoSpeakerBubbles,
+    bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
       narrator:
         "An idea can be represented by a distributed direction across the whole board.",
@@ -405,7 +415,7 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "Then it writes the MONEY pattern strongly. Confidence is how firmly the pattern is added.",
     aside: "The pattern can be written more or less strongly.",
-    bubbles: twoSpeakerBubbles,
+    bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
       narrator:
         "Writing an idea means adding some amount of its fingerprint to the shared board. This is an intuition, not a literal account of every model computation.",
@@ -424,7 +434,7 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "Three agreements. Three disagreements. Add them, and the river leaves no money behind.",
     aside: "The unrelated pattern cancels out.",
-    bubbles: twoSpeakerBubbles,
+    bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
       narrator:
         "The agreement score is a simplified dot product. Perpendicular patterns cancel to zero.",
@@ -453,7 +463,7 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "Small boards magnify coincidence. This is why our earlier tiny spaces refused the trick.",
     aside: "A small board makes coincidence conspicuous.",
-    bubbles: twoSpeakerBubbles,
+    bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
       narrator:
         "Near-perpendicularity becomes useful only after the space is large enough for small imbalances to become proportionally tiny. The displayed numbers are illustrative of scale, not a deterministic outcome for every random fingerprint.",
@@ -482,7 +492,7 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "In 12,288 boxes, ordinary coin-flip wobble leaves about 111 unmatched signs: less than one percent.",
     aside: "The board grows faster than its ordinary wobble.",
-    bubbles: twoSpeakerBubbles,
+    bubbles: diagonalSharedBoardBubbles,
     contextPanel: {
       narrator:
         "For unrelated random sign patterns, the typical normalized overlap is about 1 / sqrt(12,288), or 0.9%. The exact imbalance varies.",
@@ -508,7 +518,7 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "Millions of possible ideas. Only a modest company needs to be active in any one moment.",
     aside: "The active company matters.",
-    bubbles: twoSpeakerBubbles,
+    bubbles: ensembleSharedBoardBubbles,
     contextPanel: {
       narrator:
         "Capacity depends strongly on how many features are active together, not only on how many have been learned.",

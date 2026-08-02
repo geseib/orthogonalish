@@ -171,6 +171,36 @@ describe("guided story", () => {
     ).toBe(true);
   });
 
+  it("places Shared Board bubbles around each illustration's characters", () => {
+    for (const id of [
+      "board-empty",
+      "board-fingerprint",
+      "board-writing",
+      "board-cancellation",
+      "board-cramped",
+      "board-vast",
+    ]) {
+      expect(storySteps.find((step) => step.id === id)?.bubbles).toEqual({
+        rosencrantz: { position: "upper-left", tail: "down-left" },
+        guildenstern: { position: "lower-right", tail: "up-right" },
+      });
+    }
+
+    expect(
+      storySteps.find((step) => step.id === "board-company")?.bubbles,
+    ).toEqual({
+      rosencrantz: { position: "lower-right", tail: "up-left" },
+      guildenstern: { position: "upper-right", tail: "down-left" },
+    });
+
+    expect(
+      storySteps.find((step) => step.id === "board-active")?.bubbles,
+    ).toEqual({
+      rosencrantz: { position: "upper-left", tail: "down-right" },
+      guildenstern: { position: "lower-right", tail: "up-left" },
+    });
+  });
+
   it("moves one step at a time without wrapping and reports scene changes", () => {
     expect(moveStoryStep(0, "previous")).toEqual({
       index: 0,
