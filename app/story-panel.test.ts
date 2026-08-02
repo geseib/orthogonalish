@@ -57,6 +57,17 @@ describe("illustrated story panel", () => {
     );
   });
 
+  it("imports the estimate shape from its defining module", async () => {
+    const source = await readFile(
+      new URL("./story-panel.tsx", import.meta.url),
+      "utf8",
+    );
+
+    expect(source).toMatch(
+      /import type \{ StoryEstimate \} from "\.\.\/lib\/estimate"/,
+    );
+  });
+
   it("renders narrator and tooltip semantics alongside both character citations", () => {
     const markup = renderToStaticMarkup(
       createElement(StoryPanel, {

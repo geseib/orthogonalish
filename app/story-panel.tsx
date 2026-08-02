@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { useState, type ReactNode } from "react";
 
+import type { StoryEstimate } from "../lib/estimate";
 import type {
   BubblePlacement,
-  StoryEstimate,
   StoryProp,
   StoryStep,
   StoryTooltip,

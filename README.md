@@ -40,6 +40,16 @@ npm run lint
 npm run build
 ```
 
+## Vercel deployment
+
+This is a standard Next.js App Router project. If you import a repository whose
+root is above this project, set Vercel's **Root Directory** to
+`work/vector-theatre` (or this folder's repository-relative path). Vercel then
+uses `npm ci` and `npm run build` as configured in `vercel.json`.
+
+Do not commit `.vercel/project.json`, Vercel tokens, organization IDs, or
+project IDs.
+
 ## Project structure
 
 - `lib/story-deck.ts` is the source of truth for the ordered story, numerical

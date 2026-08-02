@@ -672,3 +672,42 @@ git commit -m "fix: polish the complete orthogonalish lesson"
 ```
 
 Do not create an empty commit when verification requires no corrections.
+
+---
+
+### Task 8: Make the Project Vercel-Ready
+
+**Files:**
+- Create: `vercel.json`
+- Modify: `package.json`
+- Modify: `package-lock.json`
+- Modify: `README.md`
+- Modify: `tests/rendered-html.test.mjs`
+- Modify only if required by a reproduced Next build failure: `app/layout.tsx`, `app/globals.css`
+
+- [ ] **Step 1: Add a failing deployment contract test**
+
+Assert that the project uses standard Next.js `dev`, `build`, and `start` scripts; `vercel.json` selects the Next.js framework and the project build; and `app/page.tsx` remains the root `/` entry.
+
+- [ ] **Step 2: Verify the test is red**
+
+Run: `npm test -- tests/rendered-html.test.mjs`
+
+- [ ] **Step 3: Configure standard Next.js and Vercel**
+
+Replace the vinext production scripts with `next dev`, `next build`, and `next start`. Add the minimal `vercel.json` required to make framework/build intent explicit. Do not add rewrites that bypass the App Router; `app/page.tsx` is the index route.
+
+- [ ] **Step 4: Document the Vercel root-directory setting**
+
+Add concise deployment instructions explaining that, when the repository root is above this project, Vercel's Root Directory must be set to `work/vector-theatre` (or this folder's repository-relative path). Do not commit `.vercel/project.json`, tokens, organization IDs, or project IDs.
+
+- [ ] **Step 5: Prove the Vercel build path**
+
+Run: `npm ci`, `npm test`, `npm run lint`, and `npm run build`. Inspect the Next build route table and confirm `/` is emitted. If a build fails, diagnose its root cause before modifying application code.
+
+- [ ] **Step 6: Commit the deployment configuration**
+
+```bash
+git add vercel.json package.json package-lock.json README.md tests/rendered-html.test.mjs app/layout.tsx app/globals.css docs/superpowers/plans/2026-08-02-orthogonalish-illustrated-lesson.md
+git commit -m "build: prepare orthogonalish for Vercel"
+```

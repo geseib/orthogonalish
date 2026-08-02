@@ -13,8 +13,8 @@
   --danger: #ff9c87;
   --focus-dark: #153d43;
   --line: rgba(243, 237, 221, 0.17);
-  --display: var(--font-geist-sans), "Helvetica Neue", sans-serif;
-  --mono: var(--font-geist-mono), "SFMono-Regular", monospace;
+  --display: "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
 * {

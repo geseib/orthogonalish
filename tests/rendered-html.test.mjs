@@ -25,6 +25,8 @@ test("replaces the starter preview with the vector theatre", async () => {
     /new Worker|Test it|Verified vectors found|Candidate attempts/,
   );
   expect(css).toMatch(/prefers-reduced-motion:\s*reduce/);
+  expect(layout).not.toMatch(/next\/font\/google/);
+  expect(css).not.toMatch(/--font-geist/);
 
   expect(JSON.parse(packageJson).name).toBe("orthogonalish");
   expect(JSON.parse(packageLock).name).toBe("orthogonalish");
@@ -42,6 +44,49 @@ test("replaces the starter preview with the vector theatre", async () => {
     throw error;
   });
   expect(previewFiles).toEqual([]);
+});
+
+test("uses the standard Next.js Vercel deployment contract", async () => {
+  const [packageJson, vercelJson, page] = await Promise.all([
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../vercel.json", import.meta.url), "utf8"),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+  ]);
+  const packageConfig = JSON.parse(packageJson);
+  const vercelConfig = JSON.parse(vercelJson);
+
+  expect(packageConfig.scripts.dev).toBe("next dev");
+  expect(packageConfig.scripts.build).toBe("next build");
+  expect(packageConfig.scripts.start).toBe("next start");
+  expect(vercelConfig.framework).toBe("nextjs");
+  expect(vercelConfig.installCommand).toBe("npm ci");
+  expect(vercelConfig.buildCommand).toBe("npm run build");
+  expect(vercelConfig.rewrites).toBeUndefined();
+  expect(page).toMatch(/export default function/);
+});
+
+test("keeps app and library sources in the Vercel typecheck", async () => {
+  const tsconfig = JSON.parse(
+    await readFile(new URL("../tsconfig.json", import.meta.url), "utf8"),
+  );
+
+  expect(tsconfig.include).toEqual(
+    expect.arrayContaining(["**/*.ts", "**/*.tsx"]),
+  );
+  expect(tsconfig.exclude).toEqual(
+    expect.arrayContaining([
+      "node_modules",
+      "db/**",
+      "worker/**",
+      "vite.config.ts",
+      "build/**",
+      "drizzle.config.ts",
+      "examples/**",
+    ]),
+  );
+  expect(tsconfig.exclude).not.toEqual(
+    expect.arrayContaining(["app/**", "lib/**"]),
+  );
 });
 
 test("renders each optional lesson tooltip as a collapsed accessible control", () => {
