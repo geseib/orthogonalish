@@ -266,7 +266,7 @@ main {
 }
 
 .story-bubble {
-  animation: bubbleFadeIn 420ms ease both;
+  animation: bubbleFadeIn 520ms ease both;
   background: var(--ivory);
   border-top: 4px solid var(--cyan);
   color: var(--charcoal);

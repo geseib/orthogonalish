@@ -66,12 +66,19 @@ export function StoryPanel({
   step,
   estimate,
   priority = false,
+  bubbleGeneration,
 }: {
   step: StoryStep;
   estimate: StoryEstimate | null;
   priority?: boolean;
+  bubbleGeneration?: string;
 }) {
   const dialogueTurns = storyDialogueTurns(step);
+  // Keying the bubbles by a per-navigation generation (not just the step id)
+  // means the cascade replays each time a scene becomes active — including the
+  // first time you scroll into it, where the step id was already mounted as an
+  // off-screen preview.
+  const bubbleKey = bubbleGeneration ?? step.id;
   const hasSpeechOverlay = Boolean(step.bubbles || step.dialogue);
   const hasContextPanel = Boolean(step.contextPanel);
   const isTitle = step.scene === "title";
@@ -110,7 +117,7 @@ export function StoryPanel({
         >
           {dialogueTurns.map((turn, index) => (
             <SpeechBubble
-              key={`${step.id}-${turn.speaker}-${index}`}
+              key={`${bubbleKey}-${turn.speaker}-${index}`}
               index={index}
               speaker={turn.speaker}
               placement={turn.placement}
@@ -189,7 +196,7 @@ function SpeechBubble({
   return (
     <blockquote
       className={`${bubbleClassName(placement)} speaker-${speaker}`}
-      style={{ animationDelay: `${120 + index * 420}ms` }}
+      style={{ animationDelay: `${450 + index * 650}ms` }}
     >
       <p>{children}</p>
       <cite>{citation}</cite>

@@ -127,7 +127,8 @@ export function GuidedStory() {
   return (
     <div className="guided-story">
       {sceneOrder.map((scene) => {
-        const visibleStep = step.scene === scene ? step : firstStepByScene[scene];
+        const isActive = step.scene === scene;
+        const visibleStep = isActive ? step : firstStepByScene[scene];
         const estimate = getGuidedEstimate(visibleStep);
         return (
           <section
@@ -141,6 +142,7 @@ export function GuidedStory() {
               step={visibleStep}
               estimate={estimate}
               priority={scene === "cold-open"}
+              bubbleGeneration={isActive ? `active-${activeIndex}` : `preview-${scene}`}
             />
           </section>
         );
