@@ -16,6 +16,7 @@ import {
 } from "../lib/story-deck";
 import {
   getPreferredScrollBehavior,
+  isActivationTarget,
   isInteractiveTarget,
 } from "../lib/story-navigation";
 import { StoryPanel } from "./story-panel";
@@ -90,9 +91,20 @@ export function GuidedStory() {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
+      // Ignore arrows while the machine overlay is open so the story behind it
+      // keeps its place.
+      if (document.documentElement.dataset.machineOpen === "true") return;
       if (isInteractiveTarget(event.target as HTMLElement | null)) return;
       const direction = keyboardStoryDirection(event.key);
       if (!direction) return;
+      // Space counts as "next", but when a button/anchor is focused it must
+      // activate that control instead of advancing the story.
+      if (
+        (event.key === " " || event.key === "Spacebar") &&
+        isActivationTarget(event.target as HTMLElement | null)
+      ) {
+        return;
+      }
       event.preventDefault();
       navigate(direction);
     }

@@ -4,9 +4,19 @@ export function isInteractiveTarget(
   if (!target) return false;
   return (
     Boolean(target.isContentEditable) ||
-    ["INPUT", "TEXTAREA", "SELECT", "BUTTON", "A"].includes(
+    ["INPUT", "TEXTAREA", "SELECT"].includes(
       target.tagName?.toUpperCase() ?? "",
     )
+  );
+}
+
+export function isActivationTarget(
+  target: { tagName?: string; role?: string | null } | null,
+): boolean {
+  if (!target) return false;
+  return (
+    ["BUTTON", "A"].includes(target.tagName?.toUpperCase() ?? "") ||
+    target.role === "button"
   );
 }
 
