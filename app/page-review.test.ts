@@ -35,23 +35,18 @@ describe("retired experiment removal", () => {
     expect(layout).toMatch(/alt: `\$\{title\}: \$\{illustratedLessonAlt\}`/);
   });
 
-  it("restores the calculator, worker, simulation, and dialogue modules for the /machine route", async () => {
+  it("removes the worker, simulation, and dialogue modules once the /machine route is estimator-only", async () => {
     const [appEntries, libEntries] = await Promise.all([
       readdir(new URL(".", import.meta.url)),
       readdir(new URL("../lib", import.meta.url)),
     ]);
 
-    expect(appEntries).toEqual(
-      expect.arrayContaining(["vector-worker.ts", "vector-worker.test.ts"]),
-    );
-    expect(libEntries).toEqual(
-      expect.arrayContaining([
-        "dialogue.ts",
-        "dialogue.test.ts",
-        "simulation.ts",
-        "simulation.test.ts",
-      ]),
-    );
+    expect(appEntries).not.toContain("vector-worker.ts");
+    expect(appEntries).not.toContain("vector-worker.test.ts");
+    expect(libEntries).not.toContain("dialogue.ts");
+    expect(libEntries).not.toContain("dialogue.test.ts");
+    expect(libEntries).not.toContain("simulation.ts");
+    expect(libEntries).not.toContain("simulation.test.ts");
   });
 
   it("keeps the page as a story shell without experiment controls or output", async () => {
