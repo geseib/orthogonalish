@@ -125,7 +125,7 @@ export const storySteps: readonly StoryStep[] = [
     alt: "Rosencrantz stands alone at a brass apparatus as cyan vector arrows multiply across the dark stage.",
     bubbles: { rosencrantz: rosencrantzBubble },
     rosencrantz:
-      "The estimate gives one million, three hundred eighty-eight thousand, eight hundred sixty-four. That seems more than I put in.",
+      "Eureka! The estimate gives one million, three hundred eighty-eight thousand, eight hundred sixty-four — that is far more than I put in!",
     aside: "He has stumbled onto the answer before hearing the question.",
     contextPanel: {
       heading: "How AI fits millions of ideas into a few thousand numbers",
@@ -150,7 +150,7 @@ export const storySteps: readonly StoryStep[] = [
     alt: "Rosencrantz stands alone at a brass apparatus as cyan vector arrows multiply across the dark stage.",
     bubbles: { rosencrantz: rosencrantzBubble },
     rosencrantz:
-      "Guildenstern! The machine has produced more directions than it has dimensions.",
+      "Guildenstern — quickly, come and see! The machine has produced more directions than it has dimensions!",
     aside: "The experimentalist has found a fact. An explanation has yet to arrive.",
     guidedInput: nearRightAngle(12_288),
   },
@@ -162,7 +162,7 @@ export const storySteps: readonly StoryStep[] = [
     rosencrantz: "I only turned the handle.",
     guildenstern: "Then we had better discover what the handle means.",
     aside:
-      "How many directions can remain nearly perpendicular to every other direction?",
+      "Rosencrantz and Guildenstern explore a peculiar thing that happens when we think far beyond three dimensions — one of the very keys that let Large Language models be, well, large.",
   },
   {
     id: "right-angle-meeting",
@@ -180,7 +180,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Two directions at 90° never get in each other's way",
       narrator:
-        "Two arrows at a right angle don't lean toward each other at all — so you can use one without disturbing the other. That zero overlap is the cleanest way to keep two ideas apart.",
+        "It seems our discoverer has begun at the very foundation of dimensions — so shall we. Two arrows at a right angle lean not at all toward each other, so you can follow one without disturbing the other: zero overlap, the cleanest way to keep two ideas apart.",
       term: {
         label: "Orthogonal",
         definition:
@@ -205,7 +205,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Perpendicular means two ideas can't be confused",
       narrator:
-        "Say one arrow means 'cat' and the other 'money'. At a right angle, turning one up adds nothing to the other — so separate directions can hold separate meanings without bleeding together.",
+        "So now we understand: a vector pointing a particular way carries a meaning — 'cat', say, or 'money'. Charming, but hardly enough. What about dogs, chickens, debt, and love? Two tidy directions will not stretch nearly far enough.",
       term: {
         label: "Vector",
         definition:
@@ -224,12 +224,30 @@ export const storySteps: readonly StoryStep[] = [
     alt: "Rosencrantz and Guildenstern examine two luminous lines meeting at a right angle.",
     bubbles: twoSpeakerBubbles,
     rosencrantz: "Two dimensions. Two ideas. A well-behaved universe.",
-    guildenstern: "Enjoy it. We are about to relax the rules.",
+    guildenstern:
+      "OK — but that is not many ideas. What is your point, Rosencrantz?",
     aside: "In two dimensions, two perfectly perpendicular directions fit.",
+    dialogue: [
+      {
+        speaker: "rosencrantz",
+        text: "Two dimensions. Two ideas. A well-behaved universe.",
+        placement: { position: "upper-left", tail: "down-right" },
+      },
+      {
+        speaker: "guildenstern",
+        text: "OK — but that is not many ideas. What is your point, Rosencrantz?",
+        placement: { position: "lower-right", tail: "up-left" },
+      },
+      {
+        speaker: "rosencrantz",
+        text: "Bear with me, Guildenstern…",
+        placement: { position: "lower-left", tail: "up-right" },
+      },
+    ],
     contextPanel: {
       heading: "Flatland offers exactly two clean directions",
       narrator:
-        "A flat sheet has just two ways to move: up-and-down and left-and-right. Two axes, two ideas — no room for a third that doesn't lean on them. So far, capacity simply equals the number of dimensions.",
+        "Guildenstern has a fair point: a flat sheet offers only two clean directions — up-and-down and left-and-right — so only two ideas. For now, capacity equals dimensions. Rosencrantz, naturally, is about to make a scene of it.",
       diagram: "axes-2d",
       term: {
         label: "Dimension",
@@ -256,7 +274,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "A flat plane can't hold a third sideways direction",
       narrator:
-        "Any third arrow you draw here leans toward the thumb or the finger. With strict right angles, a space holds no more separate directions than it has dimensions — a ceiling far too low for a model that needs thousands.",
+        "Guildenstern is right to smirk — squeeze a third arrow between thumb and finger and it always tips toward one of them. With strict right angles a space holds no more separate directions than it has dimensions: a ceiling far too low for a model that needs thousands.",
     },
   },
   {
@@ -274,7 +292,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "'Good enough' right angles are where the magic starts",
       narrator:
-        "Relax the rule: 'sideways' now means anywhere from 88° to 92°. In 2D that still fits nothing new — but this bit of slack is the whole secret. With many dimensions, it lets huge numbers of directions crowd in while barely overlapping.",
+        "Here is Rosencrantz's sleight of hand: let 'sideways' mean anywhere from 88° to 92°. In flat 2D it still fits nothing new — but that sliver of slack is the whole trick. Give it many dimensions and countless directions crowd in, barely overlapping.",
       term: {
         label: "Cosine similarity",
         definition:
@@ -298,7 +316,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Step into the room and a third direction appears",
       narrator:
-        "Off the page and into a room: back-and-forth now joins up-and-down and left-and-right. That's a cube — three axes, three clean directions. Rosencrantz has the right instinct, to keep adding dimensions… but the trap is to stop at three and call the case closed. Does he press on, or settle for the tidy little cube?",
+        "Rosencrantz drags us off the page into a room, and a third direction appears — back-and-forth, joining up-and-down and left-and-right. A cube: three axes, three clean directions. Small spaces stay stubbornly one-per-dimension; the fireworks wait for far higher numbers.",
       diagram: "cube-3d",
     },
     guidedInput: nearRightAngle(3),
@@ -313,7 +331,8 @@ export const storySteps: readonly StoryStep[] = [
     bubbles: twoSpeakerBubbles,
     rosencrantz:
       "The estimate gives 1,388,864 directions in 12,288 dimensions. The box was quite definite.",
-    guildenstern: "A result arriving before its explanation is merely an ambush.",
+    guildenstern:
+      "No, no, no — you cannot get there from here! A result arriving before its explanation is merely an ambush.",
     aside: "Rosencrantz brings the fact. Guildenstern requires it to become reasonable.",
     contextPanel: {
       heading: "The machine claims 100× more directions than dimensions",
@@ -330,9 +349,9 @@ export const storySteps: readonly StoryStep[] = [
     image: "/images/grand-conjecture.webp",
     alt: "Rosencrantz presents a field of cyan arrows while Guildenstern prepares to measure them.",
     bubbles: twoSpeakerBubbles,
-    rosencrantz: "You have made the machine smaller.",
+    rosencrantz: "You have made the machine smaller — this misses the point!",
     guildenstern:
-      "Ten dimensions. Now the experiment is small enough to understand.",
+      "The point is to understand. Ten dimensions — now the experiment is small enough to grasp.",
     aside: "Guildenstern simplifies the phenomenon until it almost disappears.",
     contextPanel: {
       heading: "Shrink it to 10 dimensions and the effect nearly vanishes",
@@ -362,7 +381,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "A small, tidy example is not the whole law",
       narrator:
-        "The theorist calls victory at ten and dismisses the million as a mistake. But the near-right-angle allowance is present here too — it just needs more dimensions before it does anything dramatic.",
+        "Guildenstern declares victory at ten and writes the million off as a blunder. Premature: the near-right-angle allowance is quietly present here too — it merely wants more dimensions before it shows its hand.",
     },
     guidedInput: nearRightAngle(10),
   },
@@ -380,7 +399,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "When the theory stalls, run the experiment again",
       narrator:
-        "Theory has stalled at ten; the experiment is willing to keep asking. Turning the dimension back up is the one move that reveals what small spaces were hiding.",
+        "Theory has parked itself at ten; the experiment, unbothered, wants to ask again. Cranking the dimension back up is the one move that drags into the light what small spaces kept hidden.",
     },
     guidedInput: nearRightAngle(10),
   },
@@ -398,7 +417,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "At 100 dimensions, a small surplus finally appears",
       narrator:
-        "A hundred dimensions gives about 113 directions — a few more than the axes. Easy to dismiss as rounding, but it's the first real interest paid by that 'good enough' angle.",
+        "At a hundred dimensions the machine coughs up about 113 directions — a few more than the axes. Guildenstern waves it off as rounding, but it is the first quiet interest paid by that 'good enough' angle.",
       term: {
         label: "Near-orthogonality",
         definition:
@@ -424,7 +443,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "At 1,000 dimensions, the surplus more than doubles",
       narrator:
-        "A thousand dimensions gives over 2,600 directions — more than twice the axes. The slack that bought nothing in 2D now compounds with every dimension added. No longer a rounding error.",
+        "A thousand dimensions: over 2,600 directions, more than twice the axes. The slack that bought nothing in the plane now compounds with every dimension added. Guildenstern can no longer call it a clerical error.",
     },
     guidedInput: nearRightAngle(1_000),
   },
@@ -443,7 +462,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "10,000 dimensions hold over 500,000 near-sideways directions",
       narrator:
-        "Ten thousand dimensions gives over half a million directions — fifty times the axes. There's now room for far more ideas than there are slots to store them in. That surplus is the whole point.",
+        "Ten thousand dimensions gives over half a million directions — fifty times the axes. Guildenstern, who a moment ago was ready to dismiss his friend entirely, falls quiet: perhaps Rosencrantz is onto something. And little wonder he balked — no human can truly picture a ten-thousand-dimensional room; the mind simply refuses to.",
       term: {
         label: "Superposition",
         definition:
@@ -468,7 +487,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Capacity multiplies, it doesn't just add",
       narrator:
-        "Each new dimension doesn't add a fixed number of directions — it multiplies what all the earlier ones could hold. Pushed all the way to the machine's 12,288 dimensions, that compounding lands on 1,388,864 — no clerical slip after all.",
+        "Each new dimension does not add a fixed number of directions — it multiplies everything the earlier ones already held. Carried to the machine's full 12,288 dimensions, that compounding lands on 1,388,864 — exactly Rosencrantz's opening cry, and no slip at all.",
     },
     guidedInput: nearRightAngle(12_288),
   },
@@ -482,7 +501,7 @@ export const storySteps: readonly StoryStep[] = [
     bubbles: twoSpeakerBubbles,
     rosencrantz: "Multiplying room.",
     guildenstern:
-      "Exponential growth with dimension. Your phrase is less dignified and more memorable.",
+      "Exponential growth with dimension. Your phrase is less dignified — yet more memorable.",
     aside:
       "All the way up at 12,288 dimensions, the estimate is 1,388,864 — the number from the cold open.",
     contextPanel: {
@@ -516,12 +535,12 @@ export const storySteps: readonly StoryStep[] = [
         speaker: "guildenstern",
         text:
           "But why hoard so many dimensions — whatever will you do with them all?",
-        placement: { position: "lower-right", tail: "up-right" },
+        placement: { position: "upper-left", tail: "down-right" },
       },
       {
         speaker: "rosencrantz",
         text: "Store things in them. Here — watch.",
-        placement: { position: "upper-left", tail: "down-left" },
+        placement: { position: "lower-right", tail: "up-left" },
       },
     ],
     contextPanel: {
@@ -559,12 +578,12 @@ export const storySteps: readonly StoryStep[] = [
         speaker: "guildenstern",
         text:
           "Six boxes. One might assign a meaning to each and proceed sensibly.",
-        placement: { position: "lower-right", tail: "up-right" },
+        placement: { position: "upper-left", tail: "down-right" },
       },
       {
         speaker: "rosencrantz",
         text: "They have declined their assignments. They are only boxes.",
-        placement: { position: "upper-left", tail: "down-left" },
+        placement: { position: "lower-right", tail: "up-left" },
       },
     ],
     contextPanel: {

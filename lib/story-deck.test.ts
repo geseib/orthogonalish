@@ -108,7 +108,7 @@ describe("guided story", () => {
     expect(comparison?.contextPanel).toMatchObject({
       heading: "Two directions at 90° never get in each other's way",
       narrator:
-        "Two arrows at a right angle don't lean toward each other at all — so you can use one without disturbing the other. That zero overlap is the cleanest way to keep two ideas apart.",
+        "It seems our discoverer has begun at the very foundation of dimensions — so shall we. Two arrows at a right angle lean not at all toward each other, so you can follow one without disturbing the other: zero overlap, the cleanest way to keep two ideas apart.",
       term: {
         label: "Orthogonal",
         definition:
