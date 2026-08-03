@@ -4,7 +4,7 @@
  * Site-wide background-music player.
  *
  * SUPPLYING A TRACK:
- *   - Drop an audio file at `public/audio/mozart_k515_marlboro.mp3` (default), OR
+ *   - Drop an audio file at `public/audio/mozart_k515_marlboro.opus` (default), OR
  *   - Set `NEXT_PUBLIC_MUSIC_SRC` to an external URL (CDN / Vercel Blob) for a
  *     long track.
  *
@@ -22,7 +22,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./background-music.module.css";
 
-const DEFAULT_SRC = "/audio/mozart_k515_marlboro.mp3";
+const DEFAULT_SRC = "/audio/mozart_k515_marlboro.opus";
 const STORAGE_KEY = "orthogonalish:music-on";
 const DEFAULT_VOLUME = 0.25;
 
