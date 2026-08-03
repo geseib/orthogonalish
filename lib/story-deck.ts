@@ -468,9 +468,9 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Capacity multiplies, it doesn't just add",
       narrator:
-        "Each new dimension doesn't add a fixed number of directions — it multiplies what all the earlier ones could hold. That compounding is exponential growth, and why the machine's number wasn't a slip.",
+        "Each new dimension doesn't add a fixed number of directions — it multiplies what all the earlier ones could hold. Pushed all the way to the machine's 12,288 dimensions, that compounding lands on 1,388,864 — no clerical slip after all.",
     },
-    guidedInput: nearRightAngle(10_000),
+    guidedInput: nearRightAngle(12_288),
   },
   {
     id: "growth-name",
@@ -484,11 +484,11 @@ export const storySteps: readonly StoryStep[] = [
     guildenstern:
       "Exponential growth with dimension. Your phrase is less dignified and more memorable.",
     aside:
-      "With a fixed near-right-angle tolerance, possible directions can grow exponentially with dimension.",
+      "All the way up at 12,288 dimensions, the estimate is 1,388,864 — the number from the cold open.",
     contextPanel: {
       heading: "Near-sideways room grows exponentially with dimension",
       narrator:
-        "With the angle fixed, the number of near-perpendicular directions grows exponentially with dimension. Why: in high dimensions, two random directions are almost always already nearly perpendicular — so there's room for exponentially many. That's the engine behind the impossible number, and behind an AI's outsized memory.",
+        "With the angle fixed, the number of near-perpendicular directions grows exponentially with dimension. Why: in high dimensions, two random directions are almost always already nearly perpendicular. Run it out to the machine's full 12,288 dimensions and the count is 1,388,864 — exactly the cold-open's number, and the reason an AI has such outsized memory.",
       term: {
         label: "Embedding capacity",
         definition:
@@ -497,7 +497,7 @@ export const storySteps: readonly StoryStep[] = [
           "It's why an AI with only a few thousand embedding dimensions can juggle an enormous vocabulary of features at once.",
       },
     },
-    guidedInput: nearRightAngle(10_000),
+    guidedInput: nearRightAngle(12_288),
   },
   {
     id: "board-question",
