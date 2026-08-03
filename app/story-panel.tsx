@@ -110,7 +110,8 @@ export function StoryPanel({
         >
           {dialogueTurns.map((turn, index) => (
             <SpeechBubble
-              key={`${turn.speaker}-${index}`}
+              key={`${step.id}-${turn.speaker}-${index}`}
+              index={index}
               speaker={turn.speaker}
               placement={turn.placement}
             >
@@ -170,10 +171,12 @@ function storyDialogueTurns(step: StoryStep): readonly StoryDialogueTurn[] {
 }
 
 function SpeechBubble({
+  index,
   speaker,
   placement,
   children,
 }: {
+  index: number;
   speaker: StorySpeaker;
   placement: BubblePlacement;
   children: ReactNode;
@@ -184,7 +187,10 @@ function SpeechBubble({
       : "Guildenstern · theorist";
 
   return (
-    <blockquote className={`${bubbleClassName(placement)} speaker-${speaker}`}>
+    <blockquote
+      className={`${bubbleClassName(placement)} speaker-${speaker}`}
+      style={{ animationDelay: `${120 + index * 420}ms` }}
+    >
       <p>{children}</p>
       <cite>{citation}</cite>
     </blockquote>

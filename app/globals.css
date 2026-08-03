@@ -254,7 +254,19 @@ main {
   grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
+@keyframes bubbleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .story-bubble {
+  animation: bubbleFadeIn 420ms ease both;
   background: var(--ivory);
   border-top: 4px solid var(--cyan);
   color: var(--charcoal);
@@ -1015,6 +1027,11 @@ footer {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .story-bubble {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
   *,
   *::before,
   *::after {
