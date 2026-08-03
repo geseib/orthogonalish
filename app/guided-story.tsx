@@ -80,10 +80,10 @@ export function GuidedStory() {
 
       transitionLockedRef.current = true;
       setActiveIndex(destination.index);
-      if (destination.sceneChanged) {
-        const nextScene = storySteps[destination.index].scene;
-        requestAnimationFrame(() => scrollTo(`story-${nextScene}`));
-      }
+      // Always re-center the destination scene, not just on scene changes, so a
+      // page that has drifted a few pixels snaps back on track with one arrow.
+      const nextScene = storySteps[destination.index].scene;
+      requestAnimationFrame(() => scrollTo(`story-${nextScene}`));
       releaseNavigationLock();
     }, [activeIndex, releaseNavigationLock, scrollTo],
   );
