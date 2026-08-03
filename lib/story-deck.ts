@@ -130,7 +130,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "How AI fits millions of ideas into a few thousand numbers",
       narrator:
-        "This is the puzzle the whole story unpacks. An AI language model describes every word as a short list of numbers — really just a direction to point in. It has only a few thousand of those slots, yet it keeps millions of distinct ideas from blurring together. Rosencrantz just cranked a machine and got that impossible-looking count. The next slides show exactly why it works.",
+        "An AI turns every word into a short list of numbers — a direction to point in. It has only a few thousand of these, yet it keeps millions of ideas from blurring together. Rosencrantz's machine just counted how many fit. Here's why it works.",
       term: {
         label: "Embedding",
         definition:
@@ -180,7 +180,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Two directions at 90° never get in each other's way",
       narrator:
-        "Picture two arrows meeting at a perfect right angle. Neither leans even slightly toward the other, so you can follow one without disturbing the other at all. That 'zero overlap' is the gold standard for keeping two ideas cleanly apart.",
+        "Two arrows at a right angle don't lean toward each other at all — so you can use one without disturbing the other. That zero overlap is the cleanest way to keep two ideas apart.",
       term: {
         label: "Orthogonal",
         definition:
@@ -205,7 +205,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Perpendicular means two ideas can't be confused",
       narrator:
-        "If one arrow means 'cat' and the other means 'money', a right angle guarantees that turning one up adds nothing to the other. Separate directions are how you store separate meanings without them bleeding together.",
+        "Say one arrow means 'cat' and the other 'money'. At a right angle, turning one up adds nothing to the other — so separate directions can hold separate meanings without bleeding together.",
       term: {
         label: "Vector",
         definition:
@@ -229,7 +229,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Flatland offers exactly two clean directions",
       narrator:
-        "On a flat sheet there are only two honest ways to move — up-and-down and left-and-right. Two axes, two ideas, and no room for a third that doesn't borrow from them. It all looks reassuringly tidy… which, to an investigator, is usually the hush right before the rules get bent.",
+        "A flat sheet has just two ways to move: up-and-down and left-and-right. Two axes, two ideas — no room for a third that doesn't lean on them. So far, capacity simply equals the number of dimensions.",
       diagram: "axes-2d",
       term: {
         label: "Dimension",
@@ -256,7 +256,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "A flat plane can't hold a third sideways direction",
       narrator:
-        "There's visible space between thumb and finger, but any arrow you draw there leans toward one of them. With strict right angles, a space can never hold more separate directions than it has dimensions — a ceiling far too low for a model that needs thousands.",
+        "Any third arrow you draw here leans toward the thumb or the finger. With strict right angles, a space holds no more separate directions than it has dimensions — a ceiling far too low for a model that needs thousands.",
     },
   },
   {
@@ -274,7 +274,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "'Good enough' right angles are where the magic starts",
       narrator:
-        "Rosencrantz relaxes the rule: a direction counts as sideways if it lands anywhere from 88° to 92°. In a flat 2D world this still fits nothing new — but that tiny bit of slack is the whole secret. Once there are many dimensions, it lets a huge number of directions crowd in while barely overlapping.",
+        "Relax the rule: 'sideways' now means anywhere from 88° to 92°. In 2D that still fits nothing new — but this bit of slack is the whole secret. With many dimensions, it lets huge numbers of directions crowd in while barely overlapping.",
       term: {
         label: "Cosine similarity",
         definition:
@@ -318,7 +318,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "The machine claims 100× more directions than dimensions",
       narrator:
-        "Held against everything we just saw in 2D and 3D, this number looks impossible: a hundred times more directions than the space has dimensions. That's exactly why it needs an explanation instead of applause — a real rule, not a lucky reading.",
+        "After 2D and 3D, this looks impossible: a hundred times more directions than dimensions. A number that large needs an explanation, not applause.",
     },
     guidedInput: nearRightAngle(12_288),
   },
@@ -337,7 +337,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Shrink it to 10 dimensions and the effect nearly vanishes",
       narrator:
-        "Guildenstern makes the space small — ten dimensions — and gets about ten directions, one per axis. Tiny spaces hide the trick completely, which is exactly why our everyday intuition, built in 2D and 3D, leads us astray.",
+        "Shrink the space to ten dimensions and you get about ten directions — one per axis. Tiny spaces hide the effect entirely, which is why intuition built in 2D and 3D misleads.",
       term: {
         label: "Basis",
         definition:
@@ -362,7 +362,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "A small, tidy example is not the whole law",
       narrator:
-        "The theorist declares victory at ten and calls the earlier million a mistake. But the near-right-angle allowance is quietly present here too — it's just waiting for enough dimensions before it does anything dramatic.",
+        "The theorist calls victory at ten and dismisses the million as a mistake. But the near-right-angle allowance is present here too — it just needs more dimensions before it does anything dramatic.",
     },
     guidedInput: nearRightAngle(10),
   },
@@ -380,7 +380,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "When the theory stalls, run the experiment again",
       narrator:
-        "Theory has parked at ten; the experiment is happy to keep asking. Turning the dimension back up is the one move that reveals what small spaces were hiding all along.",
+        "Theory has stalled at ten; the experiment is willing to keep asking. Turning the dimension back up is the one move that reveals what small spaces were hiding.",
     },
     guidedInput: nearRightAngle(10),
   },
@@ -398,7 +398,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "At 100 dimensions, a small surplus finally appears",
       narrator:
-        "A hundred dimensions yields about 113 directions — a few more than the space has axes. Easy to wave away as a rounding quirk, but it's the first visible interest paid by that 'good enough' angle allowance.",
+        "A hundred dimensions gives about 113 directions — a few more than the axes. Easy to dismiss as rounding, but it's the first real interest paid by that 'good enough' angle.",
       term: {
         label: "Near-orthogonality",
         definition:
@@ -424,7 +424,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "At 1,000 dimensions, the surplus more than doubles",
       narrator:
-        "A thousand dimensions gives over 2,600 usable directions — more than twice the number of axes. The allowance that bought nothing in a flat plane now compounds with every dimension you add. This is no longer a rounding error.",
+        "A thousand dimensions gives over 2,600 directions — more than twice the axes. The slack that bought nothing in 2D now compounds with every dimension added. No longer a rounding error.",
     },
     guidedInput: nearRightAngle(1_000),
   },
@@ -443,7 +443,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "10,000 dimensions hold over 500,000 near-sideways directions",
       narrator:
-        "Push the space up to ten thousand dimensions and the count explodes past half a million usable directions — fifty times the number of dimensions. There's now room for far more separate ideas than there are number-slots to store them in. That surplus is the entire point.",
+        "Ten thousand dimensions gives over half a million directions — fifty times the axes. There's now room for far more ideas than there are slots to store them in. That surplus is the whole point.",
       term: {
         label: "Superposition",
         definition:
@@ -468,7 +468,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Capacity multiplies, it doesn't just add",
       narrator:
-        "Each extra dimension doesn't add a fixed number of directions — it scales up everything the earlier dimensions could already hold. That compounding is the signature of exponential growth, and why the machine's number stopped looking like a clerical slip.",
+        "Each new dimension doesn't add a fixed number of directions — it multiplies what all the earlier ones could hold. That compounding is exponential growth, and why the machine's number wasn't a slip.",
     },
     guidedInput: nearRightAngle(10_000),
   },
@@ -488,7 +488,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Near-sideways room grows exponentially with dimension",
       narrator:
-        "Keep the 'good enough' angle fixed and the count of near-perpendicular directions grows exponentially as dimensions rise. The reason: in high dimensions two randomly chosen directions are almost always already nearly perpendicular, so there's room for exponentially many. That single fact is the whole engine behind the cold-open's impossible number — and behind an AI's oversized memory.",
+        "With the angle fixed, the number of near-perpendicular directions grows exponentially with dimension. Why: in high dimensions, two random directions are almost always already nearly perpendicular — so there's room for exponentially many. That's the engine behind the impossible number, and behind an AI's outsized memory.",
       term: {
         label: "Embedding capacity",
         definition:
@@ -514,7 +514,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "The boxes ARE the numbers that make a direction",
       narrator:
-        "Time to cash in all that room. Remember: a 'direction' was never anything but a list of numbers — and these boxes are exactly those numbers, one per box. So 'nearly perpendicular' from the arrow slides is the very same thing you're about to watch on the board: two patterns whose box-signs mostly cancel. Same idea, now with coordinates you can point at.",
+        "Time to cash in that room. A 'direction' was only ever a list of numbers — and these boxes are those numbers, one each. So 'nearly perpendicular' from the arrow slides is exactly what's coming on the board: two patterns whose signs mostly cancel. Same idea, now with coordinates you can point at.",
       term: {
         label: "Coordinates",
         definition:
@@ -544,7 +544,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "The numbers are shared scratch space, not labeled drawers",
       narrator:
-        "Six blank boxes. You could assign one fixed meaning to each — box 1 is 'money', box 2 is 'river' — but that wastes them. A model's working numbers behave more like shared scratch space, where no single box owns a fixed human meaning.",
+        "Six blank boxes. You could pin one fixed meaning to each — box 1 is 'money', box 2 is 'river' — but that wastes them. A model's numbers work more like shared scratch space: no single box owns a fixed meaning.",
     },
     prop: {
       kind: "boxes",
@@ -598,7 +598,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Confidence just means writing the pattern more strongly",
       narrator:
-        "'I deposited cash at the bank' is very sure it's about money, so it stamps the MONEY fingerprint onto the board strongly. How firmly a pattern is added is just how confident the model is about that idea. (This is an intuition, not a literal account of every computation.)",
+        "'I deposited cash at the bank' is sure it's about money, so it stamps the MONEY pattern on strongly. How firmly a pattern is written is just how confident the model is about that idea.",
     },
     prop: { kind: "tags", values: ["DEPOSITED", "CASH", "BANK"] },
   },
@@ -618,7 +618,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Unrelated patterns cancel out to nearly zero",
       narrator:
-        "Check the board for MONEY while RIVER is written on it: three boxes agree, three disagree, and they cancel. That agreement score is the very same ruler as the 'overlap' — the cosine similarity — from the right-angle slides: one measurement, different names. An unrelated idea leaves almost no trace when you go looking for a different one.",
+        "Read the board for MONEY while RIVER is written: three boxes agree, three disagree, and they cancel to nearly nothing. That agreement score is the same ruler as the 'overlap' from the arrow slides — one measurement, two names. An unrelated idea leaves almost no trace.",
       term: {
         label: "Dot product",
         definition:
@@ -648,7 +648,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "On a tiny board, one accident looks huge",
       narrator:
-        "With only six boxes, a couple of stray agreements is already a third of the board — a loud 33% of coincidence. Small boards make accidents look important, which is exactly why our earlier tiny 2D and 3D spaces refused the trick. (The numbers illustrate scale, not a fixed outcome.)",
+        "With only six boxes, two stray agreements is already a third of the board — a loud 33%. Small boards make coincidence look huge, which is why the tiny 2D and 3D spaces refused the trick.",
       term: {
         label: "Tolerance",
         definition:
@@ -696,7 +696,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "In 12,288 boxes, the overlap shrinks to under 1%",
       narrator:
-        "Blow the board up to 12,288 boxes and the same coin-flip wobble now leaves only about 111 mismatched signs — under one percent. Flip N ±1 coins and you land only about sqrt(N) away from even; that leftover is a vanishing slice of the whole N, which is why the overlap shrinks like 1 / sqrt(N). The typical overlap between two unrelated patterns is roughly 1 / sqrt(12,288), about 0.9%, and the exact amount varies from pair to pair — and a 0.9% overlap per unrelated pair is precisely why about a million near-orthogonal directions still fit inside 12,288 dimensions.",
+        "Blow the board up to 12,288 boxes and the same wobble leaves only about 111 mismatched signs — under 1%. Why: flip N coins and you land only about √N from even, a shrinking slice of N, so the typical overlap falls like 1/√N — here about 0.9%. And a 0.9% overlap per unrelated pair is exactly why a million near-perpendicular directions still fit in 12,288 dimensions.",
       term: {
         label: "Interference",
         definition:
@@ -723,7 +723,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "Millions can be stored; only a few speak at once",
       narrator:
-        "One board can hold kings, rivers, coins, deaths — millions of possible ideas. Sparsity is what makes the whole trick possible, not just a nice bonus: each pair's overlap is tiny, but if too many ideas shout at once their small overlaps pile up and start to interfere. Keep only a small handful strongly active in any single moment and the sum stays quiet.",
+        "One board can hold millions of possible ideas. What keeps that safe is sparsity: each pair barely overlaps, but if too many ideas fire at once the small overlaps pile up and interfere. Keep only a handful strongly active and the sum stays quiet.",
       term: {
         label: "Sparsity",
         definition:
@@ -762,7 +762,7 @@ export const storySteps: readonly StoryStep[] = [
     contextPanel: {
       heading: "A huge repertoire works because little of it speaks at once",
       narrator:
-        "The characters realize they might be ideas on the board too — presently very active ones. That's the whole resolution: an AI can hold an enormous store of concepts precisely because only a fraction needs to speak strongly at each word.",
+        "The two realize they might be ideas on the board too — presently active ones. That's the resolution: an AI holds an enormous store of concepts because only a fraction speaks strongly at each word.",
     },
     prop: { kind: "call", lines: ["ROSENCRANTZ!", "GUILDENSTERN!"] },
   },

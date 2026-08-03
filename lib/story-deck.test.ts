@@ -108,7 +108,7 @@ describe("guided story", () => {
     expect(comparison?.contextPanel).toMatchObject({
       heading: "Two directions at 90° never get in each other's way",
       narrator:
-        "Picture two arrows meeting at a perfect right angle. Neither leans even slightly toward the other, so you can follow one without disturbing the other at all. That 'zero overlap' is the gold standard for keeping two ideas cleanly apart.",
+        "Two arrows at a right angle don't lean toward each other at all — so you can use one without disturbing the other. That zero overlap is the cleanest way to keep two ideas apart.",
       term: {
         label: "Orthogonal",
         definition:
@@ -182,7 +182,7 @@ describe("guided story", () => {
       aside: "The board grows faster than its ordinary wobble.",
       contextPanel: {
         narrator:
-          "Blow the board up to 12,288 boxes and the same coin-flip wobble now leaves only about 111 mismatched signs — under one percent. Flip N ±1 coins and you land only about sqrt(N) away from even; that leftover is a vanishing slice of the whole N, which is why the overlap shrinks like 1 / sqrt(N). The typical overlap between two unrelated patterns is roughly 1 / sqrt(12,288), about 0.9%, and the exact amount varies from pair to pair — and a 0.9% overlap per unrelated pair is precisely why about a million near-orthogonal directions still fit inside 12,288 dimensions.",
+          "Blow the board up to 12,288 boxes and the same wobble leaves only about 111 mismatched signs — under 1%. Why: flip N coins and you land only about √N from even, a shrinking slice of N, so the typical overlap falls like 1/√N — here about 0.9%. And a 0.9% overlap per unrelated pair is exactly why a million near-perpendicular directions still fit in 12,288 dimensions.",
       },
     });
   });
