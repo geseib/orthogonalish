@@ -511,6 +511,19 @@ export const storySteps: readonly StoryStep[] = [
       "But why hoard so many dimensions — whatever will you do with them all?",
     aside: "A direction is only useful once something is stored in it.",
     bubbles: diagonalSharedBoardBubbles,
+    dialogue: [
+      {
+        speaker: "guildenstern",
+        text:
+          "But why hoard so many dimensions — whatever will you do with them all?",
+        placement: { position: "lower-right", tail: "up-right" },
+      },
+      {
+        speaker: "rosencrantz",
+        text: "Store things in them. Here — watch.",
+        placement: { position: "upper-left", tail: "down-left" },
+      },
+    ],
     contextPanel: {
       heading: "The boxes ARE the numbers that make a direction",
       narrator:
@@ -541,6 +554,19 @@ export const storySteps: readonly StoryStep[] = [
       "Six boxes. One might assign a meaning to each and proceed sensibly.",
     aside: "The boxes share their work.",
     bubbles: diagonalSharedBoardBubbles,
+    dialogue: [
+      {
+        speaker: "guildenstern",
+        text:
+          "Six boxes. One might assign a meaning to each and proceed sensibly.",
+        placement: { position: "lower-right", tail: "up-right" },
+      },
+      {
+        speaker: "rosencrantz",
+        text: "They have declined their assignments. They are only boxes.",
+        placement: { position: "upper-left", tail: "down-left" },
+      },
+    ],
     contextPanel: {
       heading: "The numbers are shared scratch space, not labeled drawers",
       narrator:

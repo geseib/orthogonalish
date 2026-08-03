@@ -196,7 +196,7 @@ function SpeechBubble({
   return (
     <blockquote
       className={`${bubbleClassName(placement)} speaker-${speaker}`}
-      style={{ animationDelay: `${450 + index * 650}ms` }}
+      style={{ animationDelay: `${650 + index * 800}ms` }}
     >
       <p>{children}</p>
       <cite>{citation}</cite>
