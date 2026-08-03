@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
 import BackgroundMusic from "./background-music";
-import { MachineLink } from "./machine-link";
+import { MachineOverlay } from "./machine-overlay";
 import {
   parseTrustedForwardedHosts,
   resolveMetadataBase,
@@ -69,7 +69,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         {children}
-        <MachineLink />
+        <MachineOverlay />
         <BackgroundMusic />
       </body>
     </html>

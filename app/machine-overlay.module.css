@@ -1,0 +1,175 @@
+/* Pull-tab launcher — styled to match the warm paper of the narrator panels:
+   ivory tab, charcoal type, a gold accent along its edge. */
+.tab {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+}
+
+.tabInner {
+  align-items: center;
+  background: var(--ivory);
+  border: 1px solid rgba(108, 84, 36, 0.4);
+  border-left: 3px solid var(--gold);
+  border-right: 0;
+  border-radius: 10px 0 0 10px;
+  box-shadow: -3px 0 14px rgba(0, 0, 0, 0.3);
+  color: var(--charcoal);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem 0.45rem 0.95rem;
+  transition: background 150ms ease;
+}
+
+.tab:hover .tabInner,
+.tab:focus-visible .tabInner {
+  background: #f6eed9;
+}
+
+.cog {
+  color: #6c5424;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.word {
+  color: var(--charcoal);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+.tip {
+  background: rgba(10, 13, 16, 0.98);
+  border: 1px solid rgba(216, 173, 88, 0.7);
+  border-radius: 8px;
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  padding: 0.5rem 0.7rem;
+  pointer-events: none;
+  position: absolute;
+  right: calc(100% + 0.55rem);
+  top: 50%;
+  transform: translateY(-50%) translateX(0.5rem);
+  transition: opacity 150ms ease, transform 150ms ease;
+  white-space: nowrap;
+}
+
+.tab:hover .tip,
+.tab:focus-visible .tip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Overlay drawer */
+.backdrop {
+  animation: overlayFade 180ms ease;
+  background:
+    radial-gradient(circle at 72% 12%, rgba(99, 217, 231, 0.07), transparent 30rem),
+    rgba(9, 11, 13, 0.97);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  overflow-y: auto;
+  padding: clamp(1.1rem, 3.5dvh, 3rem) clamp(1.1rem, 5vw, 3rem);
+  position: fixed;
+  z-index: 60;
+}
+
+.panel {
+  animation: overlaySlide 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2.6dvh, 1.9rem);
+  height: max-content;
+  margin: auto;
+  max-width: 1240px;
+  width: 100%;
+}
+
+.panelHeader {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.overlayEyebrow {
+  color: var(--gold-bright);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.panelHeader h2 {
+  color: var(--ivory);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.3rem, 3.2vw, 1.95rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0.25rem 0 0;
+}
+
+.close {
+  background: transparent;
+  border: 1px solid rgba(243, 237, 221, 0.25);
+  border-radius: 50%;
+  color: var(--ivory);
+  cursor: pointer;
+  flex: none;
+  font-size: 1.4rem;
+  height: 2.4rem;
+  line-height: 1;
+  width: 2.4rem;
+}
+
+.close:hover,
+.close:focus-visible {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+@keyframes overlayFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlaySlide {
+  from {
+    opacity: 0.4;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .drawer {
+    animation: none;
+  }
+}
